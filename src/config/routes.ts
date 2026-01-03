@@ -36,6 +36,17 @@ export const routes = {
     createTemplate: "/support/templates/create",
     viewTemplate: (id: string) => `/support/templates/${id}`,
     editTemplate: (id: string) => `/support/templates/${id}/edit`,
+    // Support agent management (for admin)
+    agents: "/admin/support-agents",
+    createAgent: "/admin/support-agents/create",
+    editAgent: (id: string) => `/admin/support-agents/${id}/edit`,
+    agentDetails: (id: string) => `/admin/support-agents/${id}`,
+  },
+  // Support agent dashboard (for logged in support agents)
+  supportDashboard: {
+    home: "/support-dashboard",
+    tickets: "/support-dashboard/tickets",
+    profile: "/support-dashboard/profile",
   },
   logistics: {
     dashboard: "/logistics",

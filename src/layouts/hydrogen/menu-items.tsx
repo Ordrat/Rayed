@@ -7,6 +7,8 @@ import {
   PiSquaresFourDuotone,
   PiUserDuotone,
   PiUserGearDuotone,
+  PiHeadsetDuotone,
+  PiShieldCheckDuotone,
 } from "react-icons/pi";
 
 // Note: do not add href in the label object, it is rendering as label
@@ -20,6 +22,17 @@ export const menuItems = [
     name: "sidebar-menu-file-manager",
     href: "/",
     icon: <PiFoldersDuotone />,
+  },
+
+  // label start
+  {
+    name: "sidebar-menu-admin",
+  },
+  // label end
+  {
+    name: "sidebar-menu-support-agents",
+    href: routes.support.agents,
+    icon: <PiHeadsetDuotone />,
   },
 
   // label start

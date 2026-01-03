@@ -13,6 +13,7 @@ import { useTranslations } from "next-intl";
 import { useRouter } from "@/i18n/routing";
 import toast from "react-hot-toast";
 import { useEffect } from "react";
+import { isSupportAgent, isAdmin } from "@/services/support.service";
 
 const initialValues: LoginSchema = {
   emailOrPhone: "",
@@ -32,8 +33,16 @@ export default function SignInForm() {
       // Redirect to reset password page
       router.push(routes.auth.forgotPassword1);
     } else if (status === "authenticated" && !session?.user?.needsPasswordReset) {
-      // Redirect to dashboard if already authenticated and no reset needed
-      router.push("/");
+      // Determine redirect based on role
+      const userRoles = session?.user?.roles || [];
+      
+      if (isSupportAgent(userRoles) && !isAdmin(userRoles)) {
+        // Support agents go to support dashboard
+        router.push(routes.supportDashboard.home);
+      } else {
+        // Admins and other roles go to main dashboard
+        router.push("/");
+      }
     }
   }, [session, status, router]);
 
@@ -51,13 +60,14 @@ export default function SignInForm() {
         setIsLoading(false);
       } else if (result?.ok) {
         toast.success("Login successful!");
-        // The useEffect will handle redirection based on needsPasswordReset
+        // The useEffect will handle redirection based on needsPasswordReset and role
       }
     } catch (error) {
       toast.error("An error occurred during login");
       setIsLoading(false);
     }
   };
+
 
   return (
     <>

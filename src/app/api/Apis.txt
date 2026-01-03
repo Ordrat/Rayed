@@ -588,4 +588,4 @@ Schema
   "additionalProp3": "string"
 }
 
-https://api.rayed.app/index.html
+https://api.rayed.app
