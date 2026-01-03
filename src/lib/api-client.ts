@@ -1,0 +1,82 @@
+/**
+ * API Client for making requests to the backend
+ */
+
+const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL || 'https://api.rayed.app';
+const API_VERSION = '1.0';
+
+interface ApiRequestOptions extends RequestInit {
+  token?: string;
+  apiVersion?: string;
+}
+
+export class ApiError extends Error {
+  constructor(
+    message: string,
+    public status: number,
+    public details?: any
+  ) {
+    super(message);
+    this.name = 'ApiError';
+  }
+}
+
+/**
+ * Makes an API request with proper headers and error handling
+ */
+export async function apiRequest<T>(
+  endpoint: string,
+  options: ApiRequestOptions = {}
+): Promise<T> {
+  const { token, apiVersion = API_VERSION, ...fetchOptions } = options;
+
+  const headers: HeadersInit = {
+    'Content-Type': 'application/json',
+    'Accept-Language': 'en',
+    'X-Api-Version': apiVersion,
+    ...fetchOptions.headers,
+  };
+
+  if (token) {
+    headers['Authorization'] = `Bearer ${token}`;
+  }
+
+  const url = `${API_BASE_URL}${endpoint}`;
+
+  try {
+    const response = await fetch(url, {
+      ...fetchOptions,
+      headers,
+    });
+
+    // Handle different response types
+    const contentType = response.headers.get('content-type');
+    let data;
+
+    if (contentType?.includes('application/json') || contentType?.includes('text/plain')) {
+      data = await response.json();
+    } else {
+      data = await response.text();
+    }
+
+    if (!response.ok) {
+      throw new ApiError(
+        data?.detail || data?.title || 'An error occurred',
+        response.status,
+        data
+      );
+    }
+
+    return data as T;
+  } catch (error) {
+    if (error instanceof ApiError) {
+      throw error;
+    }
+
+    // Network or other errors
+    throw new ApiError(
+      error instanceof Error ? error.message : 'Network error occurred',
+      0
+    );
+  }
+}

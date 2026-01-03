@@ -1,0 +1,591 @@
+/api/Auth/SellerLogin
+Parameters
+Try it out
+Name	Description
+X-Api-Version
+string
+(header)
+X-Api-Version
+Accept-Language
+string
+(header)
+Language of the request
+
+Accept-Language
+api-version
+string
+(query)
+api-version
+Request body
+
+application/json
+Example Value
+Schema
+{
+  "emailOrPhone": "string",
+  "password": "string"
+}
+Responses
+Code	Description	Links
+200	
+Success
+
+Media type
+
+text/plain
+Controls Accept header.
+Example Value
+Schema
+{
+  "id": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
+  "email": "string",
+  "firstName": "string",
+  "lastName": "string",
+  "phoneNumber": "string",
+  "emailConfirmed": true,
+  "isActive": true,
+  "sellerStatus": 0,
+  "roles": [
+    "string"
+  ],
+  "shopId": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
+  "accessToken": "string",
+  "accessTokenExpirationDate": "2026-01-03T12:30:36.107Z",
+  "refreshToken": "string",
+  "refreshTokenExpirationDate": "2026-01-03T12:30:36.108Z"
+}
+No links
+401	
+Unauthorized
+
+Media type
+
+text/plain
+Example Value
+Schema
+{
+  "type": "string",
+  "title": "string",
+  "status": 0,
+  "detail": "string",
+  "instance": "string",
+  "additionalProp1": "string",
+  "additionalProp2": "string",
+  "additionalProp3": "string"
+} 
+
+POST
+/api/Auth/ResetPassword
+
+Parameters
+Try it out
+Name	Description
+X-Api-Version
+string
+(header)
+X-Api-Version
+Accept-Language
+string
+(header)
+Language of the request
+
+Accept-Language
+api-version
+string
+(query)
+api-version
+Request body
+
+application/json
+Example Value
+Schema
+{
+  "phoneNumberOrEmail": "string",
+  "resetToken": "string",
+  "newPassword": "string",
+  "confirmPassword": "string"
+}
+Responses
+Code	Description	Links
+200	
+Success
+
+Media type
+
+text/plain
+Controls Accept header.
+Example Value
+Schema
+{
+  "id": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
+  "email": "string",
+  "firstName": "string",
+  "lastName": "string",
+  "phoneNumber": "string",
+  "emailConfirmed": true,
+  "isActive": true,
+  "roles": [
+    "string"
+  ],
+  "accessToken": "string",
+  "accessTokenExpirationDate": "2026-01-03T14:04:44.934Z",
+  "refreshToken": "string",
+  "refreshTokenExpirationDate": "2026-01-03T14:04:44.934Z"
+}
+No links
+400	
+Bad Request
+
+Media type
+
+text/plain
+Example Value
+Schema
+{
+  "type": "string",
+  "title": "string",
+  "status": 0,
+  "detail": "string",
+  "instance": "string",
+  "additionalProp1": "string",
+  "additionalProp2": "string",
+  "additionalProp3": "string"
+}
+
+POST
+/api/Auth/Logout
+
+Parameters
+Try it out
+Name	Description
+X-Api-Version
+string
+(header)
+X-Api-Version
+Accept-Language
+string
+(header)
+Language of the request
+
+Accept-Language
+api-version
+string
+(query)
+api-version
+Responses
+Code	Description	Links
+200	
+Success
+
+
+//
+
+Support
+
+
+POST
+/api/Support/RegisterSupport
+
+Parameters
+Try it out
+Name	Description
+X-Api-Version
+string
+(header)
+X-Api-Version
+Accept-Language
+string
+(header)
+Language of the request
+
+Accept-Language
+api-version
+string
+(query)
+api-version
+Request body
+
+application/json
+Example Value
+Schema
+{
+  "firstName": "string",
+  "lastName": "string",
+  "phoneNumber": "string",
+  "email": "string",
+  "password": "string",
+  "department": 0,
+  "canCloseTickets": true,
+  "canIssueRefunds": true,
+  "canBanUsers": true,
+  "canViewAllTickets": true
+}
+Responses
+Code	Description	Links
+201	
+Created
+
+Media type
+
+text/plain
+Controls Accept header.
+Example Value
+Schema
+{
+  "id": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
+  "firstName": "string",
+  "lastName": "string",
+  "email": "string",
+  "phoneNumber": "string",
+  "department": 0,
+  "status": 0,
+  "lastStatusChangeAt": "2026-01-03T14:04:06.847Z",
+  "totalTicketsHandled": 0,
+  "totalTicketsResolved": 0,
+  "averageResolutionTimeHours": 0,
+  "customerSatisfactionScore": 0,
+  "currentActiveTickets": 0,
+  "canCloseTickets": true,
+  "canIssueRefunds": true,
+  "canBanUsers": true,
+  "canViewAllTickets": true,
+  "lastLoginAt": "2026-01-03T14:04:06.847Z",
+  "createdAt": "2026-01-03T14:04:06.847Z"
+}
+No links
+400	
+Bad Request
+
+Media type
+
+text/plain
+Example Value
+Schema
+{
+  "type": "string",
+  "title": "string",
+  "status": 0,
+  "detail": "string",
+  "instance": "string",
+  "additionalProp1": "string",
+  "additionalProp2": "string",
+  "additionalProp3": "string"
+}
+No links
+
+PUT
+/api/Support/UpdateSupport
+
+Parameters
+Try it out
+Name	Description
+X-Api-Version
+string
+(header)
+X-Api-Version
+Accept-Language
+string
+(header)
+Language of the request
+
+Accept-Language
+api-version
+string
+(query)
+api-version
+Request body
+
+application/json
+Example Value
+Schema
+{
+  "supportId": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
+  "firstName": "string",
+  "lastName": "string",
+  "phoneNumber": "string",
+  "email": "string",
+  "department": 0,
+  "canCloseTickets": true,
+  "canIssueRefunds": true,
+  "canBanUsers": true,
+  "canViewAllTickets": true
+}
+Responses
+Code	Description	Links
+200	
+Success
+
+Media type
+
+text/plain
+Controls Accept header.
+Example Value
+Schema
+{
+  "id": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
+  "firstName": "string",
+  "lastName": "string",
+  "email": "string",
+  "phoneNumber": "string",
+  "department": 0,
+  "status": 0,
+  "lastStatusChangeAt": "2026-01-03T14:04:06.852Z",
+  "totalTicketsHandled": 0,
+  "totalTicketsResolved": 0,
+  "averageResolutionTimeHours": 0,
+  "customerSatisfactionScore": 0,
+  "currentActiveTickets": 0,
+  "canCloseTickets": true,
+  "canIssueRefunds": true,
+  "canBanUsers": true,
+  "canViewAllTickets": true,
+  "lastLoginAt": "2026-01-03T14:04:06.852Z",
+  "createdAt": "2026-01-03T14:04:06.852Z"
+}
+No links
+400	
+Bad Request
+
+Media type
+
+text/plain
+Example Value
+Schema
+{
+  "type": "string",
+  "title": "string",
+  "status": 0,
+  "detail": "string",
+  "instance": "string",
+  "additionalProp1": "string",
+  "additionalProp2": "string",
+  "additionalProp3": "string"
+}
+No links
+404	
+Not Found
+
+Media type
+
+text/plain
+Example Value
+Schema
+{
+  "type": "string",
+  "title": "string",
+  "status": 0,
+  "detail": "string",
+  "instance": "string",
+  "additionalProp1": "string",
+  "additionalProp2": "string",
+  "additionalProp3": "string"
+}
+No links
+
+GET
+/api/Support/GetAll
+
+Parameters
+Try it out
+Name	Description
+X-Api-Version
+string
+(header)
+X-Api-Version
+Accept-Language
+string
+(header)
+Language of the request
+
+Accept-Language
+api-version
+string
+(query)
+api-version
+Responses
+Code	Description	Links
+200	
+Success
+
+Media type
+
+text/plain
+Controls Accept header.
+Example Value
+Schema
+[
+  {
+    "id": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
+    "firstName": "string",
+    "lastName": "string",
+    "email": "string",
+    "phoneNumber": "string",
+    "department": 0,
+    "status": 0,
+    "lastStatusChangeAt": "2026-01-03T14:04:06.856Z",
+    "totalTicketsHandled": 0,
+    "totalTicketsResolved": 0,
+    "averageResolutionTimeHours": 0,
+    "customerSatisfactionScore": 0,
+    "currentActiveTickets": 0,
+    "canCloseTickets": true,
+    "canIssueRefunds": true,
+    "canBanUsers": true,
+    "canViewAllTickets": true,
+    "lastLoginAt": "2026-01-03T14:04:06.856Z",
+    "createdAt": "2026-01-03T14:04:06.856Z"
+  }
+]
+No links
+
+GET
+/api/Support/GetById/{id}
+
+Parameters
+Try it out
+Name	Description
+id *
+string($uuid)
+(path)
+id
+X-Api-Version
+string
+(header)
+X-Api-Version
+Accept-Language
+string
+(header)
+Language of the request
+
+Accept-Language
+api-version
+string
+(query)
+api-version
+Responses
+Code	Description	Links
+200	
+Success
+
+Media type
+
+text/plain
+Controls Accept header.
+Example Value
+Schema
+{
+  "id": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
+  "firstName": "string",
+  "lastName": "string",
+  "email": "string",
+  "phoneNumber": "string",
+  "department": 0,
+  "status": 0,
+  "lastStatusChangeAt": "2026-01-03T14:04:06.859Z",
+  "totalTicketsHandled": 0,
+  "totalTicketsResolved": 0,
+  "averageResolutionTimeHours": 0,
+  "customerSatisfactionScore": 0,
+  "currentActiveTickets": 0,
+  "canCloseTickets": true,
+  "canIssueRefunds": true,
+  "canBanUsers": true,
+  "canViewAllTickets": true,
+  "lastLoginAt": "2026-01-03T14:04:06.859Z",
+  "createdAt": "2026-01-03T14:04:06.859Z"
+}
+No links
+404	
+Not Found
+
+Media type
+
+text/plain
+Example Value
+Schema
+{
+  "type": "string",
+  "title": "string",
+  "status": 0,
+  "detail": "string",
+  "instance": "string",
+  "additionalProp1": "string",
+  "additionalProp2": "string",
+  "additionalProp3": "string"
+}
+No links
+
+POST
+/api/Support/ChangeStatus/change-status
+
+Parameters
+Try it out
+Name	Description
+X-Api-Version
+string
+(header)
+X-Api-Version
+Accept-Language
+string
+(header)
+Language of the request
+
+Accept-Language
+api-version
+string
+(query)
+api-version
+Request body
+
+application/json
+Example Value
+Schema
+{
+  "supportId": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
+  "status": 0
+}
+Responses
+Code	Description	Links
+200	
+Success
+
+No links
+400	
+Bad Request
+
+Media type
+
+text/plain
+Example Value
+Schema
+{
+  "type": "string",
+  "title": "string",
+  "status": 0,
+  "detail": "string",
+  "instance": "string",
+  "additionalProp1": "string",
+  "additionalProp2": "string",
+  "additionalProp3": "string"
+}
+No links
+404	
+Not Found
+
+Media type
+
+text/plain
+Example Value
+Schema
+{
+  "type": "string",
+  "title": "string",
+  "status": 0,
+  "detail": "string",
+  "instance": "string",
+  "additionalProp1": "string",
+  "additionalProp2": "string",
+  "additionalProp3": "string"
+}
+
+https://api.rayed.app/index.html
