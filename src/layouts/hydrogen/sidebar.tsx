@@ -1,9 +1,10 @@
 "use client";
 
 import { Link } from "@/i18n/routing";
-import Logo from "@core/components/logo";
 import cn from "@core/utils/class-names";
 import { SidebarMenu } from "./sidebar-menu";
+import Image from "next/image";
+import { siteConfig } from "@/config/site.config";
 
 export default function Sidebar({ className }: { className?: string }) {
   return (
@@ -17,13 +18,18 @@ export default function Sidebar({ className }: { className?: string }) {
         <Link
           href={"/"}
           aria-label="Site Logo"
-          className="text-gray-800 hover:text-gray-900"
+          className="flex text-gray-800 hover:text-gray-900"
         >
-          <Logo className="max-w-[155px]" />
+          <Image
+            src={siteConfig.logo}
+            alt={siteConfig.title}
+            className="h-25 w-25"
+            priority
+          />
         </Link>
       </div>
 
-      <div className="custom-scrollbar overflow-y-auto scroll-smooth h-[calc(100%-80px)]">
+      <div className="custom-scrollbar overflow-y-auto scroll-smooth h-full">
         <SidebarMenu />
       </div>
     </aside>

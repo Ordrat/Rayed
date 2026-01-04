@@ -50,7 +50,7 @@ export default function AuthWrapperOne({
     <>
       <Link
         href={"/"}
-        className="sticky start-0 top-0 z-20 flex items-center justify-center bg-blue p-3.5 text-sm font-medium text-white md:p-4 lg:hidden"
+        className="sticky start-0 top-0 z-20 flex items-center justify-center bg-[#1f502a] p-3.5 text-sm font-medium text-white md:p-4 lg:hidden"
       >
         <PiArrowLeftBold />
         <Text className="ms-1 font-lexend">{t("auth-back-to-home")}</Text>

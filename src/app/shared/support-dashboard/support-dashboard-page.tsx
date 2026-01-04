@@ -86,7 +86,7 @@ export default function SupportDashboard() {
       {/* Quick Stats Placeholder */}
       <div className="mt-8 grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4">
         {[
-          { label: "Open Tickets", value: "-", color: "bg-blue-500" },
+          { label: "Open Tickets", value: "-", color: "bg-[#1f502a]" },
           { label: "Resolved Today", value: "-", color: "bg-green-500" },
           { label: "Pending Response", value: "-", color: "bg-yellow-500" },
           { label: "Avg. Response Time", value: "-", color: "bg-purple-500" },

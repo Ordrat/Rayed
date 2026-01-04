@@ -9,21 +9,31 @@ type DeletePopoverProps = {
   title: string;
   description: string;
   onDelete: () => void;
+  children?: React.ReactElement;
 };
 
-export default function DeletePopover({ title, description, onDelete }: DeletePopoverProps) {
+export default function DeletePopover({
+  title,
+  description,
+  onDelete,
+  children,
+}: DeletePopoverProps) {
   const t = useTranslations("table");
   return (
     <Popover placement="left">
       <Popover.Trigger>
-        <ActionIcon
-          size="sm"
-          variant="outline"
-          aria-label={"Delete Item"}
-          className="cursor-pointer hover:!border-gray-900 hover:text-gray-700"
-        >
-          <TrashIcon className="h-4 w-4" />
-        </ActionIcon>
+        {children ? (
+          children
+        ) : (
+          <ActionIcon
+            size="sm"
+            variant="outline"
+            aria-label={"Delete Item"}
+            className="cursor-pointer hover:!border-gray-900 hover:text-gray-700"
+          >
+            <TrashIcon className="h-4 w-4" />
+          </ActionIcon>
+        )}
       </Popover.Trigger>
       <Popover.Content className="z-10">
         {({ setOpen }) => (

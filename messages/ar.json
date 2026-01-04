@@ -59,6 +59,15 @@
     "auth-one-time-password-to-your-email": "لقد أرسلنا لك كلمة مرور لمرة واحدة إلى بريدك الإلكتروني. "
   },
   "common": {
+    "Support Agents": "وكلاء الدعم",
+    "Home": "الرئيسية",
+    "Admin": "الإدارة",
+    "Create": "إنشاء",
+    "Edit": "تعديل",
+    "Details": "التفاصيل",
+    "Create Support Agent": "إنشاء وكيل دعم",
+    "Edit Support Agent": "تعديل وكيل الدعم",
+    "Support Agent Details": "تفاصيل وكيل الدعم",
     "text-home": "بيت",
     "text-pages": "الصفحات",
     "text-dashboard": "لوحة القيادة",
@@ -1637,6 +1646,8 @@
     "table-text-view-user": "عرض المستخدم",
     "table-text-delete-user": "حذف المستخدم",
     "table-text-delete-confirm-user": "هل أنت متأكد أنك تريد حذف هذا",
+    "table-text-delete-agent": "حذف موظف الدعم",
+    "table-text-delete-confirm-agent": "هل أنت متأكد أنك تريد حذف موظف الدعم هذا؟ لا يمكن التراجع عن هذا الإجراء.",
     "table-text-search-table": "جدول البحث",
     "table-text-tables": "الجداول",
     "table-text-search-order": "ترتيب البحث...",
@@ -1648,6 +1659,8 @@
     "table-text-add-member": "إضافة عضو",
     "table-text-edit-member": "تحرير العضو",
     "table-text-delete-member": "حذف العضو",
-    "table-text-no-data": "لايوجد بيانات"
+    "table-text-no-data": "لايوجد بيانات",
+    "text-yes": "نعم",
+    "text-no": "لا"
   }
 }

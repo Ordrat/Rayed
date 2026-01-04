@@ -5,10 +5,11 @@ export const metadata = {
   ...metaObject("Support Agent Details"),
 };
 
-export default function AgentDetailsPage({
+export default async function AgentDetailsPage({
   params,
 }: {
-  params: { id: string };
+  params: Promise<{ id: string }>;
 }) {
-  return <SupportAgentDetailsPage agentId={params.id} />;
+  const { id } = await params;
+  return <SupportAgentDetailsPage agentId={id} />;
 }

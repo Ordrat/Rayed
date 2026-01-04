@@ -1,13 +1,10 @@
-/**
- * Authentication service for handling all auth-related API calls
- */
-
 import { apiRequest } from '@/lib/api-client';
 import {
   SellerLoginRequest,
   SellerLoginResponse,
   ResetPasswordRequest,
   ResetPasswordResponse,
+  ChangePasswordRequest,
   SellerStatus,
 } from '@/types/auth.types';
 
@@ -24,7 +21,7 @@ export async function sellerLogin(
 }
 
 /**
- * Reset seller password
+ * Reset seller password (forgot password flow with token)
  */
 export async function resetPassword(
   data: ResetPasswordRequest
@@ -32,6 +29,20 @@ export async function resetPassword(
   return apiRequest<ResetPasswordResponse>('/api/Auth/ResetPassword', {
     method: 'POST',
     body: JSON.stringify(data),
+  });
+}
+
+/**
+ * Change password (for authenticated users, e.g., first-time login)
+ */
+export async function changePassword(
+  data: ChangePasswordRequest,
+  token: string
+): Promise<void> {
+  return apiRequest<void>('/api/Auth/ChangePassword', {
+    method: 'POST',
+    body: JSON.stringify(data),
+    token,
   });
 }
 

@@ -62,6 +62,19 @@ export async function getSupportById(
 }
 
 /**
+ * Delete a support agent
+ */
+export async function deleteSupport(
+  id: string,
+  token: string
+): Promise<void> {
+  return apiRequest<void>(`/api/Support/DeleteSupport/${id}`, {
+    method: 'DELETE',
+    token,
+  });
+}
+
+/**
  * Change support agent status
  */
 export async function changeSupportStatus(

@@ -1,5 +1,5 @@
 import { Metadata } from 'next';
-import logoImg from '@public/logo.svg';
+import logoImg from '@public/logo/rayed.png';
 import { LAYOUT_OPTIONS } from '@/config/enums';
 import logoIconImg from '@public/logo-short.svg';
 import { OpenGraph } from 'next/dist/lib/metadata/types/opengraph-types';
@@ -10,8 +10,8 @@ enum MODE {
 }
 
 export const siteConfig = {
-  title: 'Isomorphic - React Typescript Admin Dashboard Template',
-  description: `Isomorphic the ultimate React TypeScript Admin Template. Streamline your admin dashboard development with our feature-rich, responsive, and highly customizable solution. Boost productivity and create stunning admin interfaces effortlessly.`,
+  title: 'RAYED - Admin Dashboard',
+  description: `RAYED the ultimate React TypeScript Admin Template. Streamline your admin dashboard development with our feature-rich, responsive, and highly customizable solution. Boost productivity and create stunning admin interfaces effortlessly.`,
   logo: logoImg,
   icon: logoIconImg,
   mode: MODE.LIGHT,

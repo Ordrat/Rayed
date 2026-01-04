@@ -150,6 +150,8 @@ export const routes = {
     otp3: "/auth/otp-3",
     otp4: "/auth/otp-4",
     otp5: "/auth/otp-5",
+    // Set password (first-time login)
+    setPassword: "/auth/set-password",
   },
   signIn: "/auth/signin",
 };

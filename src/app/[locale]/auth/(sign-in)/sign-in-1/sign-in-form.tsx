@@ -30,8 +30,8 @@ export default function SignInForm() {
   // Check if user needs to reset password on session update
   useEffect(() => {
     if (status === "authenticated" && session?.user?.needsPasswordReset) {
-      // Redirect to reset password page
-      router.push(routes.auth.forgotPassword1);
+      // Redirect to set password page for first-time login
+      router.push(routes.auth.setPassword);
     } else if (status === "authenticated" && !session?.user?.needsPasswordReset) {
       // Determine redirect based on role
       const userRoles = session?.user?.roles || [];

@@ -38,7 +38,7 @@
     --gray-1000: 0 0 0;
 
     /* body style */
-    --background: 255 255 255; /* #ffffff */
+    --background: 248 249 250; /* #f8f9fa */
     --foreground: 72 72 72; /* #484848 */
     --muted: 227 227 227; /* #e3e3e3 */
     --muted-foreground: 146 146 146; /* #929292 */
@@ -52,11 +52,11 @@
     --primary-foreground: 255 255 255; /* #ffffff */
 
     /* ----------------------------------- */
-    /* secondary colors */
+    /* secondary colors (Mapped to Green #1f502a) */
     /* ----------------------------------- */
-    --secondary-lighter: 221 227 255; /* #dde3ff */
-    --secondary-default: 78 54 245; /* #4e36f5 */
-    --secondary-dark: 67 42 216; /* #432ad8 */
+    --secondary-lighter: 225 242 229; /* #e1f2e5 */
+    --secondary-default: 31 80 42; /* #1f502a */
+    --secondary-dark: 20 50 25; /* #143219 */
     --secondary-foreground: 255 255 255; /* #ffffff */
 
     /* ----------------------------------- */
@@ -74,11 +74,11 @@
     --orange-dark: 171 87 10; /* #ab570a */
 
     /* ----------------------------------- */
-    /* blue/info colors */
+    /* blue/info colors (Rebranded to Green #1f502a) */
     /* ----------------------------------- */
-    --blue-lighter: 211 229 255; /* #d3e5ff */
-    --blue-default: 0 112 243; /* #0070f3 */
-    --blue-dark: 7 97 209; /* #0761d1 */
+    --blue-lighter: 225 242 229; /* #e1f2e5 */
+    --blue-default: 31 80 42; /* #1f502a */
+    --blue-dark: 20 50 25; /* #143219 */
 
     /* ----------------------------------- */
     /* green/success colors */
@@ -133,10 +133,10 @@
     --primary-foreground: 0 0 0; /* #000000 */
 
     /* ----------------------------------- */
-    /* secondary colors */
+    /* secondary colors (Mapped to Green for Dark Mode) */
     /* ----------------------------------- */
-    --secondary-lighter: 31 22 90; /* #1f165a */
-    --secondary-dark: 193 203 255; /* #c1cbff */
+    --secondary-lighter: 8 20 10; /* Dark Green */
+    --secondary-dark: 31 80 42; /* #1f502a */
 
     /* ----------------------------------- */
     /* red/error colors */
@@ -151,10 +151,10 @@
     --orange-dark: 252 234 139; /* #fcea8b */
 
     /* ----------------------------------- */
-    /* blue/info colors */
+    /* blue/info colors (Rebranded to Green) */
     /* ----------------------------------- */
-    --blue-lighter: 13 51 94; /* #0d335e */
-    --blue-dark: 181 233 255; /* #b5e9ff */
+    --blue-lighter: 8 20 10; /* Dark Green */
+    --blue-dark: 31 80 42; /* #1f502a */
 
     /* ----------------------------------- */
     /* green/success colors */
@@ -947,12 +947,12 @@ td.rc-table-cell-fix-right {
 .ql-formats button:hover::before,
 .ql-formats > span:hover::before {
   content: "";
-  @apply absolute left-1/2 top-[-9px] z-10 -translate-x-1/2 transform border-x-[7px] border-y-[6px] border-solid border-transparent border-t-[#0d1e42];
+  @apply absolute left-1/2 top-[-9px] z-10 -translate-x-1/2 transform border-x-[7px] border-y-[6px] border-solid border-transparent border-t-[#1f502a];
 }
 
 .ql-formats button:hover::after,
 .ql-formats > span:hover::after {
-  @apply absolute left-1/2 top-[-41px] z-50 -translate-x-1/2 whitespace-nowrap rounded-md bg-[#0d1e42] px-2.5 py-2 text-xs text-white;
+  @apply absolute left-1/2 top-[-41px] z-50 -translate-x-1/2 whitespace-nowrap rounded-md bg-[#1f502a] px-2.5 py-2 text-xs text-white;
 }
 
 /** Set tooltip content for toolbar options **/
@@ -1373,7 +1373,7 @@ div[style="z-index: 1000001;"],
 }
 .react-calendar__tile--active,
 .react-calendar__tile--now {
-  @apply !bg-[#2B7F75];
+  @apply !bg-[#1f502a];
 }
 .react-calendar__tile--now {
   @apply !text-gray-0;

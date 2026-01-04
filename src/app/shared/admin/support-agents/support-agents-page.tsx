@@ -3,10 +3,10 @@
 import { useState, useEffect } from "react";
 import { useSession } from "next-auth/react";
 import { Title, Text, Badge, Button, Loader } from "rizzui";
-import { PiPlusBold, PiEyeBold, PiPencilBold } from "react-icons/pi";
+import { PiPlusBold, PiEyeBold, PiPencilBold, PiTrashBold } from "react-icons/pi";
 import { Link } from "@/i18n/routing";
 import { routes } from "@/config/routes";
-import { getAllSupport, isAdmin } from "@/services/support.service";
+import { getAllSupport, deleteSupport, isAdmin } from "@/services/support.service";
 import {
   SupportAgent,
   getDepartmentLabel,
@@ -16,6 +16,7 @@ import {
 import PageHeader from "@/app/shared/page-header";
 import toast from "react-hot-toast";
 import { useRouter } from "@/i18n/routing";
+import DeletePopover from "@/app/shared/delete-popover";
 
 const pageHeader = {
   title: "Support Agents",
@@ -45,15 +46,16 @@ export default function SupportAgentsPage() {
   const router = useRouter();
   const [agents, setAgents] = useState<SupportAgent[]>([]);
   const [isLoading, setIsLoading] = useState(true);
+  const [deletingId, setDeletingId] = useState<string | null>(null);
 
   useEffect(() => {
     if (status === "authenticated") {
-      // Check if user has admin role
-      if (!isAdmin(session?.user?.roles || [])) {
-        toast.error("You don't have permission to access this page");
-        router.push("/");
-        return;
-      }
+      // TODO: Re-enable permission check when backend permissions are implemented
+      // if (!isAdmin(session?.user?.roles || [])) {
+      //   toast.error("You don't have permission to access this page");
+      //   router.push("/");
+      //   return;
+      // }
       fetchAgents();
     } else if (status === "unauthenticated") {
       router.push(routes.auth.signIn1);
@@ -72,6 +74,19 @@ export default function SupportAgentsPage() {
     }
   };
 
+  const handleDelete = async (agentId: string) => {
+    setDeletingId(agentId);
+    try {
+      await deleteSupport(agentId, session?.accessToken || "");
+      setAgents(agents.filter((agent) => agent.id !== agentId));
+      toast.success("Support agent deleted successfully");
+    } catch (error: any) {
+      toast.error(error.message || "Failed to delete support agent");
+    } finally {
+      setDeletingId(null);
+    }
+  };
+
   if (status === "loading" || isLoading) {
     return (
       <div className="flex h-[400px] items-center justify-center">
@@ -84,7 +99,7 @@ export default function SupportAgentsPage() {
     <>
       <PageHeader title={pageHeader.title} breadcrumb={pageHeader.breadcrumb}>
         <Link href={routes.support.createAgent}>
-          <Button className="mt-4 w-full sm:mt-0 sm:w-auto">
+          <Button className="mt-4 w-full bg-[#1f502a] hover:bg-[#143219] sm:mt-0 sm:w-auto">
             <PiPlusBold className="me-1.5 h-4 w-4" />
             Add Support Agent
           </Button>
@@ -152,7 +167,10 @@ export default function SupportAgentsPage() {
                   href={routes.support.agentDetails(agent.id)}
                   className="flex-1"
                 >
-                  <Button variant="outline" className="w-full">
+                  <Button
+                    variant="outline"
+                    className="w-full hover:border-green-600 hover:text-green-600 dark:hover:border-green-500 dark:hover:text-green-500"
+                  >
                     <PiEyeBold className="me-1.5 h-4 w-4" />
                     View
                   </Button>
@@ -161,11 +179,29 @@ export default function SupportAgentsPage() {
                   href={routes.support.editAgent(agent.id)}
                   className="flex-1"
                 >
-                  <Button variant="outline" className="w-full">
+                  <Button
+                    variant="outline"
+                    className="w-full hover:border-[#1f502a] hover:text-[#1f502a] focus:ring-[#1f502a]"
+                  >
                     <PiPencilBold className="me-1.5 h-4 w-4" />
                     Edit
                   </Button>
                 </Link>
+                <div className="flex-1">
+                  <DeletePopover
+                    title="table-text-delete-agent"
+                    description="Are you sure you want to delete this support agent? This action cannot be undone."
+                    onDelete={() => handleDelete(agent.id)}
+                  >
+                    <Button
+                      variant="outline"
+                      className="w-full hover:border-red-500 hover:text-red-500"
+                    >
+                      <PiTrashBold className="me-1.5 h-4 w-4" />
+                      Delete
+                    </Button>
+                  </DeletePopover>
+                </div>
               </div>
             </div>
           ))

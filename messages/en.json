@@ -127,6 +127,15 @@
     "sidebar-menu-support-agents": "Support Agents"
   },
   "common": {
+    "Support Agents": "Support Agents",
+    "Home": "Home",
+    "Admin": "Admin",
+    "Create": "Create",
+    "Edit": "Edit",
+    "Details": "Details",
+    "Create Support Agent": "Create Support Agent",
+    "Edit Support Agent": "Edit Support Agent",
+    "Support Agent Details": "Support Agent Details",
     "text-home": "Home",
     "text-pages": "Pages",
     "text-dashboard": "Dashboard",
@@ -1168,6 +1177,8 @@
     "table-text-view-user": "View User",
     "table-text-delete-user": "Delete The User",
     "table-text-delete-confirm-user": "Are you sure you want to delete this",
+    "table-text-delete-agent": "Delete Support Agent",
+    "table-text-delete-confirm-agent": "Are you sure you want to delete this support agent? This action cannot be undone.",
     "table-text-search-table": "Search Table",
     "table-text-tables": "Tables",
     "table-text-search-order": "Search order...",
@@ -1179,7 +1190,9 @@
     "table-text-add-member": "Add Member",
     "table-text-edit-member": "Edit Member",
     "table-text-delete-member": "Delete Member",
-    "table-text-no-data": "No Data"
+    "table-text-no-data": "No Data",
+    "text-yes": "Yes",
+    "text-no": "No"
   },
   "form": {
     "form-name": "Name",
