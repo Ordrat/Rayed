@@ -99,7 +99,7 @@ export default function AuthWrapperFive({
               </Link>
               <Title
                 as="h2"
-                className="mb-5 text-[26px] leading-normal @container md:text-3xl md:!leading-normal lg:mb-7 lg:pe-8 lg:text-3xl xl:pe-16 xl:text-[32px] 2xl:pe-0 2xl:text-4xl"
+                className="mb-5 text-[32px] leading-normal @container md:text-4xl md:!leading-normal lg:mb-7 lg:pe-8 lg:text-4xl xl:pe-16 xl:text-[36px] 2xl:pe-0 2xl:text-5xl"
               >
                 {title}
               </Title>
@@ -126,9 +126,6 @@ export default function AuthWrapperFive({
           <div className="hidden pb-8 pt-10 text-center lg:block lg:w-[500px] xl:w-[600px] xl:pt-14 2xl:block 2xl:w-[730px]">
             {pageImage}
           </div>
-        </div>
-        <div className="mx-auto mb-6 mt-auto flex w-full justify-end border-b border-gray-900 pe-1 pt-10 lg:mb-10 xl:max-w-7xl 2xl:max-w-[1720px]">
-          <TreeShape className="relative -mb-3 h-12 w-16 md:h-14 md:w-20 lg:h-[70px] lg:w-28" />
         </div>
       </div>
     </>

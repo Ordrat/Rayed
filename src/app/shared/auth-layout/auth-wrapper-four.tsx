@@ -69,10 +69,10 @@ export default function AuthWrapperFour({
           <div className="flex flex-col items-center">
             <Link
               href={"/"}
-              className="mb-7 inline-block max-w-[64px] lg:mb-9"
+              className="mb-7 inline-block max-w-[280px] lg:mb-9"
             >
               <Image
-                src={siteConfig.icon}
+                src={siteConfig.logo}
                 alt={siteConfig.title}
               />
             </Link>
@@ -83,28 +83,6 @@ export default function AuthWrapperFour({
               {title}
             </Title>
           </div>
-          {isSocialLoginActive && (
-            <>
-              <div className="flex flex-col gap-4 pb-6 md:flex-row md:gap-6 xl:pb-7">
-                <Button className="h-11 w-full">
-                  <FcGoogle className="me-2 h-4 w-4 shrink-0" />
-                  <span className="truncate">{t("auth-sign-in-with-google")}</span>
-                </Button>
-                <Button className="h-11 w-full">
-                  <BsFacebook className="me-2 h-4 w-4 shrink-0 md:h-5 md:w-5" />
-                  <span className="truncate">{t("auth-sign-in-with-facebook")}</span>
-                </Button>
-              </div>
-              <OrSeparation
-                title={`${t("auth-or")}, ${
-                  isSignIn ? t("auth-sign-in") : t("auth-sign-up")
-                } ${t("auth-with-your-email")}`}
-                isCenter
-                className="mb-5 2xl:mb-7"
-              />
-            </>
-          )}
-
           {children}
         </div>
       </div>
@@ -120,9 +98,9 @@ function AuthHeader() {
     <header className="flex items-center justify-between p-4 lg:px-16 lg:py-6 2xl:px-24">
       <Link href={"/"}>
         <Image
-          src={siteConfig.logo}
+          src={siteConfig.icon}
           alt={siteConfig.title}
-          className="dark:invert"
+          className="dark:invert max-w-[64px]"
           priority
         />
       </Link>

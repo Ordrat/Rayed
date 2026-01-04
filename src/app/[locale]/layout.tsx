@@ -4,7 +4,7 @@ import GlobalDrawer from "@/app/shared/drawer-views/container";
 import GlobalModal from "@/app/shared/modal-views/container";
 import { JotaiProvider, ThemeProvider } from "@/app/shared/theme-provider";
 import { siteConfig } from "@/config/site.config";
-import { inter, lexendDeca } from "@/app/fonts";
+import { inter, lexendDeca, cairo } from "@/app/fonts";
 import cn from "@core/utils/class-names";
 import "./globals.css";
 import { NextIntlClientProvider } from "next-intl";
@@ -33,6 +33,10 @@ export default async function RootLayout({
   const {locale} = await params;
   const session = await getServerSession(auth);
   const messages = await getMessages();
+  
+  // Use Cairo font for Arabic, Inter for other languages
+  const isArabic = locale === 'ar';
+  const fontClass = isArabic ? 'font-cairo' : 'font-inter';
 
   return (
     <html
@@ -42,7 +46,12 @@ export default async function RootLayout({
     >
       <body
         suppressHydrationWarning
-        className={cn(inter.variable, lexendDeca.variable, "font-inter")}
+        className={cn(
+          inter.variable, 
+          lexendDeca.variable, 
+          cairo.variable,
+          fontClass
+        )}
       >
         <AuthProvider session={session}>
           <NextIntlClientProvider

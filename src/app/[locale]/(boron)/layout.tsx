@@ -34,5 +34,5 @@ export default function DefaultLayout({ children }: { children: React.ReactNode 
     return <CarbonLayout>{children}</CarbonLayout>;
   }
 
-  return <HydrogenLayout>{children}</HydrogenLayout>;
+  return <BoronLayout>{children}</BoronLayout>;
 }

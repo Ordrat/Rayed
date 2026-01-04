@@ -9,6 +9,8 @@ import { usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
 import { useTranslations } from "next-intl";
 import { logout } from "@/services/auth.service";
+import { changeSupportStatus } from "@/services/support.service";
+import { SupportStatus } from "@/types/support.types";
 import toast from "react-hot-toast";
 
 export default function ProfileMenu({
@@ -96,6 +98,30 @@ function DropdownMenu() {
   const handleSignOut = async () => {
     setIsLoggingOut(true);
     try {
+      // If user is a support agent, set status to Offline before logout
+      if (session?.accessToken && session?.user?.id) {
+        const userRoles = session?.user?.roles || [];
+        const isSupportRole = userRoles.some(
+          (role) => role.toLowerCase() === 'support' || role.toLowerCase() === 'supportagent'
+        );
+        
+        if (isSupportRole) {
+          try {
+            await changeSupportStatus(
+              {
+                supportId: session.user.id,
+                status: SupportStatus.OFFLINE,
+              },
+              session.accessToken
+            );
+            console.log("Support agent status set to Offline");
+          } catch (error) {
+            console.error("Failed to update support status to Offline:", error);
+            // Continue with logout even if status update fails
+          }
+        }
+      }
+      
       // Call backend logout API if user is authenticated
       if (session?.accessToken) {
         await logout(session.accessToken);

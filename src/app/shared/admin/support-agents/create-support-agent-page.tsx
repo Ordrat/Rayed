@@ -98,7 +98,10 @@ export default function CreateSupportAgentPage() {
       toast.success("Support agent created successfully!");
       router.push(routes.support.agents);
     } catch (error: any) {
-      toast.error(error.message || "Failed to create support agent");
+      console.error("RegisterSupport error:", error);
+      console.error("Error details:", error.details);
+      const errorMessage = error.details?.detail || error.details?.title || error.message || "Failed to create support agent";
+      toast.error(errorMessage);
       setIsLoading(false);
     }
   };
@@ -121,8 +124,8 @@ export default function CreateSupportAgentPage() {
             Agent Information
           </Title>
           <Text className="text-gray-500">
-            Create a new support agent account. The agent will need to reset
-            their password on first login.
+            Create a new support agent account. The agent will be required to
+            change their password on first login for security.
           </Text>
         </div>
 
@@ -189,19 +192,31 @@ export default function CreateSupportAgentPage() {
                         size="sm"
                         className="h-6 w-6 text-primary transition-colors hover:bg-primary/10 hover:text-primary-dark"
                         onClick={() => {
-                          const chars =
-                            "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+                          const uppercase = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+                          const lowercase = "abcdefghijklmnopqrstuvwxyz";
+                          const numbers = "0123456789";
+                          const allChars = uppercase + lowercase + numbers;
+                          
                           let password = "";
-                          // Ensure at least one uppercase
-                          password += "ABCDEFGHIJKLMNOPQRSTUVWXYZ".charAt(
-                            Math.floor(Math.random() * 26)
+                          
+                          // Ensure at least one uppercase letter
+                          password += uppercase.charAt(
+                            Math.floor(Math.random() * uppercase.length)
                           );
-                          for (let i = 0; i < 11; i++) {
-                            password += chars.charAt(
-                              Math.floor(Math.random() * chars.length)
+                          
+                          // Ensure at least one number
+                          password += numbers.charAt(
+                            Math.floor(Math.random() * numbers.length)
+                          );
+                          
+                          // Fill the rest with random characters (10 more to make 12 total)
+                          for (let i = 0; i < 10; i++) {
+                            password += allChars.charAt(
+                              Math.floor(Math.random() * allChars.length)
                             );
                           }
-                          // Shuffle the password to mix the guaranteed uppercase
+                          
+                          // Shuffle the password to randomize positions
                           password = password
                             .split("")
                             .sort(() => 0.5 - Math.random())

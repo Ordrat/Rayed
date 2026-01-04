@@ -22,7 +22,9 @@ export function BoronSidebarMenu() {
       {menuItems.map((item, index) => {
         const Icon = item.icon;
         const url = item?.href === "/" ? `/${locale}` : `/${locale}${item?.href}`;
-        const isActive = pathname === url;
+        const isActive =
+          pathname === url ||
+          (pathname.startsWith(url + "/") && item?.href !== "/");
 
         return (
           <Fragment key={item.name + "-" + index}>
@@ -33,8 +35,8 @@ export function BoronSidebarMenu() {
                   className={cn(
                     "group relative mx-3 my-0.5 flex items-center justify-between rounded-md px-3 py-2 font-medium capitalize lg:my-1 2xl:mx-5 2xl:my-2",
                     isActive
-                      ? "bg-primary text-gray-0"
-                      : "text-gray-700 transition-colors duration-200 hover:bg-gray-100 hover:text-gray-900 dark:text-gray-700/90"
+                      ? "bg-[#1f502a] text-gray-0"
+                      : "text-gray-700 transition-colors duration-200 hover:bg-[#1f502a] hover:text-gray-0 dark:text-gray-700/90"
                   )}
                 >
                   <div className="flex w-full items-center truncate">

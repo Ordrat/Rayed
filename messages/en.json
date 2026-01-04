@@ -1643,7 +1643,7 @@
     "auth-facebook": "Facebook",
     "auth-gitHub": "GitHub",
     "auth-linkedIn": "LinkedIn",
-    "auth-welcome-back": "Welcome back! Please",
+    "auth-welcome-back": "Welcome Back!",
     "auth-continue": "continue.",
     "auth-stay-signed-in-and-get-benefits": "Stay signed in and get special benefits.",
     "auth-sign-in-with-your-credentials": "Sign in with your credentials.",
@@ -1664,6 +1664,7 @@
     "auth-otp-has-sent-to": "OTP has been sent to +*********12",
     "auth-validation": "Validation",
     "auth-one-time-password": "We have sent you One Time Password to your email.",
-    "auth-one-time-password-to-your-email": "We have sent you One Time Password to your email. Please enter your OTP"
+    "auth-one-time-password-to-your-email": "We have sent you One Time Password to your email. Please enter your OTP",
+    "auth-sign-in-exclamation": "SIGN IN!"
   }
 }

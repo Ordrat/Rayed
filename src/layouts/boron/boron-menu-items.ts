@@ -5,7 +5,8 @@ import {
   PiBellSimpleRingingDuotone,
   PiUserDuotone,
   PiEnvelopeSimpleOpenDuotone,
-  PiFolders,
+  PiFoldersDuotone,
+  PiHeadsetDuotone,
 } from 'react-icons/pi';
 import { routes } from '@/config/routes';
 
@@ -19,11 +20,22 @@ export const menuItems = [
   {
     name: 'sidebar-menu-file-manager',
     href: '/',
-    icon: PiFolders,
+    icon: PiFoldersDuotone,
     shortcut: {
       modifiers: 'alt',
       key: '1',
     },
+  },
+
+  // label start
+  {
+    name: 'sidebar-menu-admin',
+  },
+  // label end
+  {
+    name: 'sidebar-menu-support-agents',
+    href: routes.support.agents,
+    icon: PiHeadsetDuotone,
   },
 
   // label start

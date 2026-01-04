@@ -35,11 +35,11 @@
     "auth-facebook": "فيسبوك",
     "auth-gitHub": "جيثب",
     "auth-linkedIn": "ينكدين",
-    "auth-welcome-back": "مرحبًا بعودتك!",
+    "auth-welcome-back": "مرحباً بعودتك!",
     "auth-continue": "يكمل.",
     "auth-stay-signed-in-and-get-benefits": "ابق مسجلا واحصل على مزايا خاصة.",
-    "auth-sign-in-with-your-credentials": "قم بتسجيل الدخول باستخدام بيانات الاعتماد الخاصة بك.",
-    "auth-secure-your-account-with-few-clicks": "مرحبًا بعودتك! ",
+    "auth-sign-in-with-your-credentials": "قم بتسجيل الدخول باستخدام بيانات اعتمادك.",
+    "auth-secure-your-account-with-few-clicks": "مرحبًا بعودتك! قم بتأمين حسابك ببضع نقرات فقط",
     "auth-reset": "إعادة ضبط",
     "auth-reset-your": "إعادة تعيين الخاص بك",
     "auth-reset-your-password": "اعد ضبط كلمه السر",
@@ -56,7 +56,8 @@
     "auth-otp-has-sent-to": "تم إرسال كلمة المرور لمرة واحدة إلى *********12",
     "auth-validation": "تصديق",
     "auth-one-time-password": "لقد أرسلنا لك كلمة مرور لمرة واحدة إلى بريدك الإلكتروني.",
-    "auth-one-time-password-to-your-email": "لقد أرسلنا لك كلمة مرور لمرة واحدة إلى بريدك الإلكتروني. "
+    "auth-one-time-password-to-your-email": "لقد أرسلنا لك كلمة مرور لمرة واحدة إلى بريدك الإلكتروني. ",
+    "auth-sign-in-exclamation": "تسجيل الدخول!"
   },
   "common": {
     "Support Agents": "وكلاء الدعم",

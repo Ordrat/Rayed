@@ -42,7 +42,8 @@ export default function SearchList({ onClose }: { onClose?: () => void }) {
           onChange={(e) => setSearchText(() => e.target.value)}
           placeholder="Search pages here"
           className="flex-1"
-          prefix={<PiMagnifyingGlassBold className="h-[18px] w-[18px] text-gray-600" />}
+          prefix={<PiMagnifyingGlassBold className="h-[18px] w-[18px] text-[#1f502a]" />}
+          inputClassName="!border-[#1f502a] hover:!border-[#1f502a] focus:!border-[#1f502a] focus:!ring-[#1f502a]"
           suffix={
             searchText && (
               <Button

@@ -13,13 +13,14 @@ export enum SupportDepartment {
 }
 
 /**
- * Support status enum
+ * Support status enum - matches backend SupportStatus
  */
 export enum SupportStatus {
   OFFLINE = 0,
   ONLINE = 1,
   BUSY = 2,
-  AWAY = 3,
+  ON_BREAK = 3,
+  AWAY = 4,
 }
 
 /**
@@ -108,6 +109,7 @@ export function getStatusLabel(status: SupportStatus): string {
     [SupportStatus.OFFLINE]: 'Offline',
     [SupportStatus.ONLINE]: 'Online',
     [SupportStatus.BUSY]: 'Busy',
+    [SupportStatus.ON_BREAK]: 'On Break',
     [SupportStatus.AWAY]: 'Away',
   };
   return labels[status] || 'Unknown';

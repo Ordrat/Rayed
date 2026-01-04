@@ -28,21 +28,6 @@ const localeOptions = [
     value: "ar",
     icon: SAFlagIcon,
   },
-  {
-    label: "中国人 - ZH",
-    value: "zh",
-    icon: CNFlagIcon,
-  },
-  {
-    label: "Deutsch - DE",
-    value: "de",
-    icon: DEFlagIcon,
-  },
-  {
-    label: "Español - ES",
-    value: "es",
-    icon: ESFlagIcon,
-  },
 ];
 
 export default function LanguageSwitcher({

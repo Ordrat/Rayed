@@ -8,6 +8,8 @@ import { Password, Button, Text, Title } from "rizzui";
 import { Form } from "@core/ui/form";
 import { routes } from "@/config/routes";
 import { changePassword } from "@/services/auth.service";
+import { changeSupportStatus } from "@/services/support.service";
+import { SupportStatus } from "@/types/support.types";
 import { useRouter } from "@/i18n/routing";
 import toast from "react-hot-toast";
 import { z } from "zod";
@@ -63,29 +65,37 @@ export default function SetPasswordForm() {
         },
       });
 
+      // Mark that the user has changed their password in localStorage
+      const userId = session?.user?.id;
+      if (userId && typeof window !== 'undefined') {
+        const passwordChangedKey = `support_password_changed_${userId}`;
+        localStorage.setItem(passwordChangedKey, 'true');
+        console.log("Saved password changed flag for user:", userId);
+      }
+
+      // Now set the user's status to Online (after password change)
+      if (session?.accessToken && userId) {
+        try {
+          await changeSupportStatus(
+            {
+              supportId: userId,
+              status: SupportStatus.ONLINE,
+            },
+            session.accessToken
+          );
+          console.log("User status updated to Online");
+        } catch (error) {
+          console.error("Failed to update status to Online:", error);
+          // Don't block the flow if status update fails
+        }
+      }
+
       setIsSuccess(true);
       toast.success("Password changed successfully!");
 
       // Redirect to dashboard after a brief delay
       setTimeout(() => {
-        const userRoles = session?.user?.roles || [];
-        const isSupportRole = userRoles.some(
-          (role) =>
-            role.toLowerCase() === "support" ||
-            role.toLowerCase() === "supportagent"
-        );
-        const isAdminRole = userRoles.some(
-          (role) =>
-            role.toLowerCase() === "admin" ||
-            role.toLowerCase() === "administrator" ||
-            role.toLowerCase() === "owner"
-        );
-
-        if (isSupportRole && !isAdminRole) {
-          router.push(routes.supportDashboard.home);
-        } else {
-          router.push("/");
-        }
+        router.push("/");
       }, 1500);
     } catch (error: any) {
       toast.error(error.message || "Failed to change password");

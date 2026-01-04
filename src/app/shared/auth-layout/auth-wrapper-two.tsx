@@ -3,7 +3,7 @@
 import { Link } from "@/i18n/routing";
 import Image from "next/image";
 import { Avatar, Title, Text, Button } from "rizzui";
-import logoImg from "@public/logo-short.svg";
+import logoImg from "@public/logo/rayed.png";
 import starImg from "@public/auth/star.svg";
 import { usePathname } from "next/navigation";
 import { routes } from "@/config/routes";
@@ -51,10 +51,7 @@ export default function AuthWrapperTwo({
                 as="h2"
                 className="mb-6 text-center text-[26px] font-bold leading-snug md:!leading-normal xl:mb-8 xl:text-start xl:text-3xl xl:text-[28px] 2xl:-mt-1 2xl:text-4xl"
               >
-                {
-                  // @ts-ignore
-                  t(title)
-                }
+                {title}
               </Title>
               {isSocialLoginActive && (
                 <>
@@ -140,27 +137,8 @@ function AuthNavBar() {
 }
 
 function SocialAuth() {
-  const t = useTranslations("auth");
-
-  return (
-    <div className="grid grid-cols-1 gap-4 pb-7 md:grid-cols-2 xl:gap-5 xl:pb-8">
-      <Button
-        className="h-11 w-full"
-        rounded="pill"
-      >
-        <PiAppleLogo className="me-2 h-4 w-4 shrink-0" />
-        <span className="truncate">{t("auth-sign-in-with-apple")}</span>
-      </Button>
-      <Button
-        variant="outline"
-        className="h-11 w-full"
-        rounded="pill"
-      >
-        <FcGoogle className="me-2 h-4 w-4 shrink-0" />
-        <span className="truncate">{t("auth-sign-in-with-google")}</span>
-      </Button>
-    </div>
-  );
+  // Social login buttons removed as per requirements
+  return null;
 }
 
 function IntroBannerBlock() {

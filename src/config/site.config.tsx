@@ -1,7 +1,7 @@
 import { Metadata } from 'next';
 import logoImg from '@public/logo/rayed.png';
 import { LAYOUT_OPTIONS } from '@/config/enums';
-import logoIconImg from '@public/logo-short.svg';
+import logoIconImg from '@public/logo/R.png';
 import { OpenGraph } from 'next/dist/lib/metadata/types/opengraph-types';
 
 enum MODE {
@@ -15,7 +15,7 @@ export const siteConfig = {
   logo: logoImg,
   icon: logoIconImg,
   mode: MODE.LIGHT,
-  layout: LAYOUT_OPTIONS.HYDROGEN,
+  layout: LAYOUT_OPTIONS.BORON,
   // TODO: favicon
 };
 
@@ -25,13 +25,13 @@ export const metaObject = (
   description: string = siteConfig.description
 ): Metadata => {
   return {
-    title: title ? `${title} - Isomorphic Furyroad` : siteConfig.title,
+    title: title ? `${title} - Rayed` : siteConfig.title,
     description,
     openGraph: openGraph ?? {
-      title: title ? `${title} - Isomorphic Furyroad` : title,
+      title: title ? `${title} - Rayed` : title,
       description,
-      url: 'https://isomorphic-furyroad.vercel.app',
-      siteName: 'Isomorphic Furyroad', // https://developers.google.com/search/docs/appearance/site-names
+      url: 'https://rayed.com',
+      siteName: 'Rayed', // https://developers.google.com/search/docs/appearance/site-names
       images: {
         url: 'https://s3.amazonaws.com/redqteam.com/isomorphic-furyroad/itemdep/isobanner.png',
         width: 1200,
