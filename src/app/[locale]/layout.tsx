@@ -4,7 +4,7 @@ import GlobalDrawer from "@/app/shared/drawer-views/container";
 import GlobalModal from "@/app/shared/modal-views/container";
 import { JotaiProvider, ThemeProvider } from "@/app/shared/theme-provider";
 import { siteConfig } from "@/config/site.config";
-import { inter, lexendDeca, cairo } from "@/app/fonts";
+import { inter, lexendDeca, tajawal, vazirmatn } from "@/app/fonts";
 import cn from "@core/utils/class-names";
 import "./globals.css";
 import { NextIntlClientProvider } from "next-intl";
@@ -34,9 +34,9 @@ export default async function RootLayout({
   const session = await getServerSession(auth);
   const messages = await getMessages();
   
-  // Use Cairo font for Arabic, Inter for other languages
+  // Use Vazirmatn font for Arabic, Inter for other languages
   const isArabic = locale === 'ar';
-  const fontClass = isArabic ? 'font-cairo' : 'font-inter';
+  const fontClass = isArabic ? 'font-vazirmatn' : 'font-inter';
 
   return (
     <html
@@ -49,7 +49,8 @@ export default async function RootLayout({
         className={cn(
           inter.variable, 
           lexendDeca.variable, 
-          cairo.variable,
+          tajawal.variable,
+          vazirmatn.variable,
           fontClass
         )}
       >

@@ -57,19 +57,26 @@ export default function SignInForm() {
       setHasProcessedLogin(true);
 
       // Update status to Online if applicable
-      if (session?.accessToken) {
-        try {
-          await changeSupportStatus(
-            {
-              supportId: userId,
-              status: SupportStatus.ONLINE,
-            },
-            session.accessToken
-          );
-          console.log("User status updated to Online");
-        } catch (error) {
-          console.error("Failed to update status:", error);
-          // Don't block login if status update fails
+      if (session?.accessToken && session?.user?.id) {
+        const userRoles = session?.user?.roles || [];
+        const isSupportRole = userRoles.some(
+          (role) => role.toLowerCase() === 'support' || role.toLowerCase() === 'supportagent'
+        );
+
+        if (isSupportRole) {
+          try {
+            await changeSupportStatus(
+              {
+                supportId: userId,
+                status: SupportStatus.ONLINE,
+              },
+              session.accessToken
+            );
+            console.log("User status updated to Online");
+          } catch (error) {
+            console.error("Failed to update status:", error);
+            // Don't block login if status update fails
+          }
         }
       }
 
@@ -158,7 +165,7 @@ export default function SignInForm() {
               rounded="pill"
               isLoading={isLoading}
             >
-              <span>{t("form-sign-in")}</span> <PiArrowRightBold className="ms-2 mt-0.5 h-6 w-6" />
+              <span>{t("form-sign-in")}</span> <PiArrowRightBold className="ms-2 mt-0.5 h-6 w-6 rtl:rotate-180" />
             </Button>
           </div>
         )}
@@ -166,7 +173,7 @@ export default function SignInForm() {
       <Text className="mt-6 text-center leading-loose text-gray-500 lg:mt-8 lg:text-start">
         {t("form-dont-have-an-account")}{" "}
         <Link
-          href={routes.auth.signUp1}
+          href={routes.auth.signUp}
           className="font-semibold text-gray-700 transition-colors hover:text-blue"
         >
           {t("form-sign-up")}

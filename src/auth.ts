@@ -54,8 +54,8 @@ const auth: AuthOptions = {
     maxAge: 30 * 24 * 60 * 60, // 30 days
   },
   pages: {
-    signIn: "/auth/sign-in-1",
-    error: "/auth/sign-in-1",
+    signIn: "/auth/sign-in",
+    error: "/auth/sign-in",
   },
   callbacks: {
     async jwt({ token, user, trigger, session }) {

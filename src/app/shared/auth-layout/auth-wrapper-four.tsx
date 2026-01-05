@@ -56,41 +56,49 @@ export default function AuthWrapperFour({
   const t = useTranslations("auth");
 
   return (
-    <div className="flex min-h-screen w-full flex-col justify-between">
-      <AuthHeader />
+    <div className="relative flex min-h-screen w-full flex-col justify-between">
+      <Image
+        src="/auth/sign_in_wave.png"
+        alt="Sign In Wave"
+        fill
+        className="z-0 object-cover"
+        priority
+      />
+      <div className="relative z-10 flex min-h-screen flex-col justify-between">
+        <AuthHeader />
 
-      <div className="flex w-full flex-col justify-center px-5">
-        <div
-          className={cn(
-            "mx-auto w-full max-w-md py-12 md:max-w-lg lg:max-w-xl 2xl:pb-8 2xl:pt-2",
-            className
-          )}
-        >
-          <div className="flex flex-col items-center">
-            <Link
-              href={"/"}
-              className="mb-7 inline-block max-w-[280px] lg:mb-9"
-            >
-              <Image
-                src={siteConfig.logo}
-                alt={siteConfig.title}
-              />
-            </Link>
-            <Title
-              as="h2"
-              className="mb-7 text-center text-[28px] font-bold leading-snug md:text-3xl md:!leading-normal lg:mb-10 lg:text-4xl"
-            >
-              {title}
-            </Title>
+        <div className="flex w-full flex-col justify-center px-5">
+          <div
+            className={cn(
+              "mx-auto w-full max-w-md py-12 md:max-w-lg lg:max-w-xl 2xl:pb-8 2xl:pt-2",
+              className
+            )}
+          >
+            <div className="flex flex-col items-center">
+              <Link
+                href={"/"}
+                className="mb-7 inline-block max-w-[280px] lg:mb-9"
+              >
+                <Image src={siteConfig.logo} alt={siteConfig.title} />
+              </Link>
+              <Title
+                as="h2"
+                className="mb-7 text-center text-[28px] font-bold leading-snug md:text-3xl md:!leading-normal lg:mb-10 lg:text-4xl"
+              >
+                {title}
+              </Title>
+            </div>
+            {children}
           </div>
-          {children}
         </div>
-      </div>
 
-      <AuthFooter />
+        <AuthFooter />
+      </div>
     </div>
   );
 }
+
+import LanguageSwitcher from "@/layouts/language-switcher";
 
 function AuthHeader() {
   const t = useTranslations("auth");
@@ -105,11 +113,12 @@ function AuthHeader() {
         />
       </Link>
       <div className="flex items-center space-x-2 md:space-x-4">
-        <AuthNavLink href={routes.auth.signIn4}>
-          <PiArrowLineRight className="h-4 w-4" />
+        <LanguageSwitcher />
+        <AuthNavLink href={routes.auth.signIn}>
+          <PiArrowLineRight className="h-4 w-4 rtl:rotate-180" />
           <span>{t("auth-login")}</span>
         </AuthNavLink>
-        <AuthNavLink href={routes.auth.signUp4}>
+        <AuthNavLink href={routes.auth.signUp}>
           <PiUserCirclePlus className="h-4 w-4" />
           <span>{t("auth-sign-up")}</span>
         </AuthNavLink>
@@ -120,15 +129,7 @@ function AuthHeader() {
 
 const footerMenu = [
   {
-    name: "auth-menu-help",
-    href: "/",
-  },
-  {
-    name: "auth-menu-privacy",
-    href: "/",
-  },
-  {
-    name: "auth-menu-terms",
+    name: "home",
     href: "/",
   },
 ];
@@ -141,7 +142,7 @@ function AuthFooter() {
       <div className="text-center leading-relaxed text-gray-500 lg:text-start">
         {t("auth-copyright")}{" "}
         <Link
-          href="https://redq.io/"
+          href="https://rayed.com/"
           className="font-medium transition-colors hover:text-primary"
         >
           {t("auth-redq")}

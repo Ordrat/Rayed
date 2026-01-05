@@ -127,6 +127,10 @@ export const routes = {
   maintenance: "/maintenance",
   blank: "/blank",
   auth: {
+    // Main auth routes
+    signUp: "/auth/sign-up",
+    signIn: "/auth/sign-in",
+    // Variant auth routes
     signUp1: "/auth/sign-up-1",
     signUp2: "/auth/sign-up-2",
     signUp3: "/auth/sign-up-3",

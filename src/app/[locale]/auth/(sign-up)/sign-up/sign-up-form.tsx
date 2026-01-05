@@ -43,8 +43,8 @@ export default function SignUpForm() {
             <Input
               type="text"
               size="lg"
-              label="First Name"
-              placeholder="Enter your first name"
+              label={t("form-first-name")}
+              placeholder={t("form-first-name-placeholder")}
               className="[&>label>span]:font-medium"
               inputClassName="text-sm"
               {...register("firstName")}
@@ -53,8 +53,8 @@ export default function SignUpForm() {
             <Input
               type="text"
               size="lg"
-              label="Last Name"
-              placeholder="Enter your last name"
+              label={t("form-last-name")}
+              placeholder={t("form-last-name-placeholder")}
               className="[&>label>span]:font-medium"
               inputClassName="text-sm"
               {...register("lastName")}
@@ -63,16 +63,16 @@ export default function SignUpForm() {
             <Input
               type="email"
               size="lg"
-              label="Email"
+              label={t("form-email")}
               className="col-span-2 [&>label>span]:font-medium"
               inputClassName="text-sm"
-              placeholder="Enter your email"
+              placeholder={t("form-email-placeholder")}
               {...register("email")}
               error={errors.email?.message}
             />
             <Password
-              label="Password"
-              placeholder="Enter your password"
+              label={t("form-password")}
+              placeholder={t("form-password-placeholder")}
               size="lg"
               className="[&>label>span]:font-medium"
               inputClassName="text-sm"
@@ -80,8 +80,8 @@ export default function SignUpForm() {
               error={errors.password?.message}
             />
             <Password
-              label="Confirm Password"
-              placeholder="Enter confirm password"
+              label={t("form-confirm-password")}
+              placeholder={t("form-confirm-password-placeholder")}
               size="lg"
               className="[&>label>span]:font-medium"
               inputClassName="text-sm"
@@ -117,7 +117,7 @@ export default function SignUpForm() {
               type="submit"
               className="col-span-2 mt-2"
             >
-              <span>Get Started</span> <PiArrowRightBold className="ms-2 mt-0.5 h-5 w-5" />
+              <span>{t("form-get-started")}</span> <PiArrowRightBold className="ms-2 mt-0.5 h-5 w-5 rtl:rotate-180" />
             </Button>
           </div>
         )}
@@ -125,10 +125,10 @@ export default function SignUpForm() {
       <Text className="mt-6 text-center leading-loose text-gray-500 lg:mt-8 lg:text-start">
         {t("form-already-have-an-account")}{" "}
         <Link
-          href={routes.auth.signIn1}
+          href={routes.auth.signIn}
           className="font-semibold text-gray-700 transition-colors hover:text-blue"
         >
-          Sign In
+          {t("form-sign-in")}
         </Link>
       </Text>
     </>

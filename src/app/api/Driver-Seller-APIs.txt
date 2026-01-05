@@ -1,0 +1,1645 @@
+Driver
+
+
+POST
+/api/Driver/RegisterDriver
+
+Parameters
+Try it out
+Name	Description
+X-Api-Version
+string
+(header)
+X-Api-Version
+Accept-Language
+string
+(header)
+Language of the request
+
+Accept-Language
+api-version
+string
+(query)
+api-version
+Request body
+
+application/json
+Example Value
+Schema
+{
+  "firstName": "string",
+  "lastName": "string",
+  "phoneNumber": "string",
+  "email": "string",
+  "password": "string",
+  "vehicleType": 0
+}
+Responses
+Code	Description	Links
+201	
+Created
+
+Media type
+
+text/plain
+Controls Accept header.
+Example Value
+Schema
+{
+  "id": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
+  "firstName": "string",
+  "lastName": "string",
+  "email": "string",
+  "phoneNumber": "string",
+  "vehicleType": 0,
+  "deliveryAccountStatus": 0,
+  "deliveryAvailabilityStatus": 0,
+  "currentLatitude": 0,
+  "currentLongitude": 0,
+  "lastLocationUpdateAt": "2026-01-05T13:11:51.981Z",
+  "totalDeliveries": 0,
+  "totalEarnings": 0,
+  "averageRating": 0,
+  "verifiedAt": "2026-01-05T13:11:51.981Z",
+  "createdAt": "2026-01-05T13:11:51.981Z"
+}
+No links
+400	
+Bad Request
+
+Media type
+
+text/plain
+Example Value
+Schema
+{
+  "type": "string",
+  "title": "string",
+  "status": 0,
+  "detail": "string",
+  "instance": "string",
+  "additionalProp1": "string",
+  "additionalProp2": "string",
+  "additionalProp3": "string"
+}
+No links
+
+PUT
+/api/Driver/UpdateDriver
+
+Parameters
+Try it out
+Name	Description
+X-Api-Version
+string
+(header)
+X-Api-Version
+Accept-Language
+string
+(header)
+Language of the request
+
+Accept-Language
+api-version
+string
+(query)
+api-version
+Request body
+
+application/json
+Example Value
+Schema
+{
+  "driverId": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
+  "firstName": "string",
+  "lastName": "string",
+  "phoneNumber": "string",
+  "email": "string",
+  "vehicleType": 0
+}
+Responses
+Code	Description	Links
+200	
+Success
+
+Media type
+
+text/plain
+Controls Accept header.
+Example Value
+Schema
+{
+  "id": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
+  "firstName": "string",
+  "lastName": "string",
+  "email": "string",
+  "phoneNumber": "string",
+  "vehicleType": 0,
+  "deliveryAccountStatus": 0,
+  "deliveryAvailabilityStatus": 0,
+  "currentLatitude": 0,
+  "currentLongitude": 0,
+  "lastLocationUpdateAt": "2026-01-05T13:11:51.987Z",
+  "totalDeliveries": 0,
+  "totalEarnings": 0,
+  "averageRating": 0,
+  "verifiedAt": "2026-01-05T13:11:51.987Z",
+  "createdAt": "2026-01-05T13:11:51.987Z"
+}
+No links
+400	
+Bad Request
+
+Media type
+
+text/plain
+Example Value
+Schema
+{
+  "type": "string",
+  "title": "string",
+  "status": 0,
+  "detail": "string",
+  "instance": "string",
+  "additionalProp1": "string",
+  "additionalProp2": "string",
+  "additionalProp3": "string"
+}
+No links
+404	
+Not Found
+
+Media type
+
+text/plain
+Example Value
+Schema
+{
+  "type": "string",
+  "title": "string",
+  "status": 0,
+  "detail": "string",
+  "instance": "string",
+  "additionalProp1": "string",
+  "additionalProp2": "string",
+  "additionalProp3": "string"
+}
+No links
+
+GET
+/api/Driver/GetAll
+
+Parameters
+Try it out
+Name	Description
+X-Api-Version
+string
+(header)
+X-Api-Version
+Accept-Language
+string
+(header)
+Language of the request
+
+Accept-Language
+api-version
+string
+(query)
+api-version
+Responses
+Code	Description	Links
+200	
+Success
+
+Media type
+
+text/plain
+Controls Accept header.
+Example Value
+Schema
+[
+  {
+    "id": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
+    "firstName": "string",
+    "lastName": "string",
+    "email": "string",
+    "phoneNumber": "string",
+    "vehicleType": 0,
+    "deliveryAccountStatus": 0,
+    "deliveryAvailabilityStatus": 0,
+    "currentLatitude": 0,
+    "currentLongitude": 0,
+    "lastLocationUpdateAt": "2026-01-05T13:11:51.991Z",
+    "totalDeliveries": 0,
+    "totalEarnings": 0,
+    "averageRating": 0,
+    "verifiedAt": "2026-01-05T13:11:51.991Z",
+    "createdAt": "2026-01-05T13:11:51.991Z"
+  }
+]
+No links
+
+GET
+/api/Driver/GetById/{id}
+
+Parameters
+Try it out
+Name	Description
+id *
+string($uuid)
+(path)
+id
+X-Api-Version
+string
+(header)
+X-Api-Version
+Accept-Language
+string
+(header)
+Language of the request
+
+Accept-Language
+api-version
+string
+(query)
+api-version
+Responses
+Code	Description	Links
+200	
+Success
+
+Media type
+
+text/plain
+Controls Accept header.
+Example Value
+Schema
+{
+  "id": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
+  "firstName": "string",
+  "lastName": "string",
+  "email": "string",
+  "phoneNumber": "string",
+  "vehicleType": 0,
+  "deliveryAccountStatus": 0,
+  "deliveryAvailabilityStatus": 0,
+  "currentLatitude": 0,
+  "currentLongitude": 0,
+  "lastLocationUpdateAt": "2026-01-05T13:11:51.994Z",
+  "totalDeliveries": 0,
+  "totalEarnings": 0,
+  "averageRating": 0,
+  "verifiedAt": "2026-01-05T13:11:51.994Z",
+  "createdAt": "2026-01-05T13:11:51.994Z"
+}
+No links
+404	
+Not Found
+
+Media type
+
+text/plain
+Example Value
+Schema
+{
+  "type": "string",
+  "title": "string",
+  "status": 0,
+  "detail": "string",
+  "instance": "string",
+  "additionalProp1": "string",
+  "additionalProp2": "string",
+  "additionalProp3": "string"
+}
+No links
+
+POST
+/api/Driver/ChangeAccountStatus/change-status
+
+Parameters
+Try it out
+Name	Description
+X-Api-Version
+string
+(header)
+X-Api-Version
+Accept-Language
+string
+(header)
+Language of the request
+
+Accept-Language
+api-version
+string
+(query)
+api-version
+Request body
+
+application/json
+Example Value
+Schema
+{
+  "driverId": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
+  "deliveryAccountStatus": 0
+}
+Responses
+Code	Description	Links
+200	
+Success
+
+No links
+400	
+Bad Request
+
+Media type
+
+text/plain
+Example Value
+Schema
+{
+  "type": "string",
+  "title": "string",
+  "status": 0,
+  "detail": "string",
+  "instance": "string",
+  "additionalProp1": "string",
+  "additionalProp2": "string",
+  "additionalProp3": "string"
+}
+No links
+404	
+Not Found
+
+Media type
+
+text/plain
+Example Value
+Schema
+{
+  "type": "string",
+  "title": "string",
+  "status": 0,
+  "detail": "string",
+  "instance": "string",
+  "additionalProp1": "string",
+  "additionalProp2": "string",
+  "additionalProp3": "string"
+}
+No links
+
+
+
+DriverDocument
+
+
+POST
+/api/DriverDocument/CreateDocument
+
+Parameters
+Try it out
+Name	Description
+X-Api-Version
+string
+(header)
+X-Api-Version
+Accept-Language
+string
+(header)
+Language of the request
+
+Accept-Language
+api-version
+string
+(query)
+api-version
+Request body
+
+multipart/form-data
+DriverId
+string($uuid)
+DocumentType
+integer($int32)
+Document
+string($binary)
+ExpiresAt
+string($date-time)
+Responses
+Code	Description	Links
+201	
+Created
+
+Media type
+
+text/plain
+Controls Accept header.
+Example Value
+Schema
+{
+  "id": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
+  "driverId": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
+  "documentType": 0,
+  "documentUrl": "string",
+  "verificationStatus": 0,
+  "rejectionReason": "string",
+  "expiresAt": "2026-01-05T13:11:52.002Z",
+  "verifiedAt": "2026-01-05T13:11:52.002Z",
+  "verifiedBy": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
+  "isActive": true,
+  "createdAt": "2026-01-05T13:11:52.002Z",
+  "updatedAt": "2026-01-05T13:11:52.002Z"
+}
+No links
+400	
+Bad Request
+
+Media type
+
+text/plain
+Example Value
+Schema
+{
+  "type": "string",
+  "title": "string",
+  "status": 0,
+  "detail": "string",
+  "instance": "string",
+  "additionalProp1": "string",
+  "additionalProp2": "string",
+  "additionalProp3": "string"
+}
+No links
+404	
+Not Found
+
+Media type
+
+text/plain
+Example Value
+Schema
+{
+  "type": "string",
+  "title": "string",
+  "status": 0,
+  "detail": "string",
+  "instance": "string",
+  "additionalProp1": "string",
+  "additionalProp2": "string",
+  "additionalProp3": "string"
+}
+No links
+
+PUT
+/api/DriverDocument/UpdateDocument
+
+Parameters
+Try it out
+Name	Description
+X-Api-Version
+string
+(header)
+X-Api-Version
+Accept-Language
+string
+(header)
+Language of the request
+
+Accept-Language
+api-version
+string
+(query)
+api-version
+Request body
+
+multipart/form-data
+Id
+string($uuid)
+Document
+string($binary)
+ExpiresAt
+string($date-time)
+Responses
+Code	Description	Links
+200	
+Success
+
+Media type
+
+text/plain
+Controls Accept header.
+Example Value
+Schema
+{
+  "id": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
+  "driverId": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
+  "documentType": 0,
+  "documentUrl": "string",
+  "verificationStatus": 0,
+  "rejectionReason": "string",
+  "expiresAt": "2026-01-05T13:11:52.011Z",
+  "verifiedAt": "2026-01-05T13:11:52.011Z",
+  "verifiedBy": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
+  "isActive": true,
+  "createdAt": "2026-01-05T13:11:52.011Z",
+  "updatedAt": "2026-01-05T13:11:52.011Z"
+}
+No links
+400	
+Bad Request
+
+Media type
+
+text/plain
+Example Value
+Schema
+{
+  "type": "string",
+  "title": "string",
+  "status": 0,
+  "detail": "string",
+  "instance": "string",
+  "additionalProp1": "string",
+  "additionalProp2": "string",
+  "additionalProp3": "string"
+}
+No links
+404	
+Not Found
+
+Media type
+
+text/plain
+Example Value
+Schema
+{
+  "type": "string",
+  "title": "string",
+  "status": 0,
+  "detail": "string",
+  "instance": "string",
+  "additionalProp1": "string",
+  "additionalProp2": "string",
+  "additionalProp3": "string"
+}
+No links
+
+GET
+/api/DriverDocument/GetByDriverId/driver/{driverId}
+
+Parameters
+Try it out
+Name	Description
+driverId *
+string($uuid)
+(path)
+driverId
+X-Api-Version
+string
+(header)
+X-Api-Version
+Accept-Language
+string
+(header)
+Language of the request
+
+Accept-Language
+api-version
+string
+(query)
+api-version
+Responses
+Code	Description	Links
+200	
+Success
+
+Media type
+
+text/plain
+Controls Accept header.
+Example Value
+Schema
+[
+  {
+    "id": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
+    "driverId": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
+    "documentType": 0,
+    "documentUrl": "string",
+    "verificationStatus": 0,
+    "rejectionReason": "string",
+    "expiresAt": "2026-01-05T13:11:52.015Z",
+    "verifiedAt": "2026-01-05T13:11:52.015Z",
+    "verifiedBy": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
+    "isActive": true,
+    "createdAt": "2026-01-05T13:11:52.015Z",
+    "updatedAt": "2026-01-05T13:11:52.015Z"
+  }
+]
+No links
+
+GET
+/api/DriverDocument/GetById/{id}
+
+Parameters
+Try it out
+Name	Description
+id *
+string($uuid)
+(path)
+id
+X-Api-Version
+string
+(header)
+X-Api-Version
+Accept-Language
+string
+(header)
+Language of the request
+
+Accept-Language
+api-version
+string
+(query)
+api-version
+Responses
+Code	Description	Links
+200	
+Success
+
+Media type
+
+text/plain
+Controls Accept header.
+Example Value
+Schema
+{
+  "id": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
+  "driverId": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
+  "documentType": 0,
+  "documentUrl": "string",
+  "verificationStatus": 0,
+  "rejectionReason": "string",
+  "expiresAt": "2026-01-05T13:11:52.019Z",
+  "verifiedAt": "2026-01-05T13:11:52.019Z",
+  "verifiedBy": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
+  "isActive": true,
+  "createdAt": "2026-01-05T13:11:52.019Z",
+  "updatedAt": "2026-01-05T13:11:52.019Z"
+}
+No links
+404	
+Not Found
+
+Media type
+
+text/plain
+Example Value
+Schema
+{
+  "type": "string",
+  "title": "string",
+  "status": 0,
+  "detail": "string",
+  "instance": "string",
+  "additionalProp1": "string",
+  "additionalProp2": "string",
+  "additionalProp3": "string"
+}
+No links
+
+POST
+/api/DriverDocument/ChangeStatus/change-status
+
+Parameters
+Try it out
+Name	Description
+X-Api-Version
+string
+(header)
+X-Api-Version
+Accept-Language
+string
+(header)
+Language of the request
+
+Accept-Language
+api-version
+string
+(query)
+api-version
+Request body
+
+application/json
+Example Value
+Schema
+{
+  "documentId": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
+  "verificationStatus": 0,
+  "rejectionReason": "string"
+}
+Responses
+Code	Description	Links
+200	
+Success
+
+No links
+400	
+Bad Request
+
+Media type
+
+text/plain
+Example Value
+Schema
+{
+  "type": "string",
+  "title": "string",
+  "status": 0,
+  "detail": "string",
+  "instance": "string",
+  "additionalProp1": "string",
+  "additionalProp2": "string",
+  "additionalProp3": "string"
+}
+No links
+404	
+Not Found
+
+Media type
+
+text/plain
+Example Value
+Schema
+{
+  "type": "string",
+  "title": "string",
+  "status": 0,
+  "detail": "string",
+  "instance": "string",
+  "additionalProp1": "string",
+  "additionalProp2": "string",
+  "additionalProp3": "string"
+}
+No links
+
+DELETE
+/api/DriverDocument/DeleteDocument/{id}
+
+Parameters
+Try it out
+Name	Description
+id *
+string($uuid)
+(path)
+id
+X-Api-Version
+string
+(header)
+X-Api-Version
+Accept-Language
+string
+(header)
+Language of the request
+
+Accept-Language
+api-version
+string
+(query)
+api-version
+Responses
+Code	Description	Links
+200	
+Success
+
+No links
+404	
+Not Found
+
+Media type
+
+text/plain
+Example Value
+Schema
+{
+  "type": "string",
+  "title": "string",
+  "status": 0,
+  "detail": "string",
+  "instance": "string",
+  "additionalProp1": "string",
+  "additionalProp2": "string",
+  "additionalProp3": "string"
+}
+No links
+
+
+Seller
+
+
+POST
+/api/Seller/RegisterSeller
+
+Parameters
+Try it out
+Name	Description
+X-Api-Version
+string
+(header)
+X-Api-Version
+Accept-Language
+string
+(header)
+Language of the request
+
+Accept-Language
+api-version
+string
+(query)
+api-version
+Request body
+
+application/json
+Example Value
+Schema
+{
+  "firstName": "string",
+  "lastName": "string",
+  "phoneNumber": "string",
+  "email": "string",
+  "password": "string",
+  "bankAccountNumber": "string",
+  "bankName": "string"
+}
+Responses
+Code	Description	Links
+201	
+Created
+
+Media type
+
+text/plain
+Controls Accept header.
+Example Value
+Schema
+{
+  "id": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
+  "firstName": "string",
+  "lastName": "string",
+  "email": "string",
+  "phoneNumber": "string",
+  "accountStatus": 0,
+  "totalEarnings": 0,
+  "commissionRate": 0,
+  "bankAccountNumber": "string",
+  "bankName": "string",
+  "verifiedAt": "2026-01-05T13:15:56.536Z",
+  "createdAt": "2026-01-05T13:15:56.536Z"
+}
+No links
+400	
+Bad Request
+
+Media type
+
+text/plain
+Example Value
+Schema
+{
+  "type": "string",
+  "title": "string",
+  "status": 0,
+  "detail": "string",
+  "instance": "string",
+  "additionalProp1": "string",
+  "additionalProp2": "string",
+  "additionalProp3": "string"
+}
+No links
+
+PUT
+/api/Seller/UpdateSeller
+
+Parameters
+Try it out
+Name	Description
+X-Api-Version
+string
+(header)
+X-Api-Version
+Accept-Language
+string
+(header)
+Language of the request
+
+Accept-Language
+api-version
+string
+(query)
+api-version
+Request body
+
+application/json
+Example Value
+Schema
+{
+  "sellerId": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
+  "firstName": "string",
+  "lastName": "string",
+  "phoneNumber": "string",
+  "email": "string",
+  "bankAccountNumber": "string",
+  "bankName": "string"
+}
+Responses
+Code	Description	Links
+200	
+Success
+
+Media type
+
+text/plain
+Controls Accept header.
+Example Value
+Schema
+{
+  "id": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
+  "firstName": "string",
+  "lastName": "string",
+  "email": "string",
+  "phoneNumber": "string",
+  "accountStatus": 0,
+  "totalEarnings": 0,
+  "commissionRate": 0,
+  "bankAccountNumber": "string",
+  "bankName": "string",
+  "verifiedAt": "2026-01-05T13:15:56.542Z",
+  "createdAt": "2026-01-05T13:15:56.542Z"
+}
+No links
+400	
+Bad Request
+
+Media type
+
+text/plain
+Example Value
+Schema
+{
+  "type": "string",
+  "title": "string",
+  "status": 0,
+  "detail": "string",
+  "instance": "string",
+  "additionalProp1": "string",
+  "additionalProp2": "string",
+  "additionalProp3": "string"
+}
+No links
+404	
+Not Found
+
+Media type
+
+text/plain
+Example Value
+Schema
+{
+  "type": "string",
+  "title": "string",
+  "status": 0,
+  "detail": "string",
+  "instance": "string",
+  "additionalProp1": "string",
+  "additionalProp2": "string",
+  "additionalProp3": "string"
+}
+No links
+
+GET
+/api/Seller/GetAll
+
+Parameters
+Try it out
+Name	Description
+X-Api-Version
+string
+(header)
+X-Api-Version
+Accept-Language
+string
+(header)
+Language of the request
+
+Accept-Language
+api-version
+string
+(query)
+api-version
+Responses
+Code	Description	Links
+200	
+Success
+
+Media type
+
+text/plain
+Controls Accept header.
+Example Value
+Schema
+[
+  {
+    "id": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
+    "firstName": "string",
+    "lastName": "string",
+    "email": "string",
+    "phoneNumber": "string",
+    "accountStatus": 0,
+    "totalEarnings": 0,
+    "commissionRate": 0,
+    "bankAccountNumber": "string",
+    "bankName": "string",
+    "verifiedAt": "2026-01-05T13:15:56.548Z",
+    "createdAt": "2026-01-05T13:15:56.548Z"
+  }
+]
+No links
+
+GET
+/api/Seller/GetById/{id}
+
+Parameters
+Try it out
+Name	Description
+id *
+string($uuid)
+(path)
+id
+X-Api-Version
+string
+(header)
+X-Api-Version
+Accept-Language
+string
+(header)
+Language of the request
+
+Accept-Language
+api-version
+string
+(query)
+api-version
+Responses
+Code	Description	Links
+200	
+Success
+
+Media type
+
+text/plain
+Controls Accept header.
+Example Value
+Schema
+{
+  "id": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
+  "firstName": "string",
+  "lastName": "string",
+  "email": "string",
+  "phoneNumber": "string",
+  "accountStatus": 0,
+  "totalEarnings": 0,
+  "commissionRate": 0,
+  "bankAccountNumber": "string",
+  "bankName": "string",
+  "verifiedAt": "2026-01-05T13:15:56.553Z",
+  "createdAt": "2026-01-05T13:15:56.553Z"
+}
+No links
+404	
+Not Found
+
+Media type
+
+text/plain
+Example Value
+Schema
+{
+  "type": "string",
+  "title": "string",
+  "status": 0,
+  "detail": "string",
+  "instance": "string",
+  "additionalProp1": "string",
+  "additionalProp2": "string",
+  "additionalProp3": "string"
+}
+No links
+
+POST
+/api/Seller/ChangeAccountStatus
+
+Parameters
+Try it out
+Name	Description
+X-Api-Version
+string
+(header)
+X-Api-Version
+Accept-Language
+string
+(header)
+Language of the request
+
+Accept-Language
+api-version
+string
+(query)
+api-version
+Request body
+
+application/json
+Example Value
+Schema
+{
+  "sellerId": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
+  "accountStatus": 0
+}
+Responses
+Code	Description	Links
+200	
+Success
+
+No links
+400	
+Bad Request
+
+Media type
+
+text/plain
+Example Value
+Schema
+{
+  "type": "string",
+  "title": "string",
+  "status": 0,
+  "detail": "string",
+  "instance": "string",
+  "additionalProp1": "string",
+  "additionalProp2": "string",
+  "additionalProp3": "string"
+}
+No links
+404	
+Not Found
+
+Media type
+
+text/plain
+Example Value
+Schema
+{
+  "type": "string",
+  "title": "string",
+  "status": 0,
+  "detail": "string",
+  "instance": "string",
+  "additionalProp1": "string",
+  "additionalProp2": "string",
+  "additionalProp3": "string"
+}
+No links
+SellerDocument
+
+
+POST
+/api/SellerDocument/CreateDocument
+
+Parameters
+Try it out
+Name	Description
+X-Api-Version
+string
+(header)
+X-Api-Version
+Accept-Language
+string
+(header)
+Language of the request
+
+Accept-Language
+api-version
+string
+(query)
+api-version
+Request body
+
+multipart/form-data
+SellerId
+string($uuid)
+Documents
+array
+Responses
+Code	Description	Links
+201	
+Created
+
+Media type
+
+text/plain
+Controls Accept header.
+Example Value
+Schema
+[
+  {
+    "id": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
+    "sellerId": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
+    "documentType": 0,
+    "documentUrl": "string",
+    "verificationStatus": 0,
+    "rejectionReason": "string",
+    "expiresAt": "2026-01-05T13:15:56.569Z",
+    "verifiedAt": "2026-01-05T13:15:56.569Z",
+    "verifiedBy": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
+    "isActive": true,
+    "createdAt": "2026-01-05T13:15:56.569Z",
+    "updatedAt": "2026-01-05T13:15:56.569Z"
+  }
+]
+No links
+400	
+Bad Request
+
+Media type
+
+text/plain
+Example Value
+Schema
+{
+  "type": "string",
+  "title": "string",
+  "status": 0,
+  "detail": "string",
+  "instance": "string",
+  "additionalProp1": "string",
+  "additionalProp2": "string",
+  "additionalProp3": "string"
+}
+No links
+404	
+Not Found
+
+Media type
+
+text/plain
+Example Value
+Schema
+{
+  "type": "string",
+  "title": "string",
+  "status": 0,
+  "detail": "string",
+  "instance": "string",
+  "additionalProp1": "string",
+  "additionalProp2": "string",
+  "additionalProp3": "string"
+}
+No links
+
+PUT
+/api/SellerDocument/UpdateDocument
+
+Parameters
+Try it out
+Name	Description
+X-Api-Version
+string
+(header)
+X-Api-Version
+Accept-Language
+string
+(header)
+Language of the request
+
+Accept-Language
+api-version
+string
+(query)
+api-version
+Request body
+
+multipart/form-data
+Id
+string($uuid)
+Document
+string($binary)
+ExpiresAt
+string($date-time)
+Responses
+Code	Description	Links
+200	
+Success
+
+Media type
+
+text/plain
+Controls Accept header.
+Example Value
+Schema
+{
+  "id": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
+  "sellerId": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
+  "documentType": 0,
+  "documentUrl": "string",
+  "verificationStatus": 0,
+  "rejectionReason": "string",
+  "expiresAt": "2026-01-05T13:15:56.576Z",
+  "verifiedAt": "2026-01-05T13:15:56.576Z",
+  "verifiedBy": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
+  "isActive": true,
+  "createdAt": "2026-01-05T13:15:56.576Z",
+  "updatedAt": "2026-01-05T13:15:56.576Z"
+}
+No links
+400	
+Bad Request
+
+Media type
+
+text/plain
+Example Value
+Schema
+{
+  "type": "string",
+  "title": "string",
+  "status": 0,
+  "detail": "string",
+  "instance": "string",
+  "additionalProp1": "string",
+  "additionalProp2": "string",
+  "additionalProp3": "string"
+}
+No links
+404	
+Not Found
+
+Media type
+
+text/plain
+Example Value
+Schema
+{
+  "type": "string",
+  "title": "string",
+  "status": 0,
+  "detail": "string",
+  "instance": "string",
+  "additionalProp1": "string",
+  "additionalProp2": "string",
+  "additionalProp3": "string"
+}
+No links
+
+GET
+/api/SellerDocument/GetBySellerId/seller/{sellerId}
+
+Parameters
+Try it out
+Name	Description
+sellerId *
+string($uuid)
+(path)
+sellerId
+X-Api-Version
+string
+(header)
+X-Api-Version
+Accept-Language
+string
+(header)
+Language of the request
+
+Accept-Language
+api-version
+string
+(query)
+api-version
+Responses
+Code	Description	Links
+200	
+Success
+
+Media type
+
+text/plain
+Controls Accept header.
+Example Value
+Schema
+[
+  {
+    "id": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
+    "sellerId": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
+    "documentType": 0,
+    "documentUrl": "string",
+    "verificationStatus": 0,
+    "rejectionReason": "string",
+    "expiresAt": "2026-01-05T13:15:56.583Z",
+    "verifiedAt": "2026-01-05T13:15:56.583Z",
+    "verifiedBy": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
+    "isActive": true,
+    "createdAt": "2026-01-05T13:15:56.583Z",
+    "updatedAt": "2026-01-05T13:15:56.583Z"
+  }
+]
+No links
+
+GET
+/api/SellerDocument/GetById/{id}
+
+Parameters
+Try it out
+Name	Description
+id *
+string($uuid)
+(path)
+id
+X-Api-Version
+string
+(header)
+X-Api-Version
+Accept-Language
+string
+(header)
+Language of the request
+
+Accept-Language
+api-version
+string
+(query)
+api-version
+Responses
+Code	Description	Links
+200	
+Success
+
+Media type
+
+text/plain
+Controls Accept header.
+Example Value
+Schema
+{
+  "id": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
+  "sellerId": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
+  "documentType": 0,
+  "documentUrl": "string",
+  "verificationStatus": 0,
+  "rejectionReason": "string",
+  "expiresAt": "2026-01-05T13:15:56.587Z",
+  "verifiedAt": "2026-01-05T13:15:56.587Z",
+  "verifiedBy": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
+  "isActive": true,
+  "createdAt": "2026-01-05T13:15:56.587Z",
+  "updatedAt": "2026-01-05T13:15:56.587Z"
+}
+No links
+404	
+Not Found
+
+Media type
+
+text/plain
+Example Value
+Schema
+{
+  "type": "string",
+  "title": "string",
+  "status": 0,
+  "detail": "string",
+  "instance": "string",
+  "additionalProp1": "string",
+  "additionalProp2": "string",
+  "additionalProp3": "string"
+}
+No links
+
+POST
+/api/SellerDocument/ChangeStatus
+
+Parameters
+Try it out
+Name	Description
+X-Api-Version
+string
+(header)
+X-Api-Version
+Accept-Language
+string
+(header)
+Language of the request
+
+Accept-Language
+api-version
+string
+(query)
+api-version
+Request body
+
+application/json
+Example Value
+Schema
+{
+  "documentId": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
+  "verificationStatus": 0,
+  "rejectionReason": "string"
+}
+Responses
+Code	Description	Links
+200	
+Success
+
+No links
+400	
+Bad Request
+
+Media type
+
+text/plain
+Example Value
+Schema
+{
+  "type": "string",
+  "title": "string",
+  "status": 0,
+  "detail": "string",
+  "instance": "string",
+  "additionalProp1": "string",
+  "additionalProp2": "string",
+  "additionalProp3": "string"
+}
+No links
+404	
+Not Found
+
+Media type
+
+text/plain
+Example Value
+Schema
+{
+  "type": "string",
+  "title": "string",
+  "status": 0,
+  "detail": "string",
+  "instance": "string",
+  "additionalProp1": "string",
+  "additionalProp2": "string",
+  "additionalProp3": "string"
+}
+No links
+
+DELETE
+/api/SellerDocument/DeleteDocument/{id}
+
+Parameters
+Try it out
+Name	Description
+id *
+string($uuid)
+(path)
+id
+X-Api-Version
+string
+(header)
+X-Api-Version
+Accept-Language
+string
+(header)
+Language of the request
+
+Accept-Language
+api-version
+string
+(query)
+api-version
+Responses
+Code	Description	Links
+200	
+Success
+
+No links
+404	
+Not Found
+
+Media type
+
+text/plain
+Example Value
+Schema
+{
+  "type": "string",
+  "title": "string",
+  "status": 0,
+  "detail": "string",
+  "instance": "string",
+  "additionalProp1": "string",
+  "additionalProp2": "string",
+  "additionalProp3": "string"
+}
+No links

@@ -210,6 +210,14 @@
     @apply font-lexend font-bold text-gray-900 dark:text-gray-700;
   }
 
+  /* Override fonts for Arabic language globally by remapping variables */
+  :lang(ar) {
+    --font-inter: var(--font-vazirmatn);
+    --font-lexend: var(--font-vazirmatn);
+    --font-cairo: var(--font-vazirmatn);
+    --font-tajawal: var(--font-vazirmatn);
+  }
+
   h1 {
     @apply text-3xl dark:text-gray-800 2xl:text-[32px] 4xl:text-4xl;
   }
@@ -395,6 +403,8 @@ select:-webkit-autofill:focus {
 .react-datepicker .react-datepicker__header {
   @apply border-b-gray-0 bg-gray-0 font-lexend dark:border-transparent dark:bg-gray-100;
 }
+
+
 
 /* current month name in header */
 .react-datepicker .react-datepicker-year-header {

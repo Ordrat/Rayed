@@ -1,25 +1,25 @@
-import SignInForm from "./sign-in-form";
+import SignUpForm from "./sign-up-form";
 import AuthWrapperFour from "@/app/shared/auth-layout/auth-wrapper-four";
 import { metaObject } from "@/config/site.config";
 import { useTranslations } from "next-intl";
 
 export const metadata = {
-  ...metaObject("Sign In 1"),
+  ...metaObject("Sign Up"),
 };
 
-export default function SignIn() {
+export default function SignUp() {
   const t = useTranslations("auth");
   return (
     <AuthWrapperFour
       title={
         <>
-          {t("auth-welcome-back")}
+          {t("auth-join-us-today")}
           <br />
-          {t("auth-sign-in-with-your-credentials")}
+          {t("auth-create-your-account")}
         </>
       }
     >
-      <SignInForm />
+      <SignUpForm />
     </AuthWrapperFour>
   );
 }

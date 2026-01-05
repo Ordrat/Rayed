@@ -131,7 +131,7 @@ function DropdownMenu() {
       // Continue with local signout even if API call fails
     } finally {
       // Sign out locally
-      await signOut({ callbackUrl: routes.auth.signIn1 });
+      await signOut({ callbackUrl: routes.auth.signIn });
       toast.success("Logged out successfully");
     }
   };
