@@ -127,7 +127,9 @@
     "sidebar-menu-logistics-description": "Streamline Shipments: Discover Efficiency with our Logistics!",
     "sidebar-menu-file-manager-description": "Organize, Access, and Share: Simplify your Digital World with us!",
     "sidebar-menu-admin": "Admin",
-    "sidebar-menu-support-agents": "Support Agents"
+    "sidebar-menu-support-agents": "Support Agents",
+    "sidebar-menu-drivers": "Drivers",
+    "sidebar-menu-sellers": "Sellers"
   },
   "common": {
     "Support Agents": "Support Agents",
@@ -139,6 +141,10 @@
     "Create Support Agent": "Create Support Agent",
     "Edit Support Agent": "Edit Support Agent",
     "Support Agent Details": "Support Agent Details",
+    "Drivers Management": "Drivers Management",
+    "Drivers": "Drivers",
+    "Sellers Management": "Sellers Management",
+    "Sellers": "Sellers",
     "text-home": "Home",
     "text-pages": "Pages",
     "text-dashboard": "Dashboard",

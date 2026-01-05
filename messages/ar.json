@@ -1400,6 +1400,8 @@
     "sidebar-menu-analytics": "التحليلات",
     "sidebar-menu-admin": "المشرف",
     "sidebar-menu-support-agents": "وكلاء الدعم",
+    "sidebar-menu-drivers": "السائقين",
+    "sidebar-menu-sellers": "البائعين",
     "sidebar-menu-support": "يدعم",
     "sidebar-menu-apps-kit": "مجموعة التطبيقات",
     "sidebar-menu-products": "منتجات",
@@ -1677,5 +1679,21 @@
     "table-text-no-data": "لايوجد بيانات",
     "text-yes": "نعم",
     "text-no": "لا"
+  },
+  "common": {
+    "Support Agents": "وكلاء الدعم",
+    "Home": "الرئيسية",
+    "Admin": "مسؤل",
+    "Create": "إنشاء",
+    "Edit": "تعديل",
+    "Details": "تفاصيل",
+    "Create Support Agent": "إنشاء وكيل دعم",
+    "Edit Support Agent": "تعديل وكيل الدعم",
+    "Support Agent Details": "تفاصيل وكيل الدعم",
+    "Drivers Management": "إدارة السائقين",
+    "Drivers": "السائقين",
+    "Sellers Management": "إدارة البائعين",
+    "Sellers": "البائعين",
+    "text-home": "الرئيسية"
   }
 }

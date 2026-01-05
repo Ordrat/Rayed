@@ -10,6 +10,8 @@ const publicPages = [
   "/auth/sign-up-1",
   "/auth/otp-1",
   "/auth/forgot-password-1",
+  "/auth/driver-signup",
+  "/auth/seller-signup",
 ];
 
 const intlMiddleware = createMiddleware({

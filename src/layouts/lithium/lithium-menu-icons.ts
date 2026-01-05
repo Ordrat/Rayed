@@ -45,6 +45,11 @@ import FlightIcon from "@core/components/icons/flight-icon";
 import FinancialStatisticsIcon from "@core/components/icons/financial-statistics";
 import BusinessIcon from "@core/components/icons/business";
 import SuitcaseIcon from "@core/components/icons/suitcase";
+import {
+  PiHeadsetDuotone,
+  PiCarDuotone,
+  PiStorefrontDuotone,
+} from "react-icons/pi";
 
 export const lithiumMenuIcons = {
   FilesIcon,
@@ -94,6 +99,9 @@ export const lithiumMenuIcons = {
   BusinessIcon,
   ScheduleIcon,
   SuitcaseIcon,
+  PiHeadsetDuotone,
+  PiCarDuotone,
+  PiStorefrontDuotone,
 };
 
 export type LithiumMenuIconType = keyof typeof lithiumMenuIcons;

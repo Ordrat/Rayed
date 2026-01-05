@@ -7,8 +7,9 @@ import { useTranslations } from "next-intl";
 
 export type PageHeaderTypes = {
   title: string;
-  breadcrumb: { name: string; href?: string }[];
+  breadcrumb: { name: string; href?: string; isStatic?: boolean }[];
   className?: string;
+  isStaticTitle?: boolean;
 };
 
 export default function PageHeader({
@@ -16,6 +17,7 @@ export default function PageHeader({
   breadcrumb,
   children,
   className,
+  isStaticTitle = false,
 }: React.PropsWithChildren<PageHeaderTypes>) {
   const t = useTranslations("common");
 
@@ -27,7 +29,7 @@ export default function PageHeader({
             as="h2"
             className="mb-2 text-[22px] lg:text-2xl 4xl:text-[26px]"
           >
-            {t(title!)}
+            {isStaticTitle ? title : t(title!)}
           </Title>
 
           <Breadcrumb
@@ -40,7 +42,7 @@ export default function PageHeader({
                 key={item.name}
                 {...(item?.href && { href: item?.href })}
               >
-                {t(item.name)}
+                {item.isStatic ? item.name : t(item.name)}
               </Breadcrumb.Item>
             ))}
           </Breadcrumb>

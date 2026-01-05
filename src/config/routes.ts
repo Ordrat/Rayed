@@ -48,6 +48,16 @@ export const routes = {
     tickets: "/support-dashboard/tickets",
     profile: "/support-dashboard/profile",
   },
+  // Driver management (admin)
+  drivers: {
+    list: "/admin/drivers",
+    details: (id: string) => `/admin/drivers/${id}`,
+  },
+  // Seller management (admin)
+  sellers: {
+    list: "/admin/sellers",
+    details: (id: string) => `/admin/sellers/${id}`,
+  },
   logistics: {
     dashboard: "/logistics",
     shipmentList: "/logistics/shipments",
@@ -156,6 +166,9 @@ export const routes = {
     otp5: "/auth/otp-5",
     // Set password (first-time login)
     setPassword: "/auth/set-password",
+    // Partner registration
+    driverSignUp: "/auth/driver-signup",
+    sellerSignUp: "/auth/seller-signup",
   },
   signIn: "/auth/signin",
 };

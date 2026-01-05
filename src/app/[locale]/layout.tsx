@@ -21,6 +21,10 @@ import NextProgress from "@core/components/next-progress";
 export const metadata = {
   title: siteConfig.title,
   description: siteConfig.description,
+  icons: {
+    icon: "/logo/Ricon.jpg",
+    apple: "/logo/Ricon.jpg",
+  },
 };
 
 export default async function RootLayout({

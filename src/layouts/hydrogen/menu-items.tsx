@@ -9,6 +9,8 @@ import {
   PiUserGearDuotone,
   PiHeadsetDuotone,
   PiShieldCheckDuotone,
+  PiCarDuotone,
+  PiStorefrontDuotone,
 } from "react-icons/pi";
 
 // Note: do not add href in the label object, it is rendering as label
@@ -33,6 +35,16 @@ export const menuItems = [
     name: "sidebar-menu-support-agents",
     href: routes.support.agents,
     icon: <PiHeadsetDuotone />,
+  },
+  {
+    name: "sidebar-menu-drivers",
+    href: routes.drivers.list,
+    icon: <PiCarDuotone />,
+  },
+  {
+    name: "sidebar-menu-sellers",
+    href: routes.sellers.list,
+    icon: <PiStorefrontDuotone />,
   },
 
   // label start

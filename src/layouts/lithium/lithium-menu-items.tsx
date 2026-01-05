@@ -34,6 +34,27 @@ export const lithiumMenuItems: LithiumMenuItem = {
       },
     ],
   },
+  admin: {
+    name: 'sidebar-menu-admin',
+    type: 'link',
+    dropdownItems: [
+      {
+        name: 'sidebar-menu-support-agents',
+        href: routes.support.agents,
+        icon: 'PiHeadsetDuotone',
+      },
+      {
+        name: 'sidebar-menu-drivers',
+        href: routes.drivers.list,
+        icon: 'PiCarDuotone',
+      },
+      {
+        name: 'sidebar-menu-sellers',
+        href: routes.sellers.list,
+        icon: 'PiStorefrontDuotone',
+      },
+    ],
+  },
   widgets: {
     name: 'sidebar-menu-widgets',
     type: 'link',

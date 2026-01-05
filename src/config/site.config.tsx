@@ -16,7 +16,6 @@ export const siteConfig = {
   icon: logoIconImg,
   mode: MODE.LIGHT,
   layout: LAYOUT_OPTIONS.BORON,
-  // TODO: favicon
 };
 
 export const metaObject = (

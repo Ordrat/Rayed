@@ -7,6 +7,8 @@ import {
   PiEnvelopeSimpleOpenDuotone,
   PiFoldersDuotone,
   PiHeadsetDuotone,
+  PiCarDuotone,
+  PiStorefrontDuotone,
 } from 'react-icons/pi';
 import { routes } from '@/config/routes';
 
@@ -36,6 +38,16 @@ export const menuItems = [
     name: 'sidebar-menu-support-agents',
     href: routes.support.agents,
     icon: PiHeadsetDuotone,
+  },
+  {
+    name: 'sidebar-menu-drivers',
+    href: routes.drivers.list,
+    icon: PiCarDuotone,
+  },
+  {
+    name: 'sidebar-menu-sellers',
+    href: routes.sellers.list,
+    icon: PiStorefrontDuotone,
   },
 
   // label start

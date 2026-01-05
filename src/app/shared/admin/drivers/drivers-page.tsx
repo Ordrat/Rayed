@@ -1,0 +1,217 @@
+"use client";
+
+import { useState, useEffect } from "react";
+import { useSession } from "next-auth/react";
+import { Title, Text, Badge, Button, Loader } from "rizzui";
+import { PiEyeBold, PiCheckCircleBold, PiXCircleBold } from "react-icons/pi";
+import { Link } from "@/i18n/routing";
+import { routes } from "@/config/routes";
+import { getAllDrivers, changeDriverAccountStatus } from "@/services/driver.service";
+import {
+  Driver,
+  DeliveryAccountStatus,
+  getDeliveryAccountStatusLabel,
+  getVehicleTypeLabel,
+} from "@/types/driver.types";
+import PageHeader from "@/app/shared/page-header";
+import toast from "react-hot-toast";
+import { useRouter } from "@/i18n/routing";
+
+const pageHeader = {
+  title: "Drivers Management",
+  breadcrumb: [
+    { name: "Home", href: "/" },
+    { name: "Admin", href: "#" },
+    { name: "Drivers" },
+  ],
+};
+
+function getStatusBadgeColor(status: DeliveryAccountStatus) {
+  switch (status) {
+    case DeliveryAccountStatus.APPROVED:
+      return "success";
+    case DeliveryAccountStatus.PENDING:
+      return "warning";
+    case DeliveryAccountStatus.REJECTED:
+      return "danger";
+    case DeliveryAccountStatus.SUSPENDED:
+    default:
+      return "secondary";
+  }
+}
+
+export default function DriversPage() {
+  const { data: session, status } = useSession();
+  const router = useRouter();
+  const [drivers, setDrivers] = useState<Driver[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
+  const [processingId, setProcessingId] = useState<string | null>(null);
+
+  useEffect(() => {
+    if (status === "authenticated") {
+      fetchDrivers();
+    } else if (status === "unauthenticated") {
+      router.push(routes.auth.signIn);
+    }
+  }, [session, status, router]);
+
+  const fetchDrivers = async () => {
+    try {
+      setIsLoading(true);
+      const data = await getAllDrivers(session?.accessToken || "");
+      setDrivers(data);
+    } catch (error: any) {
+      toast.error(error.message || "Failed to fetch drivers");
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const handleApprove = async (driverId: string) => {
+    setProcessingId(driverId);
+    try {
+      await changeDriverAccountStatus(
+        { driverId, deliveryAccountStatus: DeliveryAccountStatus.APPROVED },
+        session?.accessToken || ""
+      );
+      setDrivers(
+        drivers.map((d) =>
+          d.id === driverId
+            ? { ...d, deliveryAccountStatus: DeliveryAccountStatus.APPROVED }
+            : d
+        )
+      );
+      toast.success("Driver approved successfully");
+    } catch (error: any) {
+      toast.error(error.message || "Failed to approve driver");
+    } finally {
+      setProcessingId(null);
+    }
+  };
+
+  const handleReject = async (driverId: string) => {
+    setProcessingId(driverId);
+    try {
+      await changeDriverAccountStatus(
+        { driverId, deliveryAccountStatus: DeliveryAccountStatus.REJECTED },
+        session?.accessToken || ""
+      );
+      setDrivers(
+        drivers.map((d) =>
+          d.id === driverId
+            ? { ...d, deliveryAccountStatus: DeliveryAccountStatus.REJECTED }
+            : d
+        )
+      );
+      toast.success("Driver rejected");
+    } catch (error: any) {
+      toast.error(error.message || "Failed to reject driver");
+    } finally {
+      setProcessingId(null);
+    }
+  };
+
+  if (status === "loading" || isLoading) {
+    return (
+      <div className="flex h-[400px] items-center justify-center">
+        <Loader variant="spinner" size="xl" />
+      </div>
+    );
+  }
+
+  return (
+    <>
+      <PageHeader title={pageHeader.title} breadcrumb={pageHeader.breadcrumb} />
+
+      <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
+        {drivers.length === 0 ? (
+          <div className="col-span-full flex flex-col items-center justify-center py-12">
+            <Text className="mb-4 text-gray-500">
+              No drivers found.
+            </Text>
+          </div>
+        ) : (
+          drivers.map((driver) => (
+            <div
+              key={driver.id}
+              className="rounded-lg border border-gray-200 bg-white p-6 shadow-sm transition-shadow hover:shadow-md dark:border-gray-700 dark:bg-gray-800"
+            >
+              <div className="mb-4 flex items-start justify-between">
+                <div>
+                  <Title as="h4" className="mb-1 text-lg font-semibold">
+                    {driver.firstName} {driver.lastName}
+                  </Title>
+                  <Text className="text-sm text-gray-500">{driver.email}</Text>
+                </div>
+                <Badge
+                  variant="flat"
+                  color={getStatusBadgeColor(driver.deliveryAccountStatus)}
+                  className="capitalize"
+                >
+                  {getDeliveryAccountStatusLabel(driver.deliveryAccountStatus)}
+                </Badge>
+              </div>
+
+              <div className="mb-4 space-y-2">
+                <div className="flex justify-between text-sm">
+                  <Text className="text-gray-500">Phone:</Text>
+                  <Text className="font-medium">{driver.phoneNumber}</Text>
+                </div>
+                <div className="flex justify-between text-sm">
+                  <Text className="text-gray-500">Vehicle:</Text>
+                  <Text className="font-medium">
+                    {getVehicleTypeLabel(driver.vehicleType)}
+                  </Text>
+                </div>
+                <div className="flex justify-between text-sm">
+                  <Text className="text-gray-500">Total Deliveries:</Text>
+                  <Text className="font-medium">{driver.totalDeliveries}</Text>
+                </div>
+                <div className="flex justify-between text-sm">
+                  <Text className="text-gray-500">Rating:</Text>
+                  <Text className="font-medium">
+                    {driver.averageRating.toFixed(1)} ★
+                  </Text>
+                </div>
+              </div>
+
+              <div className="flex gap-2">
+                <Link href={routes.drivers.details(driver.id)} className="flex-1">
+                  <Button
+                    variant="outline"
+                    className="w-full hover:border-green-600 hover:text-green-600"
+                  >
+                    <PiEyeBold className="me-1.5 h-4 w-4" />
+                    View
+                  </Button>
+                </Link>
+                {driver.deliveryAccountStatus === DeliveryAccountStatus.PENDING && (
+                  <>
+                    <Button
+                      variant="outline"
+                      className="flex-1 hover:border-green-600 hover:bg-green-600 hover:text-white"
+                      onClick={() => handleApprove(driver.id)}
+                      disabled={processingId === driver.id}
+                    >
+                      <PiCheckCircleBold className="me-1.5 h-4 w-4" />
+                      Approve
+                    </Button>
+                    <Button
+                      variant="outline"
+                      className="flex-1 hover:border-red-500 hover:bg-red-500 hover:text-white"
+                      onClick={() => handleReject(driver.id)}
+                      disabled={processingId === driver.id}
+                    >
+                      <PiXCircleBold className="me-1.5 h-4 w-4" />
+                      Reject
+                    </Button>
+                  </>
+                )}
+              </div>
+            </div>
+          ))
+        )}
+      </div>
+    </>
+  );
+}

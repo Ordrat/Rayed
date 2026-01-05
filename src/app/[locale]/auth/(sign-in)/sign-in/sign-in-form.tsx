@@ -4,7 +4,7 @@ import { Link } from "@/i18n/routing";
 import { useState } from "react";
 import { signIn, useSession } from "next-auth/react";
 import { SubmitHandler } from "react-hook-form";
-import { PiArrowRightBold } from "react-icons/pi";
+import { PiArrowRightBold, PiCarDuotone, PiStorefrontDuotone } from "react-icons/pi";
 import { Checkbox, Password, Button, Input, Text } from "rizzui";
 import { Form } from "@core/ui/form";
 import { routes } from "@/config/routes";
@@ -170,15 +170,29 @@ export default function SignInForm() {
           </div>
         )}
       </Form>
-      <Text className="mt-6 text-center leading-loose text-gray-500 lg:mt-8 lg:text-start">
-        {t("form-dont-have-an-account")}{" "}
-        <Link
-          href={routes.auth.signUp}
-          className="font-semibold text-gray-700 transition-colors hover:text-blue"
-        >
-          {t("form-sign-up")}
-        </Link>
-      </Text>
+      <div className="mt-6 text-center leading-loose text-gray-500 lg:mt-8 lg:text-start">
+        <Text className="mb-2">{t("form-dont-have-an-account")}</Text>
+        <div className="flex flex-col gap-3 sm:flex-row sm:justify-center lg:justify-start">
+          <Link href={routes.auth.driverSignUp}>
+            <Button
+              className="w-full bg-red-600 hover:bg-red-700 sm:w-auto"
+              rounded="pill"
+            >
+              <PiCarDuotone className="me-2 h-5 w-5" />
+              Sign up as Driver
+            </Button>
+          </Link>
+          <Link href={routes.auth.sellerSignUp}>
+            <Button
+              className="w-full bg-green-600 hover:bg-green-700 sm:w-auto"
+              rounded="pill"
+            >
+              <PiStorefrontDuotone className="me-2 h-5 w-5" />
+              Sign up as Seller
+            </Button>
+          </Link>
+        </div>
+      </div>
     </>
   );
 }

@@ -7,6 +7,9 @@ import {
   PiUser,
   PiEnvelopeSimpleOpen,
   PiFolders,
+  PiHeadset,
+  PiCar,
+  PiStorefront,
 } from 'react-icons/pi';
 
 // Note: do not add href in the label object, it is rendering as label
@@ -20,6 +23,26 @@ export const berylliumSidebarMenuItems = [
     name: 'File Manager',
     href: '/',
     icon: <PiFolders />,
+  },
+  // label start
+  {
+    name: 'Admin',
+  },
+  // label end
+  {
+    name: 'Support Agents',
+    href: routes.support.agents,
+    icon: <PiHeadset />,
+  },
+  {
+    name: 'Drivers',
+    href: routes.drivers.list,
+    icon: <PiCar />,
+  },
+  {
+    name: 'Sellers',
+    href: routes.sellers.list,
+    icon: <PiStorefront />,
   },
   // label start
   {

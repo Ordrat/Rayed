@@ -11,6 +11,9 @@ import {
   PiSquaresFourDuotone,
   PiUserCircleDuotone,
   PiUserGearDuotone,
+  PiHeadsetDuotone,
+  PiCarDuotone,
+  PiStorefrontDuotone,
 } from 'react-icons/pi';
 import { atom } from 'jotai';
 
@@ -49,6 +52,29 @@ export const carbonMenuItems: MenuItemsType[] = [
         name: 'sidebar-menu-file-manager',
         href: '/',
         icon: PiFoldersDuotone,
+      },
+    ],
+  },
+  {
+    id: '2',
+    name: 'sidebar-menu-admin',
+    title: 'sidebar-menu-admin',
+    icon: PiHeadsetDuotone,
+    menuItems: [
+      {
+        name: 'sidebar-menu-support-agents',
+        href: routes.support.agents,
+        icon: PiHeadsetDuotone,
+      },
+      {
+        name: 'sidebar-menu-drivers',
+        href: routes.drivers.list,
+        icon: PiCarDuotone,
+      },
+      {
+        name: 'sidebar-menu-sellers',
+        href: routes.sellers.list,
+        icon: PiStorefrontDuotone,
       },
     ],
   },
