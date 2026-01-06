@@ -4,7 +4,7 @@ import { Link } from "@/i18n/routing";
 import { useState } from "react";
 import { signIn, useSession } from "next-auth/react";
 import { SubmitHandler } from "react-hook-form";
-import { PiArrowRightBold, PiCarDuotone, PiStorefrontDuotone } from "react-icons/pi";
+import { PiArrowRightBold} from "react-icons/pi";
 import { Checkbox, Password, Button, Input, Text } from "rizzui";
 import { Form } from "@core/ui/form";
 import { routes } from "@/config/routes";
@@ -37,26 +37,9 @@ export default function SignInForm() {
       const userId = session?.user?.id;
       if (!userId) return;
 
-      // Check localStorage for first-time login flag
-      // If user hasn't changed their password yet, redirect to set-password
-      const passwordChangedKey = `support_password_changed_${userId}`;
-      const hasChangedPassword = typeof window !== 'undefined' 
-        ? localStorage.getItem(passwordChangedKey) === 'true' 
-        : false;
-      
-      if (!hasChangedPassword) {
-        // First-time login - redirect to set password page immediately
-        // DO NOT update status to Online yet - that happens after password change
-        console.log("First-time login detected, redirecting to set password page");
-        setHasProcessedLogin(true);
-        router.push(routes.auth.setPassword);
-        return;
-      }
-
-      // User has already changed password, proceed with normal login
       setHasProcessedLogin(true);
 
-      // Update status to Online if applicable
+      // Update status to Online if applicable (for support agents)
       if (session?.accessToken && session?.user?.id) {
         const userRoles = session?.user?.roles || [];
         const isSupportRole = userRoles.some(
@@ -170,7 +153,7 @@ export default function SignInForm() {
           </div>
         )}
       </Form>
-      <div className="mt-6 text-center leading-loose text-gray-500 lg:mt-8 lg:text-start">
+      {/* <div className="mt-6 text-center leading-loose text-gray-500 lg:mt-8 lg:text-start">
         <Text className="mb-2">{t("form-dont-have-an-account")}</Text>
         <div className="flex flex-col gap-3 sm:flex-row sm:justify-center lg:justify-start">
           <Link href={routes.auth.driverSignUp}>
@@ -192,7 +175,7 @@ export default function SignInForm() {
             </Button>
           </Link>
         </div>
-      </div>
+      </div> */}
     </>
   );
 }

@@ -51,12 +51,16 @@ export const routes = {
   // Driver management (admin)
   drivers: {
     list: "/admin/drivers",
+    create: "/admin/drivers/create",
     details: (id: string) => `/admin/drivers/${id}`,
+    edit: (id: string) => `/admin/drivers/${id}/edit`,
   },
   // Seller management (admin)
   sellers: {
     list: "/admin/sellers",
+    create: "/admin/sellers/create",
     details: (id: string) => `/admin/sellers/${id}`,
+    edit: (id: string) => `/admin/sellers/${id}/edit`,
   },
   logistics: {
     dashboard: "/logistics",

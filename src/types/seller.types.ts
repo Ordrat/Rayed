@@ -72,8 +72,7 @@ export enum SellerAccountStatus {
 export enum SellerDocumentType {
   NATIONAL_ID = 0,
   COMMERCIAL_REGISTER = 1,
-  TAX_CERTIFICATE = 2,
-  BANK_STATEMENT = 3,
+  TAX_CARD = 2,
 }
 
 export enum DocumentVerificationStatus {
@@ -104,10 +103,8 @@ export function getSellerDocumentTypeLabel(type: SellerDocumentType): string {
       return "National ID";
     case SellerDocumentType.COMMERCIAL_REGISTER:
       return "Commercial Register";
-    case SellerDocumentType.TAX_CERTIFICATE:
-      return "Tax Certificate";
-    case SellerDocumentType.BANK_STATEMENT:
-      return "Bank Statement";
+    case SellerDocumentType.TAX_CARD:
+      return "Tax Card";
     default:
       return "Unknown";
   }

@@ -11,6 +11,7 @@ import {
 } from "react-icons/pi";
 import { Link } from "@/i18n/routing";
 import { routes } from "@/config/routes";
+import { getDocumentUrl } from "@/config/constants";
 import {
   getDriverById,
   getDriverDocuments,
@@ -274,7 +275,7 @@ export default function DriverDetailsPage({ driverId }: DriverDetailsPageProps) 
         {driver.deliveryAccountStatus === DeliveryAccountStatus.PENDING && (
           <div className="mt-6 flex gap-4">
             <Button
-              className="bg-green-600 hover:bg-green-700"
+              className="bg-green-600 text-white hover:bg-black hover:text-white active:bg-green-700"
               onClick={handleApproveDriver}
               disabled={processingId === "driver"}
             >
@@ -283,7 +284,7 @@ export default function DriverDetailsPage({ driverId }: DriverDetailsPageProps) 
             </Button>
             <Button
               variant="outline"
-              className="hover:border-red-500 hover:bg-red-500 hover:text-white"
+              className="bg-red-600 text-white hover:bg-black hover:text-white hover:border-black active:bg-red-700 border-transparent"
               onClick={handleRejectDriver}
               disabled={processingId === "driver"}
             >
@@ -303,7 +304,7 @@ export default function DriverDetailsPage({ driverId }: DriverDetailsPageProps) 
         {documents.length === 0 ? (
           <Text className="text-gray-500">No documents uploaded yet.</Text>
         ) : (
-          <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
+          <div className="grid grid-cols-1 md:grid-cols-3 xl:grid-cols-5 gap-4">
             {documents.map((doc) => (
               <div
                 key={doc.id}
@@ -327,7 +328,7 @@ export default function DriverDetailsPage({ driverId }: DriverDetailsPageProps) 
 
                 {doc.documentUrl && (
                   <a
-                    href={doc.documentUrl}
+                    href={getDocumentUrl(doc.documentUrl)}
                     target="_blank"
                     rel="noopener noreferrer"
                     className="mb-3 block text-sm text-blue-600 hover:underline"
@@ -340,7 +341,7 @@ export default function DriverDetailsPage({ driverId }: DriverDetailsPageProps) 
                   <div className="flex gap-2">
                     <Button
                       size="sm"
-                      className="flex-1 bg-green-600 hover:bg-green-700"
+                      className="flex-1 bg-green-600 text-white hover:bg-black hover:text-white active:bg-green-700"
                       onClick={() => handleApproveDocument(doc.id)}
                       disabled={processingId === doc.id}
                     >
@@ -349,7 +350,7 @@ export default function DriverDetailsPage({ driverId }: DriverDetailsPageProps) 
                     <Button
                       size="sm"
                       variant="outline"
-                      className="flex-1 hover:border-red-500 hover:text-red-500"
+                      className="flex-1 bg-red-600 text-white hover:bg-black hover:text-white hover:border-black active:bg-red-700 border-transparent"
                       onClick={() => handleRejectDocument(doc.id)}
                       disabled={processingId === doc.id}
                     >

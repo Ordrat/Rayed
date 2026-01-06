@@ -1,9 +1,9 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useMemo } from "react";
 import { useSession } from "next-auth/react";
-import { Title, Text, Badge, Button, Loader } from "rizzui";
-import { PiEyeBold, PiCheckCircleBold, PiXCircleBold } from "react-icons/pi";
+import { Title, Text, Badge, Button, Loader, Input, Select } from "rizzui";
+import { PiPlusBold, PiEyeBold, PiCheckCircleBold, PiXCircleBold, PiMagnifyingGlassBold, PiSortAscendingBold } from "react-icons/pi";
 import { Link } from "@/i18n/routing";
 import { routes } from "@/config/routes";
 import { getAllDrivers, changeDriverAccountStatus } from "@/services/driver.service";
@@ -46,6 +46,34 @@ export default function DriversPage() {
   const [drivers, setDrivers] = useState<Driver[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [processingId, setProcessingId] = useState<string | null>(null);
+  const [searchTerm, setSearchTerm] = useState("");
+  const [sortConfig, setSortConfig] = useState<any>({ value: "newest", label: "Newest First" });
+
+  const filteredDrivers = useMemo(() => {
+    let result = [...drivers];
+    if (searchTerm) {
+      const term = searchTerm.toLowerCase();
+      result = result.filter(
+        (d) =>
+          d.firstName.toLowerCase().includes(term) ||
+          d.lastName.toLowerCase().includes(term) ||
+          d.email.toLowerCase().includes(term) ||
+          d.phoneNumber.includes(term)
+      );
+    }
+
+    if (sortConfig) {
+      const sortValue = sortConfig.value || sortConfig;
+      result.sort((a, b) => {
+        if (sortValue === "newest") return b.createdAt.localeCompare(a.createdAt);
+        if (sortValue === "oldest") return a.createdAt.localeCompare(b.createdAt);
+        if (sortValue === "name_asc") return a.firstName.localeCompare(b.firstName);
+        if (sortValue === "name_desc") return b.firstName.localeCompare(a.firstName);
+        return 0;
+      });
+    }
+    return result;
+  }, [drivers, searchTerm, sortConfig]);
 
   useEffect(() => {
     if (status === "authenticated") {
@@ -121,17 +149,61 @@ export default function DriversPage() {
 
   return (
     <>
-      <PageHeader title={pageHeader.title} breadcrumb={pageHeader.breadcrumb} />
+      <PageHeader title={pageHeader.title} breadcrumb={pageHeader.breadcrumb}>
+        <Link href={routes.drivers.create}>
+          <Button className="mt-4 w-full bg-[#1f502a] hover:bg-[#143219] sm:mt-0 sm:w-auto">
+            <PiPlusBold className="me-1.5 h-4 w-4" />
+            Add Driver
+          </Button>
+        </Link>
+      </PageHeader>
+
+      {drivers.length > 0 && (
+        <div className="mb-6 flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
+          <Input
+            placeholder="Search by name, email or phone..."
+            prefix={<PiMagnifyingGlassBold className="h-4 w-4" />}
+            value={searchTerm}
+            onChange={(e) => setSearchTerm(e.target.value)}
+            className="w-full md:w-1/3"
+            clearable
+            onClear={() => setSearchTerm("")}
+          />
+          <Select
+            options={[
+              { label: "Newest First", value: "newest" },
+              { label: "Oldest First", value: "oldest" },
+              { label: "Name (A-Z)", value: "name_asc" },
+              { label: "Name (Z-A)", value: "name_desc" },
+            ]}
+            value={sortConfig}
+            onChange={setSortConfig}
+            className="w-full md:w-48"
+            prefix={<PiSortAscendingBold className="h-4 w-4" />}
+          />
+        </div>
+      )}
 
       <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
         {drivers.length === 0 ? (
           <div className="col-span-full flex flex-col items-center justify-center py-12">
             <Text className="mb-4 text-gray-500">
-              No drivers found.
+              No drivers found. Create one to get started.
             </Text>
+            <Link href={routes.drivers.create}>
+              <Button className="bg-[#1f502a] hover:bg-[#143219]">
+                <PiPlusBold className="me-1.5 h-4 w-4" />
+                Create First Driver
+              </Button>
+            </Link>
+          </div>
+        ) : filteredDrivers.length === 0 ? (
+          <div className="col-span-full py-12 text-center text-gray-500">
+             <Text className="mb-2">No results found for &quot;{searchTerm}&quot;</Text>
+             <Button variant="text" onClick={() => setSearchTerm("")} className="text-[#1f502a]">Clear Search</Button>
           </div>
         ) : (
-          drivers.map((driver) => (
+          filteredDrivers.map((driver) => (
             <div
               key={driver.id}
               className="rounded-lg border border-gray-200 bg-white p-6 shadow-sm transition-shadow hover:shadow-md dark:border-gray-700 dark:bg-gray-800"
@@ -188,8 +260,7 @@ export default function DriversPage() {
                 {driver.deliveryAccountStatus === DeliveryAccountStatus.PENDING && (
                   <>
                     <Button
-                      variant="outline"
-                      className="flex-1 hover:border-green-600 hover:bg-green-600 hover:text-white"
+                      className="flex-1 bg-green-600 text-white hover:bg-black hover:text-white hover:border-black active:bg-green-700 border-transparent"
                       onClick={() => handleApprove(driver.id)}
                       disabled={processingId === driver.id}
                     >
@@ -197,8 +268,7 @@ export default function DriversPage() {
                       Approve
                     </Button>
                     <Button
-                      variant="outline"
-                      className="flex-1 hover:border-red-500 hover:bg-red-500 hover:text-white"
+                      className="flex-1 bg-red-600 text-white hover:bg-black hover:text-white hover:border-black active:bg-red-700 border-transparent"
                       onClick={() => handleReject(driver.id)}
                       disabled={processingId === driver.id}
                     >

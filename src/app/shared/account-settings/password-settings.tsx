@@ -1,9 +1,12 @@
 "use client";
 
 import { useState } from "react";
+import { useSession } from "next-auth/react";
 import { SubmitHandler, Controller } from "react-hook-form";
 import { PiDesktop } from "react-icons/pi";
 import { Form } from "@core/ui/form";
+import toast from "react-hot-toast";
+import { changePassword } from "@/services/auth.service";
 import { Button, Password, Title, Text } from "rizzui";
 import cn from "@core/utils/class-names";
 import { ProfileHeader } from "@/app/shared/account-settings/profile-settings";
@@ -15,17 +18,44 @@ export default function PasswordSettingsView({ settings }: { settings?: Password
   const t = useTranslations("form");
   const [reset, setReset] = useState({});
   const [isLoading, setLoading] = useState(false);
+  const { data: session, update } = useSession();
 
-  const onSubmit: SubmitHandler<PasswordFormTypes> = (data) => {
+  const onSubmit: SubmitHandler<PasswordFormTypes> = async (data) => {
     setLoading(true);
-    setTimeout(() => {
-      setLoading(false);
+    try {
+      await changePassword(
+        {
+          oldPassword: data.currentPassword,
+          newPassword: data.newPassword,
+          confirmPassword: data.confirmedPassword,
+        },
+        session?.accessToken || ""
+      );
+
+      // Update the session to reflect that password reset is no longer needed
+      if (session?.user?.needsPasswordReset) {
+        await update({
+          ...session,
+          user: {
+            ...session?.user,
+            needsPasswordReset: false,
+          },
+        });
+      }
+
+      toast.success(t("password-updated-successfully") || "Password updated successfully");
+      
       setReset({
         currentPassword: "",
         newPassword: "",
         confirmedPassword: "",
       });
-    }, 600);
+    } catch (error: any) {
+      console.error("Password update error:", error);
+      toast.error(error.message || t("password-update-failed") || "Failed to update password");
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (

@@ -74,21 +74,23 @@ export default function AuthWrapperFour({
               className
             )}
           >
-            <div className="flex flex-col items-center">
-              <Link
-                href={"/"}
-                className="mb-7 inline-block max-w-[280px] lg:mb-9"
-              >
-                <Image src={siteConfig.logo} alt={siteConfig.title} />
-              </Link>
-              <Title
-                as="h2"
-                className="mb-7 text-center text-[28px] font-bold leading-snug md:text-3xl md:!leading-normal lg:mb-10 lg:text-4xl"
-              >
-                {title}
-              </Title>
+            <div className="rounded-xl bg-white/80 p-6 shadow-md md:p-10">
+              <div className="flex flex-col items-center">
+                <Link
+                  href={"/"}
+                  className="mb-7 inline-block max-w-[280px] lg:mb-9"
+                >
+                  <Image src={siteConfig.logo} alt={siteConfig.title} />
+                </Link>
+                <Title
+                  as="h2"
+                  className="mb-7 text-center text-[28px] font-bold leading-snug md:text-3xl md:!leading-normal lg:mb-10 lg:text-4xl"
+                >
+                  {title}
+                </Title>
+              </div>
+              {children}
             </div>
-            {children}
           </div>
         </div>
 

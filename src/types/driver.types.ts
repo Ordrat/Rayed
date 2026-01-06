@@ -85,10 +85,17 @@ export enum DeliveryAvailabilityStatus {
 }
 
 export enum DriverDocumentType {
-  NATIONAL_ID = 0,
-  DRIVERS_LICENSE = 1,
-  VEHICLE_REGISTRATION = 2,
-  INSURANCE = 3,
+  PERSONAL_PHOTO = 0,
+  PERSONAL_VERIFICATION_CARD_FRONT = 1,
+  PERSONAL_VERIFICATION_CARD_BACK = 2,
+  VEHICLE_LICENSE_FRONT = 3,
+  VEHICLE_LICENSE_BACK = 4,
+  VEHICLE_BACK_IMAGE = 5,
+  VEHICLE_FRONT_IMAGE = 6,
+  DRIVING_LICENSE = 7,
+  VEHICLE_REGISTRATION = 8,
+  INSURANCE = 9,
+  BACKGROUND_CHECKS = 10,
 }
 
 export enum DocumentVerificationStatus {
@@ -143,14 +150,28 @@ export function getDeliveryAvailabilityStatusLabel(status: DeliveryAvailabilityS
 
 export function getDriverDocumentTypeLabel(type: DriverDocumentType): string {
   switch (type) {
-    case DriverDocumentType.NATIONAL_ID:
-      return "National ID";
-    case DriverDocumentType.DRIVERS_LICENSE:
-      return "Driver's License";
+    case DriverDocumentType.PERSONAL_PHOTO:
+      return "Personal Photo";
+    case DriverDocumentType.PERSONAL_VERIFICATION_CARD_FRONT:
+      return "ID Card (Front)";
+    case DriverDocumentType.PERSONAL_VERIFICATION_CARD_BACK:
+      return "ID Card (Back)";
+    case DriverDocumentType.VEHICLE_LICENSE_FRONT:
+      return "Vehicle License (Front)";
+    case DriverDocumentType.VEHICLE_LICENSE_BACK:
+      return "Vehicle License (Back)";
+    case DriverDocumentType.VEHICLE_BACK_IMAGE:
+      return "Vehicle (Back)";
+    case DriverDocumentType.VEHICLE_FRONT_IMAGE:
+      return "Vehicle (Front)";
+    case DriverDocumentType.DRIVING_LICENSE:
+      return "Driving License";
     case DriverDocumentType.VEHICLE_REGISTRATION:
       return "Vehicle Registration";
     case DriverDocumentType.INSURANCE:
       return "Insurance";
+    case DriverDocumentType.BACKGROUND_CHECKS:
+      return "Background Check";
     default:
       return "Unknown";
   }

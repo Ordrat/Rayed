@@ -26,7 +26,7 @@ export default function SupportDashboard() {
     if (status === "authenticated") {
       // Check if user needs to reset password
       if (session?.user?.needsPasswordReset) {
-        router.push(routes.auth.forgotPassword1);
+        router.push(routes.forms.profileSettings + "/password");
         return;
       }
       

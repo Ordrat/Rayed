@@ -38,3 +38,20 @@ export const ROLES = {
   RestrictedUser: 'Restricted User',
   Customer: 'Customer',
 } as const;
+
+// CDN base URL for documents and uploaded files
+export const CDN_BASE_URL = 'https://cdn.ordrat.com/';
+
+/**
+ * Get full document URL from relative path
+ */
+export function getDocumentUrl(relativePath: string): string {
+  if (!relativePath) return '';
+  // If already a full URL, return as is
+  if (relativePath.startsWith('http://') || relativePath.startsWith('https://')) {
+    return relativePath;
+  }
+  // Remove leading slash if present
+  const path = relativePath.startsWith('/') ? relativePath.substring(1) : relativePath;
+  return `${CDN_BASE_URL}${path}`;
+}

@@ -133,15 +133,15 @@ export default function SignUpForm() {
           </Link>
         </Text>
         
-        <Text className="mt-4 mb-2 font-medium">Want to partner with us?</Text>
+        <Text className="mt-4 mb-2 font-medium">{t("form-want-to-partner-with-us")}</Text>
         <div className="flex flex-col gap-3 sm:flex-row sm:justify-center lg:justify-start">
           <Link href={routes.auth.driverSignUp}>
             <Button
               className="w-full bg-red-600 hover:bg-red-700 sm:w-auto"
               rounded="pill"
             >
-              <PiCarDuotone className="me-2 h-5 w-5" />
-              Sign up as Driver
+              <PiCarDuotone className="me-2 h-5 w-5 rtl:ms-2 rtl:me-0" />
+              {t("form-sign-up-as-driver")}
             </Button>
           </Link>
           <Link href={routes.auth.sellerSignUp}>
@@ -149,8 +149,8 @@ export default function SignUpForm() {
               className="w-full bg-green-600 hover:bg-green-700 sm:w-auto"
               rounded="pill"
             >
-              <PiStorefrontDuotone className="me-2 h-5 w-5" />
-              Sign up as Seller
+              <PiStorefrontDuotone className="me-2 h-5 w-5 rtl:ms-2 rtl:me-0" />
+              {t("form-sign-up-as-seller")}
             </Button>
           </Link>
         </div>

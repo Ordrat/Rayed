@@ -831,6 +831,24 @@ Schema
 No links
 
 
+namespace Rayde.Domain.Enums
+{
+    public enum DocumentType
+    {
+        PersonalPhoto,
+        PersonalVerificationCardFront,
+        PersonalVerificationCardBack,
+        VehicleLicenseFront,
+        VehicleLicenseBack,
+        VehicleBackImage,
+        VehicleFrontImage,
+        DrivingLicense,
+        VehicleRegistration,
+        Insurance,
+        BackgroundChecks
+    }
+}
+
 Seller
 
 
@@ -1643,3 +1661,10 @@ Schema
   "additionalProp3": "string"
 }
 No links
+
+Seller enum
+nationalId 0
+commercialRegister 1
+taxCard 2
+
+cdn: https://cdn.ordrat.com/

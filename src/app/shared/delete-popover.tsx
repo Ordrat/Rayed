@@ -10,6 +10,7 @@ type DeletePopoverProps = {
   description: string;
   onDelete: () => void;
   children?: React.ReactElement;
+  translateTitle?: boolean;
 };
 
 export default function DeletePopover({
@@ -17,6 +18,7 @@ export default function DeletePopover({
   description,
   onDelete,
   children,
+  translateTitle = true,
 }: DeletePopoverProps) {
   const t = useTranslations("table");
   return (
@@ -42,7 +44,7 @@ export default function DeletePopover({
               as="h6"
               className="mb-0.5 flex items-start text-sm text-gray-700 sm:items-center"
             >
-              <PiTrashFill className="me-1 h-[17px] w-[17px]" /> {t(title)}
+              <PiTrashFill className="me-1 h-[17px] w-[17px]" /> {translateTitle ? t(title) : title}
             </Title>
             <Text className="mb-2 leading-relaxed text-gray-500">{description}</Text>
             <div className="flex items-center justify-end">

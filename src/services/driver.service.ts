@@ -27,6 +27,20 @@ export async function registerDriver(
 }
 
 /**
+ * Register a new driver (admin - for admin dashboard creation)
+ */
+export async function adminRegisterDriver(
+  data: RegisterDriverRequest,
+  token: string
+): Promise<Driver> {
+  return apiRequest<Driver>('/api/Driver/RegisterDriver', {
+    method: 'POST',
+    body: JSON.stringify(data),
+    token,
+  });
+}
+
+/**
  * Update an existing driver
  */
 export async function updateDriver(

@@ -27,6 +27,20 @@ export async function registerSeller(
 }
 
 /**
+ * Register a new seller (admin - for admin dashboard creation)
+ */
+export async function adminRegisterSeller(
+  data: RegisterSellerRequest,
+  token: string
+): Promise<Seller> {
+  return apiRequest<Seller>('/api/Seller/RegisterSeller', {
+    method: 'POST',
+    body: JSON.stringify(data),
+    token,
+  });
+}
+
+/**
  * Update an existing seller
  */
 export async function updateSeller(
@@ -100,8 +114,35 @@ export async function createSellerDocuments(
   });
 
   if (!response.ok) {
-    const errorData = await response.json().catch(() => ({}));
-    throw new Error(errorData.detail || errorData.title || 'Failed to create documents');
+    let errorData: any = {};
+    let errorText = '';
+    
+    try {
+      const responseText = await response.text();
+      errorText = responseText;
+      
+      // Try to parse as JSON
+      if (responseText) {
+        try {
+          errorData = JSON.parse(responseText);
+        } catch {
+          // Not JSON, use text as error
+          errorData = { message: responseText };
+        }
+      }
+    } catch (e) {
+      console.error('Failed to read error response:', e);
+    }
+    
+    console.error('Seller document creation error:', {
+      status: response.status,
+      statusText: response.statusText,
+      errorData,
+      rawResponse: errorText
+    });
+    
+    const errorMessage = errorData.detail || errorData.title || errorData.message || errorText || 'Failed to create documents';
+    throw new Error(errorMessage);
   }
 
   return response.json();

@@ -9,7 +9,7 @@ export default function ProfileSettingsFormPage() {
   return (
     <PasswordSettingsView
       settings={{
-        currentPassword: "9876543210",
+        currentPassword: "",
         newPassword: "",
         confirmedPassword: "",
       }}

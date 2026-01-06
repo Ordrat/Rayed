@@ -8,6 +8,7 @@ import { routes } from "@/config/routes";
 import { registerSeller, createSellerDocuments } from "@/services/seller.service";
 import { SellerDocumentType } from "@/types/seller.types";
 import toast from "react-hot-toast";
+import { useTranslations } from "next-intl";
 
 interface SellerSignUpFormData {
   firstName: string;
@@ -21,6 +22,7 @@ interface SellerSignUpFormData {
 }
 
 export default function SellerSignUpForm() {
+  const t = useTranslations("form");
   const router = useRouter();
   const [isLoading, setIsLoading] = useState(false);
   const [step, setStep] = useState<"form" | "documents" | "success">("form");
@@ -38,7 +40,7 @@ export default function SellerSignUpForm() {
 
   const onSubmit: SubmitHandler<SellerSignUpFormData> = async (data) => {
     if (data.password !== data.confirmPassword) {
-      toast.error("Passwords do not match");
+      toast.error(t("form-password-dont-match"));
       return;
     }
 
@@ -55,9 +57,9 @@ export default function SellerSignUpForm() {
       });
       setSellerId(seller.id);
       setStep("documents");
-      toast.success("Account created! Now upload your documents.");
+      toast.success(t("form-account-created-upload-docs"));
     } catch (error: any) {
-      toast.error(error.message || "Failed to create account");
+      toast.error(error.message || t("form-failed-create-account"));
     } finally {
       setIsLoading(false);
     }
@@ -73,7 +75,7 @@ export default function SellerSignUpForm() {
     if (!sellerId) return;
 
     if (documents.length === 0) {
-      toast.error("Please upload at least one document");
+      toast.error(t("form-at-least-one-doc"));
       return;
     }
 
@@ -87,9 +89,9 @@ export default function SellerSignUpForm() {
 
       await createSellerDocuments(formData);
       setStep("success");
-      toast.success("Documents uploaded successfully!");
+      toast.success(t("form-docs-uploaded-success"));
     } catch (error: any) {
-      toast.error(error.message || "Failed to upload documents");
+      toast.error(error.message || t("form-failed-upload-docs"));
     } finally {
       setIsLoading(false);
     }
@@ -116,14 +118,13 @@ export default function SellerSignUpForm() {
           </div>
         </div>
         <Title as="h3" className="mb-4 text-2xl font-bold text-green-600">
-          Registration Complete!
+          {t("form-registration-complete")}
         </Title>
         <Text className="mb-6 text-gray-600">
-          Your application has been submitted successfully. Our team will review
-          your documents and approve your account within 24-48 hours.
+          {t("form-registration-complete-description")}
         </Text>
         <Button onClick={() => router.push(routes.auth.signIn)}>
-          Go to Sign In
+          {t("form-go-to-sign-in")}
         </Button>
       </div>
     );
@@ -134,18 +135,17 @@ export default function SellerSignUpForm() {
       <div className="space-y-6">
         <div className="text-center">
           <Title as="h3" className="mb-2 text-xl font-bold">
-            Upload Your Documents
+            {t("form-upload-your-documents")}
           </Title>
           <Text className="text-gray-500">
-            Please upload the required documents for verification (National ID,
-            Commercial Register, Tax Certificate, etc.)
+            {t("form-business-documents-description")}
           </Text>
         </div>
 
         <div className="space-y-4">
           <div>
             <label className="mb-2 block text-sm font-medium">
-              Business Documents *
+              {t("form-business-documents")}
             </label>
             <input
               type="file"
@@ -155,13 +155,13 @@ export default function SellerSignUpForm() {
               className="w-full rounded-lg border border-gray-300 p-2"
             />
             <Text className="mt-1 text-xs text-gray-500">
-              You can select multiple files. Accepted: Images, PDF
+              {t("form-file-accepted-types")}
             </Text>
           </div>
 
           {documents.length > 0 && (
             <div className="rounded-lg bg-gray-50 p-4">
-              <Text className="mb-2 font-medium">Selected files:</Text>
+              <Text className="mb-2 font-medium">{t("form-selected-files")}:</Text>
               <ul className="space-y-1">
                 {documents.map((file, index) => (
                   <li key={index} className="text-sm text-gray-600">
@@ -179,7 +179,7 @@ export default function SellerSignUpForm() {
           onClick={handleDocumentSubmit}
           disabled={isLoading}
         >
-          {isLoading ? <Loader variant="spinner" /> : "Submit Documents"}
+          {isLoading ? <Loader variant="spinner" /> : t("form-submit-documents")}
         </Button>
       </div>
     );
@@ -190,29 +190,29 @@ export default function SellerSignUpForm() {
       <div className="grid grid-cols-2 gap-4">
         <Input
           type="text"
-          label="First Name"
-          placeholder="Enter your first name"
-          {...register("firstName", { required: "First name is required" })}
+          label={t("form-first-name")}
+          placeholder={t("form-first-name-placeholder")}
+          {...register("firstName", { required: t("form-first-name-required") })}
           error={errors.firstName?.message}
         />
         <Input
           type="text"
-          label="Last Name"
-          placeholder="Enter your last name"
-          {...register("lastName", { required: "Last name is required" })}
+          label={t("form-last-name")}
+          placeholder={t("form-last-name-placeholder")}
+          {...register("lastName", { required: t("form-last-name-is-required") })}
           error={errors.lastName?.message}
         />
       </div>
 
       <Input
         type="email"
-        label="Email"
-        placeholder="Enter your email"
+        label={t("form-email")}
+        placeholder={t("form-email-placeholder")}
         {...register("email", {
-          required: "Email is required",
+          required: t("form-email-address-required"),
           pattern: {
             value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i,
-            message: "Invalid email address",
+            message: t("form-invalid-email-address"),
           },
         })}
         error={errors.email?.message}
@@ -220,26 +220,26 @@ export default function SellerSignUpForm() {
 
       <Input
         type="tel"
-        label="Phone Number"
-        placeholder="Enter your phone number"
-        {...register("phoneNumber", { required: "Phone number is required" })}
+        label={t("form-phone-number")}
+        placeholder={t("form-phone-placeholder")}
+        {...register("phoneNumber", { required: t("form-phone-number-is-required") })}
         error={errors.phoneNumber?.message}
       />
 
       <div className="grid grid-cols-2 gap-4">
         <Input
           type="text"
-          label="Bank Name"
-          placeholder="Enter bank name"
-          {...register("bankName", { required: "Bank name is required" })}
+          label={t("form-bank-name")}
+          placeholder={t("form-bank-name")}
+          {...register("bankName", { required: t("form-this-field-required") })}
           error={errors.bankName?.message}
         />
         <Input
           type="text"
-          label="Bank Account Number"
-          placeholder="Enter account number"
+          label={t("form-bank-account-number")}
+          placeholder={t("form-bank-account-number")}
           {...register("bankAccountNumber", {
-            required: "Account number is required",
+            required: t("form-this-field-required"),
           })}
           error={errors.bankAccountNumber?.message}
         />
@@ -247,24 +247,24 @@ export default function SellerSignUpForm() {
 
       <div className="grid grid-cols-2 gap-4">
         <Password
-          label="Password"
-          placeholder="Enter your password"
+          label={t("form-password")}
+          placeholder={t("form-password-placeholder")}
           {...register("password", {
-            required: "Password is required",
+            required: t("form-password-required"),
             minLength: {
               value: 8,
-              message: "Password must be at least 8 characters",
+              message: t("form-password-helper-text"),
             },
           })}
           error={errors.password?.message}
         />
 
         <Password
-          label="Confirm Password"
-          placeholder="Confirm your password"
+          label={t("form-confirm-password")}
+          placeholder={t("form-confirm-password-placeholder")}
           {...register("confirmPassword", {
-            required: "Please confirm your password",
-            validate: (value) => value === password || "Passwords do not match",
+            required: t("form-confirm-password-required"),
+            validate: (value) => value === password || t("form-password-dont-match"),
           })}
           error={errors.confirmPassword?.message}
         />
@@ -275,7 +275,7 @@ export default function SellerSignUpForm() {
         className="w-full rounded-full bg-[#1f502a] hover:bg-[#143219]"
         disabled={isLoading}
       >
-        {isLoading ? <Loader variant="spinner" /> : "Create Account"}
+        {isLoading ? <Loader variant="spinner" /> : t("form-create-account")}
       </Button>
     </form>
   );
