@@ -1,0 +1,886 @@
+Shop
+
+POST
+/api/Shop/ChangeStatus/change-status
+
+Parameters
+Try it out
+Name	Description
+X-Api-Version
+string
+(header)
+X-Api-Version
+Accept-Language
+string
+(header)
+Language of the request
+
+Accept-Language
+api-version
+string
+(query)
+api-version
+Request body
+
+application/json
+Example Value
+Schema
+{
+  "shopId": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
+  "status": 0
+}
+Responses
+Code	Description	Links
+200	
+Success
+
+No links
+400	
+Bad Request
+
+Media type
+
+text/plain
+Example Value
+Schema
+{
+  "type": "string",
+  "title": "string",
+  "status": 0,
+  "detail": "string",
+  "instance": "string",
+  "additionalProp1": "string",
+  "additionalProp2": "string",
+  "additionalProp3": "string"
+}
+No links
+404	
+Not Found
+
+Media type
+
+text/plain
+Example Value
+Schema
+{
+  "type": "string",
+  "title": "string",
+  "status": 0,
+  "detail": "string",
+  "instance": "string",
+  "additionalProp1": "string",
+  "additionalProp2": "string",
+  "additionalProp3": "string"
+}
+No links
+
+GET
+/api/Shop/GetAll
+
+Parameters
+Try it out
+Name	Description
+X-Api-Version
+string
+(header)
+X-Api-Version
+Accept-Language
+string
+(header)
+Language of the request
+
+Accept-Language
+api-version
+string
+(query)
+api-version
+Responses
+Code	Description	Links
+200	
+Success
+
+Media type
+
+text/plain
+Controls Accept header.
+Example Value
+Schema
+[
+  {
+    "id": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
+    "sellerId": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
+    "shopCategoryId": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
+    "name": "string",
+    "description": "string",
+    "logoUrl": "string",
+    "backgroundImageUrl": "string",
+    "status": 0,
+    "isFeatured": true,
+    "averageRating": 0,
+    "totalOrders": 0,
+    "commissionRate": 0,
+    "createdAt": "2026-01-07T12:26:46.293Z",
+    "updatedAt": "2026-01-07T12:26:46.293Z",
+    "subCategories": [
+      {
+        "id": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
+        "shopCategoryId": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
+        "name": "string",
+        "iconUrl": "string",
+        "displayOrder": 0,
+        "isActive": true,
+        "createdAt": "2026-01-07T12:26:46.293Z"
+      }
+    ]
+  }
+]
+
+ShopCategory
+
+ShopCategory
+
+
+POST
+/api/ShopCategory/Create
+
+Parameters
+Try it out
+Name	Description
+X-Api-Version
+string
+(header)
+X-Api-Version
+Accept-Language
+string
+(header)
+Language of the request
+
+Accept-Language
+api-version
+string
+(query)
+api-version
+Request body
+
+multipart/form-data
+NameEn
+string
+NameAr
+string
+Icon
+string($binary)
+DisplayOrder
+integer($int32)
+IsActive
+boolean
+Responses
+Code	Description	Links
+201	
+Created
+
+Media type
+
+text/plain
+Controls Accept header.
+Example Value
+Schema
+{
+  "id": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
+  "name": "string",
+  "iconUrl": "string",
+  "displayOrder": 0,
+  "isActive": true,
+  "createdAt": "2026-01-07T12:27:27.306Z"
+}
+No links
+400	
+Bad Request
+
+Media type
+
+text/plain
+Example Value
+Schema
+{
+  "type": "string",
+  "title": "string",
+  "status": 0,
+  "detail": "string",
+  "instance": "string",
+  "additionalProp1": "string",
+  "additionalProp2": "string",
+  "additionalProp3": "string"
+}
+No links
+
+PUT
+/api/ShopCategory/Update/{id}
+
+Parameters
+Try it out
+Name	Description
+id *
+string($uuid)
+(path)
+id
+X-Api-Version
+string
+(header)
+X-Api-Version
+Accept-Language
+string
+(header)
+Language of the request
+
+Accept-Language
+api-version
+string
+(query)
+api-version
+Request body
+
+multipart/form-data
+NameEn
+string
+NameAr
+string
+Icon
+string($binary)
+DisplayOrder
+integer($int32)
+IsActive
+boolean
+Responses
+Code	Description	Links
+200	
+Success
+
+Media type
+
+text/plain
+Controls Accept header.
+Example Value
+Schema
+{
+  "id": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
+  "name": "string",
+  "iconUrl": "string",
+  "displayOrder": 0,
+  "isActive": true,
+  "createdAt": "2026-01-07T12:27:27.309Z"
+}
+No links
+400	
+Bad Request
+
+Media type
+
+text/plain
+Example Value
+Schema
+{
+  "type": "string",
+  "title": "string",
+  "status": 0,
+  "detail": "string",
+  "instance": "string",
+  "additionalProp1": "string",
+  "additionalProp2": "string",
+  "additionalProp3": "string"
+}
+No links
+404	
+Not Found
+
+Media type
+
+text/plain
+Example Value
+Schema
+{
+  "type": "string",
+  "title": "string",
+  "status": 0,
+  "detail": "string",
+  "instance": "string",
+  "additionalProp1": "string",
+  "additionalProp2": "string",
+  "additionalProp3": "string"
+}
+No links
+
+GET
+/api/ShopCategory/GetById/{id}
+
+Parameters
+Try it out
+Name	Description
+id *
+string($uuid)
+(path)
+id
+X-Api-Version
+string
+(header)
+X-Api-Version
+Accept-Language
+string
+(header)
+Language of the request
+
+Accept-Language
+api-version
+string
+(query)
+api-version
+Responses
+Code	Description	Links
+200	
+Success
+
+Media type
+
+text/plain
+Controls Accept header.
+Example Value
+Schema
+{
+  "id": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
+  "name": "string",
+  "iconUrl": "string",
+  "displayOrder": 0,
+  "isActive": true,
+  "createdAt": "2026-01-07T12:27:27.313Z"
+}
+No links
+404	
+Not Found
+
+Media type
+
+text/plain
+Example Value
+Schema
+{
+  "type": "string",
+  "title": "string",
+  "status": 0,
+  "detail": "string",
+  "instance": "string",
+  "additionalProp1": "string",
+  "additionalProp2": "string",
+  "additionalProp3": "string"
+}
+No links
+
+GET
+/api/ShopCategory/GetAll
+
+Parameters
+Try it out
+Name	Description
+X-Api-Version
+string
+(header)
+X-Api-Version
+Accept-Language
+string
+(header)
+Language of the request
+
+Accept-Language
+api-version
+string
+(query)
+api-version
+Responses
+Code	Description	Links
+200	
+Success
+
+Media type
+
+text/plain
+Controls Accept header.
+Example Value
+Schema
+[
+  {
+    "id": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
+    "name": "string",
+    "iconUrl": "string",
+    "displayOrder": 0,
+    "isActive": true,
+    "createdAt": "2026-01-07T12:27:27.315Z"
+  }
+]
+No links
+
+DELETE
+/api/ShopCategory/Delete/{id}
+
+Parameters
+Try it out
+Name	Description
+id *
+string($uuid)
+(path)
+id
+X-Api-Version
+string
+(header)
+X-Api-Version
+Accept-Language
+string
+(header)
+Language of the request
+
+Accept-Language
+api-version
+string
+(query)
+api-version
+Responses
+Code	Description	Links
+200	
+Success
+
+No links
+400	
+Bad Request
+
+Media type
+
+text/plain
+Example Value
+Schema
+{
+  "type": "string",
+  "title": "string",
+  "status": 0,
+  "detail": "string",
+  "instance": "string",
+  "additionalProp1": "string",
+  "additionalProp2": "string",
+  "additionalProp3": "string"
+}
+No links
+404	
+Not Found
+
+Media type
+
+text/plain
+Example Value
+Schema
+{
+  "type": "string",
+  "title": "string",
+  "status": 0,
+  "detail": "string",
+  "instance": "string",
+  "additionalProp1": "string",
+  "additionalProp2": "string",
+  "additionalProp3": "string"
+}
+
+SubCategory
+
+
+POST
+/api/SubCategory/Create
+
+Parameters
+Try it out
+Name	Description
+X-Api-Version
+string
+(header)
+X-Api-Version
+Accept-Language
+string
+(header)
+Language of the request
+
+Accept-Language
+api-version
+string
+(query)
+api-version
+Request body
+
+multipart/form-data
+ShopCategoryId
+string($uuid)
+NameEn
+string
+NameAr
+string
+Icon
+string($binary)
+DisplayOrder
+integer($int32)
+IsActive
+boolean
+Responses
+Code	Description	Links
+201	
+Created
+
+Media type
+
+text/plain
+Controls Accept header.
+Example Value
+Schema
+{
+  "id": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
+  "shopCategoryId": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
+  "name": "string",
+  "iconUrl": "string",
+  "displayOrder": 0,
+  "isActive": true,
+  "createdAt": "2026-01-07T12:28:50.363Z"
+}
+No links
+400	
+Bad Request
+
+Media type
+
+text/plain
+Example Value
+Schema
+{
+  "type": "string",
+  "title": "string",
+  "status": 0,
+  "detail": "string",
+  "instance": "string",
+  "additionalProp1": "string",
+  "additionalProp2": "string",
+  "additionalProp3": "string"
+}
+No links
+
+PUT
+/api/SubCategory/Update/{id}
+
+Parameters
+Try it out
+Name	Description
+id *
+string($uuid)
+(path)
+id
+X-Api-Version
+string
+(header)
+X-Api-Version
+Accept-Language
+string
+(header)
+Language of the request
+
+Accept-Language
+api-version
+string
+(query)
+api-version
+Request body
+
+multipart/form-data
+NameEn
+string
+NameAr
+string
+Icon
+string($binary)
+DisplayOrder
+integer($int32)
+IsActive
+boolean
+Responses
+Code	Description	Links
+200	
+Success
+
+Media type
+
+text/plain
+Controls Accept header.
+Example Value
+Schema
+{
+  "id": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
+  "shopCategoryId": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
+  "name": "string",
+  "iconUrl": "string",
+  "displayOrder": 0,
+  "isActive": true,
+  "createdAt": "2026-01-07T12:28:50.368Z"
+}
+No links
+400	
+Bad Request
+
+Media type
+
+text/plain
+Example Value
+Schema
+{
+  "type": "string",
+  "title": "string",
+  "status": 0,
+  "detail": "string",
+  "instance": "string",
+  "additionalProp1": "string",
+  "additionalProp2": "string",
+  "additionalProp3": "string"
+}
+No links
+404	
+Not Found
+
+Media type
+
+text/plain
+Example Value
+Schema
+{
+  "type": "string",
+  "title": "string",
+  "status": 0,
+  "detail": "string",
+  "instance": "string",
+  "additionalProp1": "string",
+  "additionalProp2": "string",
+  "additionalProp3": "string"
+}
+No links
+
+GET
+/api/SubCategory/GetById/{id}
+
+Parameters
+Try it out
+Name	Description
+id *
+string($uuid)
+(path)
+id
+X-Api-Version
+string
+(header)
+X-Api-Version
+Accept-Language
+string
+(header)
+Language of the request
+
+Accept-Language
+api-version
+string
+(query)
+api-version
+Responses
+Code	Description	Links
+200	
+Success
+
+Media type
+
+text/plain
+Controls Accept header.
+Example Value
+Schema
+{
+  "id": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
+  "shopCategoryId": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
+  "name": "string",
+  "iconUrl": "string",
+  "displayOrder": 0,
+  "isActive": true,
+  "createdAt": "2026-01-07T12:28:50.374Z"
+}
+No links
+404	
+Not Found
+
+Media type
+
+text/plain
+Example Value
+Schema
+{
+  "type": "string",
+  "title": "string",
+  "status": 0,
+  "detail": "string",
+  "instance": "string",
+  "additionalProp1": "string",
+  "additionalProp2": "string",
+  "additionalProp3": "string"
+}
+No links
+
+GET
+/api/SubCategory/GetByCategoryId/category/{categoryId}
+
+Parameters
+Try it out
+Name	Description
+categoryId *
+string($uuid)
+(path)
+categoryId
+X-Api-Version
+string
+(header)
+X-Api-Version
+Accept-Language
+string
+(header)
+Language of the request
+
+Accept-Language
+api-version
+string
+(query)
+api-version
+Responses
+Code	Description	Links
+200	
+Success
+
+Media type
+
+text/plain
+Controls Accept header.
+Example Value
+Schema
+[
+  {
+    "id": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
+    "shopCategoryId": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
+    "name": "string",
+    "iconUrl": "string",
+    "displayOrder": 0,
+    "isActive": true,
+    "createdAt": "2026-01-07T12:28:50.378Z"
+  }
+]
+No links
+
+GET
+/api/SubCategory/GetAll
+
+Parameters
+Try it out
+Name	Description
+X-Api-Version
+string
+(header)
+X-Api-Version
+Accept-Language
+string
+(header)
+Language of the request
+
+Accept-Language
+api-version
+string
+(query)
+api-version
+Responses
+Code	Description	Links
+200	
+Success
+
+Media type
+
+text/plain
+Controls Accept header.
+Example Value
+Schema
+[
+  {
+    "id": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
+    "shopCategoryId": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
+    "name": "string",
+    "iconUrl": "string",
+    "displayOrder": 0,
+    "isActive": true,
+    "createdAt": "2026-01-07T12:28:50.380Z"
+  }
+]
+No links
+
+DELETE
+/api/SubCategory/Delete/{id}
+
+Parameters
+Try it out
+Name	Description
+id *
+string($uuid)
+(path)
+id
+X-Api-Version
+string
+(header)
+X-Api-Version
+Accept-Language
+string
+(header)
+Language of the request
+
+Accept-Language
+api-version
+string
+(query)
+api-version
+Responses
+Code	Description	Links
+200	
+Success
+
+No links
+400	
+Bad Request
+
+Media type
+
+text/plain
+Example Value
+Schema
+{
+  "type": "string",
+  "title": "string",
+  "status": 0,
+  "detail": "string",
+  "instance": "string",
+  "additionalProp1": "string",
+  "additionalProp2": "string",
+  "additionalProp3": "string"
+}
+No links
+404	
+Not Found
+
+Media type
+
+text/plain
+Example Value
+Schema
+{
+  "type": "string",
+  "title": "string",
+  "status": 0,
+  "detail": "string",
+  "instance": "string",
+  "additionalProp1": "string",
+  "additionalProp2": "string",
+  "additionalProp3": "string"
+}

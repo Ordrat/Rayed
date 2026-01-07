@@ -3,9 +3,9 @@
 import { Link } from "@/i18n/routing";
 import { Fragment } from "react";
 import { usePathname } from "next/navigation";
-import { Title } from "rizzui";
+import { Title, Collapse } from "rizzui";
 import cn from "@core/utils/class-names";
-import { PiCommand } from "react-icons/pi";
+import { PiCommand, PiCaretDownBold } from "react-icons/pi";
 import { menuItems } from "@/layouts/boron/boron-menu-items";
 import { useBoronKbdShortcuts } from "@/layouts/boron/boron-utils";
 import { useLocale, useTranslations } from "next-intl";
@@ -25,6 +25,15 @@ export function BoronSidebarMenu() {
         const isActive =
           pathname === url ||
           (pathname.startsWith(url + "/") && item?.href !== "/");
+
+        // Check if item has dropdown items
+        const hasDropdown = item.dropdownItems && item.dropdownItems.length > 0;
+        
+        // Check if any dropdown item is active
+        const isDropdownActive = hasDropdown && item.dropdownItems?.some((dropdownItem) => {
+          const dropdownUrl = `/${locale}${dropdownItem.href}`;
+          return pathname === dropdownUrl || pathname.startsWith(dropdownUrl + "/");
+        });
 
         return (
           <Fragment key={item.name + "-" + index}>
@@ -46,7 +55,7 @@ export function BoronSidebarMenu() {
                           "me-2 inline-flex h-5 w-5 items-center justify-center rounded-md duration-200 [&>svg]:h-[20px] [&>svg]:w-[20px]",
                           isActive
                             ? "text-gray-0"
-                            : "text-gray-800 dark:text-gray-500 dark:group-hover:text-gray-700"
+                            : "text-gray-800 group-hover:text-gray-0 dark:text-gray-500 dark:group-hover:text-gray-0"
                         )}
                       >
                         <Icon />
@@ -74,6 +83,73 @@ export function BoronSidebarMenu() {
                   </div>
                 </Link>
               </>
+            ) : hasDropdown ? (
+              <Collapse
+                defaultOpen={isDropdownActive}
+                className="mx-3 my-0.5 2xl:mx-5"
+                header={({ open, toggle }) => (
+                  <div
+                    onClick={toggle}
+                    className={cn(
+                      "group relative flex cursor-pointer items-center justify-between rounded-md px-3 py-2 font-medium capitalize duration-200 lg:my-1 2xl:my-2",
+                      isDropdownActive
+                        ? "bg-[#1f502a] text-gray-0"
+                        : "text-gray-700 transition-colors duration-200 hover:bg-[#1f502a] hover:text-gray-0 dark:text-gray-700/90"
+                    )}
+                  >
+                    <div className="flex items-center truncate">
+                      {Icon && (
+                        <span
+                          className={cn(
+                            "me-2 inline-flex h-5 w-5 items-center justify-center rounded-md duration-200 [&>svg]:h-[20px] [&>svg]:w-[20px]",
+                            isDropdownActive
+                              ? "text-gray-0"
+                              : "text-gray-800 group-hover:text-gray-0 dark:text-gray-500 dark:group-hover:text-gray-0"
+                          )}
+                        >
+                          <Icon />
+                        </span>
+                      )}
+                      <span className="truncate">{t(item.name)}</span>
+                    </div>
+                    <PiCaretDownBold
+                      strokeWidth={3}
+                      className={cn(
+                        "h-3.5 w-3.5 -rotate-90 transition-transform duration-200 rtl:rotate-90",
+                        open && "rotate-0 rtl:rotate-0"
+                      )}
+                    />
+                  </div>
+                )}
+              >
+                {item.dropdownItems?.map((dropdownItem, dropdownIndex) => {
+                  const dropdownUrl = `/${locale}${dropdownItem.href}`;
+                  const isDropdownItemActive = pathname === dropdownUrl || pathname.startsWith(dropdownUrl + "/");
+                  
+                  return (
+                    <Link
+                      key={dropdownItem.name + "-" + dropdownIndex}
+                      href={dropdownItem.href}
+                      className={cn(
+                        "mb-0.5 flex items-center rounded-md py-2 pl-10 pr-3 font-medium capitalize duration-200",
+                        isDropdownItemActive
+                          ? "text-[#1f502a] dark:text-[#1f502a]"
+                          : "text-gray-500 hover:text-[#1f502a] dark:text-gray-400"
+                      )}
+                    >
+                      <span
+                        className={cn(
+                          "me-2 inline-flex h-1 w-1 rounded-full bg-current transition-all duration-200",
+                          isDropdownItemActive
+                            ? "bg-[#1f502a] ring-[1px] ring-[#1f502a]"
+                            : "opacity-40"
+                        )}
+                      />
+                      <span className="truncate">{t(dropdownItem.name)}</span>
+                    </Link>
+                  );
+                })}
+              </Collapse>
             ) : (
               <Title
                 as="h6"

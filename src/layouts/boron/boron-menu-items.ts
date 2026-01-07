@@ -4,6 +4,9 @@ import {
   PiCarDuotone,
   PiStorefrontDuotone,
   PiUserGearDuotone,
+  PiShoppingBagDuotone,
+  PiGridFourDuotone,
+  PiListDashesDuotone,
 } from 'react-icons/pi';
 import { routes } from '@/config/routes';
 
@@ -44,6 +47,24 @@ export const menuItems = [
     href: routes.sellers.list,
     icon: PiStorefrontDuotone,
   },
+  {
+    name: 'sidebar-menu-shop',
+    icon: PiShoppingBagDuotone,
+    dropdownItems: [
+      {
+        name: 'sidebar-menu-shop-hub',
+        href: routes.shop.hub,
+      },
+      {
+        name: 'sidebar-menu-shop-categories',
+        href: routes.shop.categories,
+      },
+      {
+        name: 'sidebar-menu-shop-sub-categories',
+        href: routes.shop.subCategories,
+      },
+    ],
+  },
 
   // label start
   {
@@ -56,3 +77,4 @@ export const menuItems = [
     icon: PiUserGearDuotone,
   },
 ];
+

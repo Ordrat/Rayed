@@ -62,6 +62,18 @@ export const routes = {
     details: (id: string) => `/admin/sellers/${id}`,
     edit: (id: string) => `/admin/sellers/${id}/edit`,
   },
+  // Shop management (admin)
+  shop: {
+    hub: "/admin/shop/hub",
+    categories: "/admin/shop/categories",
+    createCategory: "/admin/shop/categories/create",
+    categoryDetails: (id: string) => `/admin/shop/categories/${id}`,
+    editCategory: (id: string) => `/admin/shop/categories/${id}/edit`,
+    subCategories: "/admin/shop/sub-categories",
+    createSubCategory: "/admin/shop/sub-categories/create",
+    subCategoryDetails: (id: string) => `/admin/shop/sub-categories/${id}`,
+    editSubCategory: (id: string) => `/admin/shop/sub-categories/${id}/edit`,
+  },
   logistics: {
     dashboard: "/logistics",
     shipmentList: "/logistics/shipments",
