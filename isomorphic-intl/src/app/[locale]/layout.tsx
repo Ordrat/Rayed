@@ -3,7 +3,7 @@ import { Toaster } from "react-hot-toast";
 import GlobalDrawer from "@/app/shared/drawer-views/container";
 import GlobalModal from "@/app/shared/modal-views/container";
 import { JotaiProvider, ThemeProvider } from "@/app/shared/theme-provider";
-import { siteConfig } from "@/config/site.config";
+import { siteConfig, metaObject } from "@/config/site.config";
 import { inter, lexendDeca, tajawal, vazirmatn } from "@/app/fonts";
 import cn from "@core/utils/class-names";
 import "./globals.css";
@@ -19,8 +19,7 @@ import NextProgress from "@core/components/next-progress";
 // });
 
 export const metadata = {
-  title: siteConfig.title,
-  description: siteConfig.description,
+  ...metaObject(),
   icons: {
     icon: "/logo/Ricon.jpg",
     apple: "/logo/Ricon.jpg",

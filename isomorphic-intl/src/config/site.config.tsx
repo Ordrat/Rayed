@@ -27,12 +27,12 @@ export const metaObject = (
     title: title ? `${title} - Rayed` : siteConfig.title,
     description,
     openGraph: openGraph ?? {
-      title: title ? `${title} - Rayed` : title,
+      title: title ? `${title} - Rayed` : siteConfig.title,
       description,
-      url: 'https://rayed.com',
+      url: 'https://rayed.vercel.app',
       siteName: 'Rayed', // https://developers.google.com/search/docs/appearance/site-names
       images: {
-        url: 'https://s3.amazonaws.com/redqteam.com/isomorphic-furyroad/itemdep/isobanner.png',
+        url: 'https://rayed.vercel.app/logo/OG-Rayed.jpg',
         width: 1200,
         height: 630,
       },
