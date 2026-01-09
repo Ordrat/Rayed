@@ -1,0 +1,4 @@
+packages:
+  - "isomorphic-intl"
+  - "apps/*"
+  - "packages/*"
