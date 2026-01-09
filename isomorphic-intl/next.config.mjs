@@ -53,7 +53,7 @@ const nextConfig = {
       },
       {
         protocol: "https",
-        hostname: "rayed.netlify.app",
+        hostname: "rayed-dashboard.netlify.app",
       },
       {
         protocol: "https",

@@ -29,10 +29,10 @@ export const metaObject = (
     openGraph: openGraph ?? {
       title: title ? `${title} - Rayed` : siteConfig.title,
       description,
-      url: 'https://rayed.netlify.app',
+      url: 'https://rayed-dashboard.netlify.app',
       siteName: 'Rayed', // https://developers.google.com/search/docs/appearance/site-names
       images: {
-        url: 'https://rayed.netlify.app/logo/OG-Rayed.jpg',
+        url: 'https://rayed-dashboard.netlify.app/logo/OG-Rayed.jpg',
         width: 1200,
         height: 630,
       },
