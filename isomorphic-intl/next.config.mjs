@@ -53,7 +53,7 @@ const nextConfig = {
       },
       {
         protocol: "https",
-        hostname: "isomorphic-furyroad.vercel.app",
+        hostname: "rayed.netlify.app",
       },
       {
         protocol: "https",
