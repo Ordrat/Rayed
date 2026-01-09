@@ -149,7 +149,7 @@ export default function EditSupportAgentPage({ agentId }: { agentId: string }) {
             Edit Agent Information
           </Title>
           <Text className="text-gray-500">
-            Update the support agent's information and permissions.
+            Update the support agent&apos;s information and permissions.
           </Text>
         </div>
 

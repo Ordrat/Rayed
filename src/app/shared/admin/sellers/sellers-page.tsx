@@ -267,14 +267,15 @@ export default function SellersPage() {
                           Approve
                         </Button>
                       </Popover.Trigger>
-                      <Popover.Content className="z-50 shadow-xl">
+                      <Popover.Content className="z-[9999] shadow-xl">
                         {({ setOpen }) => (
                           <div className="w-56 p-3">
                             <Title as="h6" className="mb-2 text-base font-semibold">Approve Seller?</Title>
                             <Text className="mb-4 text-sm text-gray-500">Are you sure you want to approve this seller?</Text>
-                            <div className="flex justify-end gap-2">
+                            <div className="flex items-center justify-end">
                               <Button 
-                                className="bg-green-600 text-white hover:bg-black hover:text-white active:bg-green-700"
+                                size="sm"
+                                className="me-1.5 h-7 bg-green-600 text-white hover:bg-black hover:text-white active:bg-green-700"
                                 onClick={() => { 
                                   handleApprove(seller.id); 
                                   setOpen(false); 
@@ -282,7 +283,7 @@ export default function SellersPage() {
                               >
                                 Yes
                               </Button>
-                              <Button size="sm" variant="outline" onClick={() => setOpen(false)}>No</Button>
+                              <Button size="sm" variant="outline" className="h-7" onClick={() => setOpen(false)}>No</Button>
                             </div>
                           </div>
                         )}
@@ -300,14 +301,15 @@ export default function SellersPage() {
                           Reject
                         </Button>
                       </Popover.Trigger>
-                      <Popover.Content className="z-50 shadow-xl">
+                      <Popover.Content className="z-[9999] shadow-xl">
                         {({ setOpen }) => (
                           <div className="w-56 p-3">
                             <Title as="h6" className="mb-2 text-base font-semibold">Reject Seller?</Title>
                             <Text className="mb-4 text-sm text-gray-500">Are you sure you want to reject this seller?</Text>
-                            <div className="flex justify-end gap-2">
+                            <div className="flex items-center justify-end">
                               <Button 
-                                className="bg-red-600 text-white hover:bg-black hover:text-white active:bg-red-700"
+                                size="sm"
+                                className="me-1.5 h-7 bg-red-600 text-white hover:bg-black hover:text-white active:bg-red-700"
                                 onClick={() => { 
                                   handleReject(seller.id); 
                                   setOpen(false); 
@@ -315,7 +317,7 @@ export default function SellersPage() {
                               >
                                 Yes
                               </Button>
-                              <Button size="sm" variant="outline" onClick={() => setOpen(false)}>No</Button>
+                              <Button size="sm" variant="outline" className="h-7" onClick={() => setOpen(false)}>No</Button>
                             </div>
                           </div>
                         )}

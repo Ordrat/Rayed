@@ -55,6 +55,10 @@ const nextConfig = {
         protocol: "https",
         hostname: "isomorphic-furyroad.vercel.app",
       },
+      {
+        protocol: "https",
+        hostname: "cdn.ordrat.com",
+      },
     ],
   },
   reactStrictMode: true,

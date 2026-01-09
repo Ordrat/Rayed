@@ -2,7 +2,7 @@
 
 import { useState, useEffect, useMemo } from "react";
 import { useSession } from "next-auth/react";
-import { Title, Text, Badge, Button, Loader, Input, Select } from "rizzui";
+import { Title, Text, Badge, Button, Loader, Input, Select, Popover } from "rizzui";
 import { PiPlusBold, PiEyeBold, PiCheckCircleBold, PiXCircleBold, PiMagnifyingGlassBold, PiSortAscendingBold } from "react-icons/pi";
 import { Link } from "@/i18n/routing";
 import { routes } from "@/config/routes";
@@ -259,22 +259,71 @@ export default function DriversPage() {
                 </Link>
                 {driver.deliveryAccountStatus === DeliveryAccountStatus.PENDING && (
                   <>
-                    <Button
-                      className="flex-1 bg-green-600 text-white hover:bg-black hover:text-white hover:border-black active:bg-green-700 border-transparent"
-                      onClick={() => handleApprove(driver.id)}
-                      disabled={processingId === driver.id}
-                    >
-                      <PiCheckCircleBold className="me-1.5 h-4 w-4" />
-                      Approve
-                    </Button>
-                    <Button
-                      className="flex-1 bg-red-600 text-white hover:bg-black hover:text-white hover:border-black active:bg-red-700 border-transparent"
-                      onClick={() => handleReject(driver.id)}
-                      disabled={processingId === driver.id}
-                    >
-                      <PiXCircleBold className="me-1.5 h-4 w-4" />
-                      Reject
-                    </Button>
+                    <Popover placement="top">
+                      <Popover.Trigger>
+                        <Button
+                          className="flex-1 bg-green-600 text-white hover:bg-black hover:text-white hover:border-black active:bg-green-700 border-transparent"
+                          disabled={processingId === driver.id}
+                        >
+                          <PiCheckCircleBold className="me-1.5 h-4 w-4" />
+                          Approve
+                        </Button>
+                      </Popover.Trigger>
+                      <Popover.Content className="z-[9999] shadow-xl">
+                        {({ setOpen }) => (
+                          <div className="w-56 p-3">
+                            <Title as="h6" className="mb-2 text-base font-semibold">Approve Driver?</Title>
+                            <Text className="mb-4 text-sm text-gray-500">Are you sure you want to approve this driver?</Text>
+                            <div className="flex items-center justify-end">
+                              <Button
+                                size="sm"
+                                className="me-1.5 h-7 bg-green-600 text-white hover:bg-black hover:text-white active:bg-green-700"
+                                onClick={() => {
+                                  handleApprove(driver.id);
+                                  setOpen(false);
+                                }}
+                              >
+                                Yes
+                              </Button>
+                              <Button size="sm" variant="outline" className="h-7" onClick={() => setOpen(false)}>No</Button>
+                            </div>
+                          </div>
+                        )}
+                      </Popover.Content>
+                    </Popover>
+
+                    <Popover placement="top">
+                      <Popover.Trigger>
+                        <Button
+                          className="flex-1 bg-red-600 text-white hover:bg-black hover:text-white hover:border-black active:bg-red-700 border-transparent"
+                          disabled={processingId === driver.id}
+                        >
+                          <PiXCircleBold className="me-1.5 h-4 w-4" />
+                          Reject
+                        </Button>
+                      </Popover.Trigger>
+                      <Popover.Content className="z-[9999] shadow-xl">
+                        {({ setOpen }) => (
+                          <div className="w-56 p-3">
+                            <Title as="h6" className="mb-2 text-base font-semibold">Reject Driver?</Title>
+                            <Text className="mb-4 text-sm text-gray-500">Are you sure you want to reject this driver?</Text>
+                            <div className="flex items-center justify-end">
+                              <Button
+                                size="sm"
+                                className="me-1.5 h-7 bg-red-600 text-white hover:bg-black hover:text-white active:bg-red-700"
+                                onClick={() => {
+                                  handleReject(driver.id);
+                                  setOpen(false);
+                                }}
+                              >
+                                Yes
+                              </Button>
+                              <Button size="sm" variant="outline" className="h-7" onClick={() => setOpen(false)}>No</Button>
+                            </div>
+                          </div>
+                        )}
+                      </Popover.Content>
+                    </Popover>
                   </>
                 )}
               </div>

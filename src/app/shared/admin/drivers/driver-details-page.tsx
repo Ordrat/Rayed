@@ -8,6 +8,8 @@ import {
   PiXCircleBold,
   PiArrowLeftBold,
   PiFileBold,
+  PiCarProfileBold,
+  PiTrendUpBold,
 } from "react-icons/pi";
 import { Link } from "@/i18n/routing";
 import { routes } from "@/config/routes";
@@ -32,6 +34,9 @@ import {
 import PageHeader from "@/app/shared/page-header";
 import toast from "react-hot-toast";
 import { useRouter } from "@/i18n/routing";
+import { useTranslations } from "next-intl";
+import WidgetCard from "@core/components/cards/widget-card";
+import DocumentCard from "@/app/shared/document-card";
 
 interface DriverDetailsPageProps {
   driverId: string;
@@ -67,18 +72,19 @@ function getDocStatusBadgeColor(status: DocumentVerificationStatus) {
 export default function DriverDetailsPage({ driverId }: DriverDetailsPageProps) {
   const { data: session, status } = useSession();
   const router = useRouter();
+  const t = useTranslations("common");
   const [driver, setDriver] = useState<Driver | null>(null);
   const [documents, setDocuments] = useState<DriverDocument[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [processingId, setProcessingId] = useState<string | null>(null);
 
   const pageHeader = {
-    title: driver ? `${driver.firstName} ${driver.lastName}` : "Driver Details",
+    title: driver ? `${driver.firstName} ${driver.lastName}` : t("Driver Details"),
     breadcrumb: [
-      { name: "Home", href: "/" },
-      { name: "Admin", href: "#" },
-      { name: "Drivers", href: routes.drivers.list },
-      { name: "Details" },
+      { name: t("Home"), href: "/" },
+      { name: t("Admin"), href: "#" },
+      { name: t("Drivers"), href: routes.drivers.list },
+      { name: t("Details") },
     ],
   };
 
@@ -100,7 +106,7 @@ export default function DriverDetailsPage({ driverId }: DriverDetailsPageProps) 
       setDriver(driverData);
       setDocuments(docsData);
     } catch (error: any) {
-      toast.error(error.message || "Failed to fetch driver details");
+      toast.error(error.message || t("failed-to-fetch-driver-details"));
     } finally {
       setIsLoading(false);
     }
@@ -115,9 +121,9 @@ export default function DriverDetailsPage({ driverId }: DriverDetailsPageProps) 
         session?.accessToken || ""
       );
       setDriver({ ...driver, deliveryAccountStatus: DeliveryAccountStatus.APPROVED });
-      toast.success("Driver approved successfully");
+      toast.success(t("driver-approved-successfully"));
     } catch (error: any) {
-      toast.error(error.message || "Failed to approve driver");
+      toast.error(error.message || t("failed-to-approve-driver"));
     } finally {
       setProcessingId(null);
     }
@@ -132,9 +138,9 @@ export default function DriverDetailsPage({ driverId }: DriverDetailsPageProps) 
         session?.accessToken || ""
       );
       setDriver({ ...driver, deliveryAccountStatus: DeliveryAccountStatus.REJECTED });
-      toast.success("Driver rejected");
+      toast.success(t("driver-rejected-successfully"));
     } catch (error: any) {
-      toast.error(error.message || "Failed to reject driver");
+      toast.error(error.message || t("failed-to-reject-driver"));
     } finally {
       setProcessingId(null);
     }
@@ -154,9 +160,9 @@ export default function DriverDetailsPage({ driverId }: DriverDetailsPageProps) 
             : d
         )
       );
-      toast.success("Document approved");
+      toast.success(t("document-approved-successfully"));
     } catch (error: any) {
-      toast.error(error.message || "Failed to approve document");
+      toast.error(error.message || t("failed-to-approve-document"));
     } finally {
       setProcessingId(null);
     }
@@ -169,7 +175,7 @@ export default function DriverDetailsPage({ driverId }: DriverDetailsPageProps) 
         {
           documentId: docId,
           verificationStatus: DocumentVerificationStatus.REJECTED,
-          rejectionReason: "Document does not meet requirements",
+          rejectionReason: t("document-rejection-default-reason"),
         },
         session?.accessToken || ""
       );
@@ -180,9 +186,9 @@ export default function DriverDetailsPage({ driverId }: DriverDetailsPageProps) 
             : d
         )
       );
-      toast.success("Document rejected");
+      toast.success(t("document-rejected-successfully"));
     } catch (error: any) {
-      toast.error(error.message || "Failed to reject document");
+      toast.error(error.message || t("failed-to-reject-document"));
     } finally {
       setProcessingId(null);
     }
@@ -199,11 +205,11 @@ export default function DriverDetailsPage({ driverId }: DriverDetailsPageProps) 
   if (!driver) {
     return (
       <div className="flex h-[400px] flex-col items-center justify-center">
-        <Text className="mb-4 text-gray-500">Driver not found</Text>
+        <Text className="mb-4 text-gray-500">{t("Driver not found")}</Text>
         <Link href={routes.drivers.list}>
           <Button>
             <PiArrowLeftBold className="me-1.5 h-4 w-4" />
-            Back to Drivers
+            {t("Back to Drivers")}
           </Button>
         </Link>
       </div>
@@ -220,20 +226,16 @@ export default function DriverDetailsPage({ driverId }: DriverDetailsPageProps) 
         <Link href={routes.drivers.list}>
           <Button variant="outline" className="mt-4 sm:mt-0">
             <PiArrowLeftBold className="me-1.5 h-4 w-4" />
-            Back to Drivers
+            {t("Back to Drivers")}
           </Button>
         </Link>
       </PageHeader>
 
       {/* Driver Info Card */}
-      <div className="mb-6 rounded-lg border border-gray-200 bg-white p-6 dark:border-gray-700 dark:bg-gray-800">
-        <div className="mb-4 flex items-start justify-between">
-          <div>
-            <Title as="h3" className="mb-2 text-xl font-semibold">
-              Driver Information
-            </Title>
-            <Text className="text-gray-500">{driver.email}</Text>
-          </div>
+      <WidgetCard 
+        title={t("Driver Information")}
+        description={driver.email}
+        action={
           <Badge
             variant="flat"
             color={getStatusBadgeColor(driver.deliveryAccountStatus)}
@@ -241,65 +243,81 @@ export default function DriverDetailsPage({ driverId }: DriverDetailsPageProps) 
           >
             {getDeliveryAccountStatusLabel(driver.deliveryAccountStatus)}
           </Badge>
-        </div>
+        }
+      >
+        <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3 mt-4">
+          
+          {/* Personal Group */}
+          <div className="space-y-4">
+             <Title as="h6" className="text-sm font-semibold uppercase tracking-wider text-gray-500 mb-2">{t("Personal Information")}</Title>
+             <div>
+               <Text className="text-sm text-gray-500">{t("Phone")}</Text>
+               <Text className="font-medium text-lg">{driver.phoneNumber}</Text>
+             </div>
+             <div>
+               <Text className="text-sm text-gray-500">{t("Availability")}</Text>
+               <Text className="font-medium">
+                {getDeliveryAvailabilityStatusLabel(driver.deliveryAvailabilityStatus)}
+               </Text>
+             </div>
+          </div>
 
-        <div className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3">
-          <div>
-            <Text className="text-sm text-gray-500">Phone</Text>
-            <Text className="font-medium">{driver.phoneNumber}</Text>
+          {/* Vehicle Group */}
+          <div className="space-y-4">
+             <Title as="h6" className="text-sm font-semibold uppercase tracking-wider text-gray-500 mb-2">{t("Vehicle Information")}</Title>
+             <div>
+               <Text className="text-sm text-gray-500 flex items-center gap-1"><PiCarProfileBold /> {t("Vehicle Type")}</Text>
+               <Text className="font-medium">{getVehicleTypeLabel(driver.vehicleType)}</Text>
+             </div>
           </div>
-          <div>
-            <Text className="text-sm text-gray-500">Vehicle Type</Text>
-            <Text className="font-medium">{getVehicleTypeLabel(driver.vehicleType)}</Text>
-          </div>
-          <div>
-            <Text className="text-sm text-gray-500">Availability</Text>
-            <Text className="font-medium">
-              {getDeliveryAvailabilityStatusLabel(driver.deliveryAvailabilityStatus)}
-            </Text>
-          </div>
-          <div>
-            <Text className="text-sm text-gray-500">Total Deliveries</Text>
-            <Text className="font-medium">{driver.totalDeliveries}</Text>
-          </div>
-          <div>
-            <Text className="text-sm text-gray-500">Total Earnings</Text>
-            <Text className="font-medium">{driver.totalEarnings.toFixed(2)} SAR</Text>
-          </div>
-          <div>
-            <Text className="text-sm text-gray-500">Average Rating</Text>
-            <Text className="font-medium">{driver.averageRating.toFixed(1)} ★</Text>
+
+          {/* Performance Group */}
+          <div className="space-y-4">
+             <Title as="h6" className="text-sm font-semibold uppercase tracking-wider text-gray-500 mb-2">{t("Performance")}</Title>
+             <div>
+               <Text className="text-sm text-gray-500 flex items-center gap-1"><PiTrendUpBold /> {t("Total Deliveries")}</Text>
+               <Text className="font-medium">{driver.totalDeliveries}</Text>
+             </div>
+             <div>
+               <Text className="text-sm text-gray-500">{t("Total Earnings")}</Text>
+               <Text className="font-medium text-green-600 font-bold">{driver.totalEarnings.toFixed(2)} {t("SAR")}</Text>
+             </div>
+             <div>
+               <Text className="text-sm text-gray-500">{t("Average Rating")}</Text>
+               <Text className="font-medium">{driver.averageRating.toFixed(1)} ★</Text>
+             </div>
           </div>
         </div>
 
         {driver.deliveryAccountStatus === DeliveryAccountStatus.PENDING && (
-          <div className="mt-6 flex gap-4">
+          <div className="mt-8 flex gap-4 pt-6 border-t border-gray-100 dark:border-gray-700">
             <Popover placement="top">
               <Popover.Trigger>
                 <Button
-                  className="bg-green-600 text-white hover:bg-black hover:text-white active:bg-green-700"
+                  className="flex-1 bg-green-600 text-white hover:bg-black hover:text-white active:bg-green-700"
                   disabled={processingId === "driver"}
                 >
                   <PiCheckCircleBold className="me-1.5 h-4 w-4" />
-                  Approve Driver
+                  {t("Approve Driver")}
                 </Button>
               </Popover.Trigger>
-              <Popover.Content className="z-50 shadow-xl">
+              <Popover.Content className="z-[9999] shadow-xl">
                 {({ setOpen }) => (
                   <div className="w-56 p-3">
-                    <Title as="h6" className="mb-2 text-base font-semibold">Approve Driver?</Title>
-                    <Text className="mb-4 text-sm text-gray-500">Are you sure you want to approve this driver?</Text>
-                    <div className="flex justify-end gap-2">
+                    <Title as="h6" className="mb-2 text-base font-semibold">{t("Approve Driver")}?</Title>
+                    <Text className="mb-4 text-sm text-gray-500">{t("approve-driver-confirm")}</Text>
+                    <div className="flex items-center justify-end">
                       <Button 
-                        className="bg-green-600 text-white hover:bg-black hover:text-white active:bg-green-700"
+                        size="sm"
+                        className="me-1.5 h-7 bg-green-600 text-white hover:bg-black hover:text-white active:bg-green-700"
                         onClick={() => { 
                           handleApproveDriver(); 
                           setOpen(false); 
                         }}
                       >
-                        Yes
+                        {t("text-yes")}
                       </Button>
-                      <Button size="sm" variant="outline" onClick={() => setOpen(false)}>No</Button>
+                      <Button size="sm" variant="outline" className="h-7" onClick={() => setOpen(false)}>{t("text-no")}</Button>
                     </div>
                   </div>
                 )}
@@ -310,29 +328,30 @@ export default function DriverDetailsPage({ driverId }: DriverDetailsPageProps) 
               <Popover.Trigger>
                 <Button
                   variant="outline"
-                  className="bg-red-600 text-white hover:bg-black hover:text-white hover:border-black active:bg-red-700 border-transparent"
+                  className="flex-1 bg-red-600 text-white hover:bg-black hover:text-white hover:border-black active:bg-red-700 border-transparent"
                   disabled={processingId === "driver"}
                 >
                   <PiXCircleBold className="me-1.5 h-4 w-4" />
-                  Reject Driver
+                  {t("Reject Driver")}
                 </Button>
               </Popover.Trigger>
-              <Popover.Content className="z-50 shadow-xl">
+              <Popover.Content className="z-[9999] shadow-xl">
                 {({ setOpen }) => (
                   <div className="w-56 p-3">
-                    <Title as="h6" className="mb-2 text-base font-semibold">Reject Driver?</Title>
-                    <Text className="mb-4 text-sm text-gray-500">Are you sure you want to reject this driver?</Text>
-                    <div className="flex justify-end gap-2">
+                    <Title as="h6" className="mb-2 text-base font-semibold">{t("Reject Driver")}?</Title>
+                    <Text className="mb-4 text-sm text-gray-500">{t("reject-driver-confirm")}</Text>
+                    <div className="flex items-center justify-end">
                       <Button 
-                        className="bg-red-600 text-white hover:bg-black hover:text-white active:bg-red-700"
+                        size="sm"
+                        className="me-1.5 h-7 bg-red-600 text-white hover:bg-black hover:text-white active:bg-red-700"
                         onClick={() => { 
                           handleRejectDriver(); 
                           setOpen(false); 
                         }}
                       >
-                        Yes
+                        {t("text-yes")}
                       </Button>
-                      <Button size="sm" variant="outline" onClick={() => setOpen(false)}>No</Button>
+                      <Button size="sm" variant="outline" className="h-7" onClick={() => setOpen(false)}>{t("text-no")}</Button>
                     </div>
                   </div>
                 )}
@@ -340,131 +359,35 @@ export default function DriverDetailsPage({ driverId }: DriverDetailsPageProps) 
             </Popover>
           </div>
         )}
-      </div>
+      </WidgetCard>
+
+
+
+
 
       {/* Documents Section */}
-      <div className="rounded-lg border border-gray-200 bg-white p-6 dark:border-gray-700 dark:bg-gray-800">
-        <Title as="h3" className="mb-4 text-xl font-semibold">
-          Documents
-        </Title>
-
+      <WidgetCard title={t("Documents")} className="mt-6">
         {documents.length === 0 ? (
-          <Text className="text-gray-500">No documents uploaded yet.</Text>
+          <Text className="text-gray-500">{t("no-documents-uploaded")}</Text>
         ) : (
-          <div className="grid grid-cols-1 md:grid-cols-3 xl:grid-cols-5 gap-4">
+          <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-6">
             {documents.map((doc) => (
-              <div
+              <DocumentCard
                 key={doc.id}
-                className="rounded-lg border border-gray-200 p-4 dark:border-gray-600"
-              >
-                <div className="mb-3 flex items-start justify-between">
-                  <div className="flex items-center gap-2">
-                    <PiFileBold className="h-5 w-5 text-gray-500" />
-                    <Text className="font-medium">
-                      {getDriverDocumentTypeLabel(doc.documentType)}
-                    </Text>
-                  </div>
-                  <Badge
-                    variant="flat"
-                    color={getDocStatusBadgeColor(doc.verificationStatus)}
-                    className="capitalize"
-                  >
-                    {getDocumentVerificationStatusLabel(doc.verificationStatus)}
-                  </Badge>
-                </div>
-
-                {doc.documentUrl && (
-                  <a
-                    href={getDocumentUrl(doc.documentUrl)}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="mb-3 block text-sm text-blue-600 hover:underline"
-                  >
-                    View Document
-                  </a>
-                )}
-
-                {doc.verificationStatus === DocumentVerificationStatus.PENDING && (
-                  <div className="flex gap-2">
-                    <Popover placement="top">
-                      <Popover.Trigger>
-                        <Button
-                          size="sm"
-                          className="flex-1 bg-green-600 text-white hover:bg-black hover:text-white active:bg-green-700"
-                          disabled={processingId === doc.id}
-                        >
-                          Approve
-                        </Button>
-                      </Popover.Trigger>
-                      <Popover.Content className="z-50 shadow-xl">
-                        {({ setOpen }) => (
-                          <div className="w-56 p-3">
-                            <Title as="h6" className="mb-2 text-base font-semibold">Approve Document?</Title>
-                            <Text className="mb-4 text-sm text-gray-500">Are you sure you want to approve this document?</Text>
-                            <div className="flex justify-end gap-2">
-                              <Button 
-                                size="sm"
-                                className="bg-green-600 text-white hover:bg-black hover:text-white active:bg-green-700"
-                                onClick={() => { 
-                                  handleApproveDocument(doc.id); 
-                                  setOpen(false); 
-                                }}
-                              >
-                                Yes
-                              </Button>
-                              <Button size="sm" variant="outline" onClick={() => setOpen(false)}>No</Button>
-                            </div>
-                          </div>
-                        )}
-                      </Popover.Content>
-                    </Popover>
-
-                    <Popover placement="top">
-                      <Popover.Trigger>
-                        <Button
-                          size="sm"
-                          variant="outline"
-                          className="flex-1 bg-red-600 text-white hover:bg-black hover:text-white hover:border-black active:bg-red-700 border-transparent"
-                          disabled={processingId === doc.id}
-                        >
-                          Reject
-                        </Button>
-                      </Popover.Trigger>
-                      <Popover.Content className="z-50 shadow-xl">
-                        {({ setOpen }) => (
-                          <div className="w-56 p-3">
-                            <Title as="h6" className="mb-2 text-base font-semibold">Reject Document?</Title>
-                            <Text className="mb-4 text-sm text-gray-500">Are you sure you want to reject this document?</Text>
-                            <div className="flex justify-end gap-2">
-                              <Button 
-                                size="sm"
-                                className="bg-red-600 text-white hover:bg-black hover:text-white active:bg-red-700"
-                                onClick={() => { 
-                                  handleRejectDocument(doc.id); 
-                                  setOpen(false); 
-                                }}
-                              >
-                                Yes
-                              </Button>
-                              <Button size="sm" variant="outline" onClick={() => setOpen(false)}>No</Button>
-                            </div>
-                          </div>
-                        )}
-                      </Popover.Content>
-                    </Popover>
-                  </div>
-                )}
-
-                {doc.rejectionReason && (
-                  <Text className="mt-2 text-sm text-red-500">
-                    Rejection reason: {doc.rejectionReason}
-                  </Text>
-                )}
-              </div>
+                title={getDriverDocumentTypeLabel(doc.documentType)}
+                statusLabel={getDocumentVerificationStatusLabel(doc.verificationStatus)}
+                statusColor={getDocStatusBadgeColor(doc.verificationStatus)}
+                documentUrl={doc.documentUrl}
+                rejectionReason={doc.rejectionReason}
+                onApprove={() => handleApproveDocument(doc.id)}
+                onReject={() => handleRejectDocument(doc.id)}
+                isProcessing={processingId === doc.id}
+                showActions={doc.verificationStatus === DocumentVerificationStatus.PENDING}
+              />
             ))}
           </div>
         )}
-      </div>
+      </WidgetCard>
     </>
   );
 }

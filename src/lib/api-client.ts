@@ -30,11 +30,11 @@ export async function apiRequest<T>(
 ): Promise<T> {
   const { token, apiVersion = API_VERSION, ...fetchOptions } = options;
 
-  const headers: HeadersInit = {
+  const headers: Record<string, string> = {
     'Content-Type': 'application/json',
     'Accept-Language': 'en',
     'X-Api-Version': apiVersion,
-    ...fetchOptions.headers,
+    ...(fetchOptions.headers as Record<string, string>),
   };
 
   if (token) {

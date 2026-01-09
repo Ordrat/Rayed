@@ -63,11 +63,12 @@ export interface ApiErrorResponse {
 
 /**
  * Seller status enum based on API
- * 0 = Needs password reset (first time login)
+ * 0 = Pending approval (new account, not yet approved by admin)
+ * 1 = Active (approved by admin)
+ * 2 = Suspended
  */
 export enum SellerStatus {
-  NEEDS_PASSWORD_RESET = 0,
+  PENDING = 0,
   ACTIVE = 1,
   SUSPENDED = 2,
-  PENDING = 3,
 }

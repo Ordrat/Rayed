@@ -8,7 +8,12 @@
       "Bash(netstat:*)",
       "Bash(findstr:*)",
       "Bash(taskkill /PID 372 /F)",
-      "Bash(PORT=3002 npm run dev:*)"
+      "Bash(PORT=3002 npm run dev:*)",
+      "Bash(npm run build:*)",
+      "Bash(timeout 120 bash -c \"while ! [ -s ''C:\\\\Users\\\\agala\\\\AppData\\\\Local\\\\Temp\\\\claude\\\\D--Ordrat-Rayed-isomorphic-isomorphic-intl\\\\tasks\\\\bf835f5.output'' ]; do sleep 2; done; tail -100 ''C:\\\\Users\\\\agala\\\\AppData\\\\Local\\\\Temp\\\\claude\\\\D--Ordrat-Rayed-isomorphic-isomorphic-intl\\\\tasks\\\\bf835f5.output''\")",
+      "Bash(timeout 240 npm run build)",
+      "Bash(timeout 300 npm run build:*)",
+      "Bash(openssl rand:*)"
     ]
   }
 }

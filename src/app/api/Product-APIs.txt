@@ -1,0 +1,662 @@
+Product
+
+POST
+/api/Product/Approve/{id}/approve
+
+Parameters
+Try it out
+Name	Description
+id *
+string($uuid)
+(path)
+id
+X-Api-Version
+string
+(header)
+X-Api-Version
+Accept-Language
+string
+(header)
+Language of the request
+
+Accept-Language
+api-version
+string
+(query)
+api-version
+Responses
+Code	Description	Links
+200	
+Success
+
+Media type
+
+text/plain
+Controls Accept header.
+Example Value
+Schema
+{
+  "id": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
+  "shopId": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
+  "shopName": "string",
+  "categoryId": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
+  "categoryName": "string",
+  "name": "string",
+  "description": "string",
+  "basePrice": 0,
+  "discountedPrice": 0,
+  "isActive": true,
+  "isFeatured": true,
+  "displayOrder": 0,
+  "averageRating": 0,
+  "totalOrders": 0,
+  "status": 0,
+  "approvedByUserName": "string",
+  "approvedAt": "2026-01-08T11:20:21.337Z",
+  "createdAt": "2026-01-08T11:20:21.337Z",
+  "updatedAt": "2026-01-08T11:20:21.337Z",
+  "productImages": [
+    {
+      "id": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
+      "productId": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
+      "imageUrl": "string",
+      "isPrimary": true,
+      "displayOrder": 0
+    }
+  ],
+  "variations": [
+    {
+      "id": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
+      "nameAr": "string",
+      "nameEn": "string",
+      "buttonType": 0,
+      "isActive": true,
+      "isRequired": true,
+      "priority": 0,
+      "choices": [
+        {
+          "id": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
+          "nameAr": "string",
+          "nameEn": "string",
+          "price": 0,
+          "imageUrl": "string",
+          "isDefault": true,
+          "isActive": true,
+          "displayOrder": 0
+        }
+      ]
+    }
+  ],
+  "tags": [
+    {
+      "id": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
+      "name": "string",
+      "icon": "string",
+      "colorCode": "string"
+    }
+  ]
+}
+No links
+400	
+Bad Request
+
+Media type
+
+text/plain
+Example Value
+Schema
+{
+  "type": "string",
+  "title": "string",
+  "status": 0,
+  "detail": "string",
+  "instance": "string",
+  "additionalProp1": "string",
+  "additionalProp2": "string",
+  "additionalProp3": "string"
+}
+No links
+404	
+Not Found
+
+Media type
+
+text/plain
+Example Value
+Schema
+{
+  "type": "string",
+  "title": "string",
+  "status": 0,
+  "detail": "string",
+  "instance": "string",
+  "additionalProp1": "string",
+  "additionalProp2": "string",
+  "additionalProp3": "string"
+}
+No links
+
+POST
+/api/Product/Reject/{id}/reject
+
+Parameters
+Try it out
+Name	Description
+id *
+string($uuid)
+(path)
+id
+X-Api-Version
+string
+(header)
+X-Api-Version
+Accept-Language
+string
+(header)
+Language of the request
+
+Accept-Language
+api-version
+string
+(query)
+api-version
+Responses
+Code	Description	Links
+200	
+Success
+
+Media type
+
+text/plain
+Controls Accept header.
+Example Value
+Schema
+{
+  "id": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
+  "shopId": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
+  "shopName": "string",
+  "categoryId": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
+  "categoryName": "string",
+  "name": "string",
+  "description": "string",
+  "basePrice": 0,
+  "discountedPrice": 0,
+  "isActive": true,
+  "isFeatured": true,
+  "displayOrder": 0,
+  "averageRating": 0,
+  "totalOrders": 0,
+  "status": 0,
+  "approvedByUserName": "string",
+  "approvedAt": "2026-01-08T11:20:21.343Z",
+  "createdAt": "2026-01-08T11:20:21.343Z",
+  "updatedAt": "2026-01-08T11:20:21.343Z",
+  "productImages": [
+    {
+      "id": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
+      "productId": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
+      "imageUrl": "string",
+      "isPrimary": true,
+      "displayOrder": 0
+    }
+  ],
+  "variations": [
+    {
+      "id": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
+      "nameAr": "string",
+      "nameEn": "string",
+      "buttonType": 0,
+      "isActive": true,
+      "isRequired": true,
+      "priority": 0,
+      "choices": [
+        {
+          "id": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
+          "nameAr": "string",
+          "nameEn": "string",
+          "price": 0,
+          "imageUrl": "string",
+          "isDefault": true,
+          "isActive": true,
+          "displayOrder": 0
+        }
+      ]
+    }
+  ],
+  "tags": [
+    {
+      "id": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
+      "name": "string",
+      "icon": "string",
+      "colorCode": "string"
+    }
+  ]
+}
+No links
+400	
+Bad Request
+
+Media type
+
+text/plain
+Example Value
+Schema
+{
+  "type": "string",
+  "title": "string",
+  "status": 0,
+  "detail": "string",
+  "instance": "string",
+  "additionalProp1": "string",
+  "additionalProp2": "string",
+  "additionalProp3": "string"
+}
+No links
+404	
+Not Found
+
+Media type
+
+text/plain
+Example Value
+Schema
+{
+  "type": "string",
+  "title": "string",
+  "status": 0,
+  "detail": "string",
+  "instance": "string",
+  "additionalProp1": "string",
+  "additionalProp2": "string",
+  "additionalProp3": "string"
+}
+No links
+
+GET
+/api/Product/GetById/{id}
+
+Parameters
+Try it out
+Name	Description
+id *
+string($uuid)
+(path)
+id
+X-Api-Version
+string
+(header)
+X-Api-Version
+Accept-Language
+string
+(header)
+Language of the request
+
+Accept-Language
+api-version
+string
+(query)
+api-version
+Responses
+Code	Description	Links
+200	
+Success
+
+Media type
+
+text/plain
+Controls Accept header.
+Example Value
+Schema
+{
+  "id": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
+  "shopId": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
+  "shopName": "string",
+  "categoryId": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
+  "categoryName": "string",
+  "name": "string",
+  "description": "string",
+  "basePrice": 0,
+  "discountedPrice": 0,
+  "isActive": true,
+  "isFeatured": true,
+  "displayOrder": 0,
+  "averageRating": 0,
+  "totalOrders": 0,
+  "status": 0,
+  "approvedByUserName": "string",
+  "approvedAt": "2026-01-08T11:20:21.348Z",
+  "createdAt": "2026-01-08T11:20:21.348Z",
+  "updatedAt": "2026-01-08T11:20:21.348Z",
+  "productImages": [
+    {
+      "id": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
+      "productId": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
+      "imageUrl": "string",
+      "isPrimary": true,
+      "displayOrder": 0
+    }
+  ],
+  "variations": [
+    {
+      "id": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
+      "nameAr": "string",
+      "nameEn": "string",
+      "buttonType": 0,
+      "isActive": true,
+      "isRequired": true,
+      "priority": 0,
+      "choices": [
+        {
+          "id": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
+          "nameAr": "string",
+          "nameEn": "string",
+          "price": 0,
+          "imageUrl": "string",
+          "isDefault": true,
+          "isActive": true,
+          "displayOrder": 0
+        }
+      ]
+    }
+  ],
+  "tags": [
+    {
+      "id": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
+      "name": "string",
+      "icon": "string",
+      "colorCode": "string"
+    }
+  ]
+}
+No links
+404	
+Not Found
+
+Media type
+
+text/plain
+Example Value
+Schema
+{
+  "type": "string",
+  "title": "string",
+  "status": 0,
+  "detail": "string",
+  "instance": "string",
+  "additionalProp1": "string",
+  "additionalProp2": "string",
+  "additionalProp3": "string"
+}
+
+GET
+/api/Product/GetAllPendingProducts/pending
+
+Parameters
+Try it out
+Name	Description
+X-Api-Version
+string
+(header)
+X-Api-Version
+Accept-Language
+string
+(header)
+Language of the request
+
+Accept-Language
+api-version
+string
+(query)
+api-version
+Responses
+Code	Description	Links
+200	
+Success
+
+Media type
+
+text/plain
+Controls Accept header.
+Example Value
+Schema
+[
+  {
+    "id": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
+    "shopId": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
+    "shopName": "string",
+    "categoryId": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
+    "categoryName": "string",
+    "name": "string",
+    "description": "string",
+    "basePrice": 0,
+    "discountedPrice": 0,
+    "isActive": true,
+    "isFeatured": true,
+    "displayOrder": 0,
+    "averageRating": 0,
+    "totalOrders": 0,
+    "status": 0,
+    "approvedByUserName": "string",
+    "approvedAt": "2026-01-08T11:20:21.354Z",
+    "createdAt": "2026-01-08T11:20:21.354Z",
+    "updatedAt": "2026-01-08T11:20:21.354Z",
+    "productImages": [
+      {
+        "id": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
+        "productId": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
+        "imageUrl": "string",
+        "isPrimary": true,
+        "displayOrder": 0
+      }
+    ],
+    "variations": [
+      {
+        "id": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
+        "nameAr": "string",
+        "nameEn": "string",
+        "buttonType": 0,
+        "isActive": true,
+        "isRequired": true,
+        "priority": 0,
+        "choices": [
+          {
+            "id": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
+            "nameAr": "string",
+            "nameEn": "string",
+            "price": 0,
+            "imageUrl": "string",
+            "isDefault": true,
+            "isActive": true,
+            "displayOrder": 0
+          }
+        ]
+      }
+    ],
+    "tags": [
+      {
+        "id": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
+        "name": "string",
+        "icon": "string",
+        "colorCode": "string"
+      }
+    ]
+  }
+]
+No links
+
+DELETE
+/api/Product/Delete/{id}
+
+Parameters
+Try it out
+Name	Description
+id *
+string($uuid)
+(path)
+id
+X-Api-Version
+string
+(header)
+X-Api-Version
+Accept-Language
+string
+(header)
+Language of the request
+
+Accept-Language
+api-version
+string
+(query)
+api-version
+Responses
+Code	Description	Links
+200	
+Success
+
+No links
+400	
+Bad Request
+
+Media type
+
+text/plain
+Example Value
+Schema
+{
+  "type": "string",
+  "title": "string",
+  "status": 0,
+  "detail": "string",
+  "instance": "string",
+  "additionalProp1": "string",
+  "additionalProp2": "string",
+  "additionalProp3": "string"
+}
+No links
+404	
+Not Found
+
+Media type
+
+text/plain
+Example Value
+Schema
+{
+  "type": "string",
+  "title": "string",
+  "status": 0,
+  "detail": "string",
+  "instance": "string",
+  "additionalProp1": "string",
+  "additionalProp2": "string",
+  "additionalProp3": "string"
+}
+
+ProductImage
+
+GET
+/api/ProductImage/GetById/{id}
+
+Parameters
+Try it out
+Name	Description
+id *
+string($uuid)
+(path)
+id
+X-Api-Version
+string
+(header)
+X-Api-Version
+Accept-Language
+string
+(header)
+Language of the request
+
+Accept-Language
+api-version
+string
+(query)
+api-version
+Responses
+Code	Description	Links
+200	
+Success
+
+Media type
+
+text/plain
+Controls Accept header.
+Example Value
+Schema
+{
+  "id": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
+  "productId": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
+  "imageUrl": "string",
+  "isPrimary": true,
+  "displayOrder": 0
+}
+No links
+404	
+Not Found
+
+Media type
+
+text/plain
+Example Value
+Schema
+{
+  "type": "string",
+  "title": "string",
+  "status": 0,
+  "detail": "string",
+  "instance": "string",
+  "additionalProp1": "string",
+  "additionalProp2": "string",
+  "additionalProp3": "string"
+}
+
+GET
+/api/ProductImage/GetByProductId/product/{productId}
+
+Parameters
+Try it out
+Name	Description
+productId *
+string($uuid)
+(path)
+productId
+X-Api-Version
+string
+(header)
+X-Api-Version
+Accept-Language
+string
+(header)
+Language of the request
+
+Accept-Language
+api-version
+string
+(query)
+api-version
+Responses
+Code	Description	Links
+200	
+Success
+
+Media type
+
+text/plain
+Controls Accept header.
+Example Value
+Schema
+[
+  {
+    "id": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
+    "productId": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
+    "imageUrl": "string",
+    "isPrimary": true,
+    "displayOrder": 0
+  }
+]

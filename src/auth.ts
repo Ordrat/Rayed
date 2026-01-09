@@ -1,8 +1,8 @@
 import { AuthOptions, User } from "next-auth";
 import { JWT } from "next-auth/jwt";
 import CredentialsProvider from "next-auth/providers/credentials";
-import { sellerLogin, needsPasswordReset } from "@/services/auth.service";
-import { SellerLoginResponse } from "@/types/auth.types";
+import { sellerLogin } from "@/services/auth.service";
+import { SellerLoginResponse, SellerStatus } from "@/types/auth.types";
 
 declare module "next-auth" {
   interface Session {
@@ -62,8 +62,8 @@ const auth: AuthOptions = {
       // Initial sign in
       if (user) {
         const sellerUser = user as User;
-        token.id = sellerUser.id;
-        token.email = sellerUser.email;
+        token.id = sellerUser.id!;
+        token.email = sellerUser.email!;
         token.firstName = sellerUser.firstName;
         token.lastName = sellerUser.lastName;
         token.phoneNumber = sellerUser.phoneNumber;
@@ -138,12 +138,19 @@ const auth: AuthOptions = {
             password: credentials.password,
           });
 
-          // Check if seller needs to reset password
-          const needsReset = needsPasswordReset(response.sellerStatus);
+          // Block login for pending accounts (status 0)
+          if (response.sellerStatus === SellerStatus.PENDING) {
+            throw new Error("ACCOUNT_PENDING_APPROVAL");
+          }
+
+          // Block login for suspended accounts (status 2)
+          if (response.sellerStatus === SellerStatus.SUSPENDED) {
+            throw new Error("ACCOUNT_SUSPENDED");
+          }
 
           return {
             ...response,
-            needsPasswordReset: needsReset,
+            needsPasswordReset: false,
           } as User;
         } catch (error: any) {
           console.error("Login error:", error);

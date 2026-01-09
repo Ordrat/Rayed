@@ -22,12 +22,28 @@ const initialValues: LoginSchema = {
   rememberMe: false,
 };
 
+// Map error codes to translation keys
+const ERROR_CODE_MAP: Record<string, string> = {
+  "ACCOUNT_PENDING_APPROVAL": "form-error-account-pending-approval",
+  "ACCOUNT_SUSPENDED": "form-error-account-suspended",
+};
+
 export default function SignInForm() {
   const t = useTranslations("form");
   const router = useRouter();
   const { data: session, status } = useSession();
   const [isLoading, setIsLoading] = useState(false);
   const [hasProcessedLogin, setHasProcessedLogin] = useState(false);
+
+  // Translate error codes to localized messages
+  const getTranslatedError = (error: string): string => {
+    const translationKey = ERROR_CODE_MAP[error];
+    if (translationKey) {
+      return t(translationKey);
+    }
+    // Return original error if no translation found
+    return error;
+  };
 
   // Handle post-login redirect logic
   useEffect(() => {
@@ -80,7 +96,7 @@ export default function SignInForm() {
       });
 
       if (result?.error) {
-        toast.error(result.error);
+        toast.error(getTranslatedError(result.error));
         setIsLoading(false);
       } else if (result?.ok) {
         toast.success("Login successful!");

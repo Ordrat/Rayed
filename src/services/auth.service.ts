@@ -57,10 +57,10 @@ export async function logout(token: string): Promise<void> {
 }
 
 /**
- * Check if seller needs to reset password (first time login)
+ * Check if seller account is active (approved by admin)
  */
-export function needsPasswordReset(sellerStatus: number): boolean {
-  return sellerStatus === SellerStatus.NEEDS_PASSWORD_RESET;
+export function isSellerActive(sellerStatus: number): boolean {
+  return sellerStatus === SellerStatus.ACTIVE;
 }
 
 /**

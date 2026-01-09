@@ -335,7 +335,7 @@ export default function CreateSellerPage() {
             Seller Information
           </Title>
           <Text className="text-gray-500">
-            Enter the seller's business information. After this, you'll upload their documents.
+            Enter the seller&apos;s business information. After this, you&apos;ll upload their documents.
           </Text>
         </div>
 

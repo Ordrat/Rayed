@@ -1,11 +1,12 @@
+"use client";
+
 import { Link } from "@/i18n/routing";
 import Image from "next/image";
-import { Title } from "rizzui/typography";
-import { Button } from "rizzui/button";
+import { Title, Button } from "rizzui";
 import { PiHouseLineBold } from "react-icons/pi";
 import SocialItems from "@core/ui/social-shares";
 import { siteConfig } from "@/config/site.config";
-import NotFoundImg from "@public/not-found.png";
+import RayedLogo from "@public/logo/rayed.png";
 import { useTranslations } from "next-intl";
 
 export default function NotFound() {
@@ -25,22 +26,28 @@ export default function NotFound() {
 
       <div className="flex grow items-center px-6 xl:px-10">
         <div className="mx-auto text-center">
-          <Image
-            src={NotFoundImg}
-            alt="not found"
-            className="mx-auto mb-8 aspect-[360/326] max-w-[256px] xs:max-w-[370px] lg:mb-12 2xl:mb-16"
-          />
-          <Title
-            as="h1"
-            className="text-[22px] font-bold leading-normal text-gray-1000 lg:text-3xl"
-          >
-            {t("text-not-found-title")}
-          </Title>
-          <p className="mt-3 text-sm leading-loose text-gray-500 lg:mt-6 lg:text-base lg:leading-loose">
-            {t("text-we-have-been-spending-long-hours")}
-            <br className="hidden sm:inline-block" />
-            {t("text-mailing-list-or-follow-us-on-facebook")}
-          </p>
+            <div className="flex flex-col items-center justify-center">
+                <div className="relative mx-auto mb-8 aspect-[360/326] max-w-[256px] xs:max-w-[370px] lg:mb-12 2xl:mb-16">
+                     <Image
+                        src={RayedLogo}
+                        alt="not found"
+                        fill
+                        className="object-contain" // removed mx-auto as it's handled by flex/parent
+                    />
+                </div>
+                <Title
+                    as="h1"
+                    className="text-[22px] font-bold leading-normal text-gray-1000 lg:text-3xl"
+                >
+                    {t("text-not-found-title")}
+                </Title>
+                <p className="mt-3 text-sm leading-loose text-gray-500 lg:mt-6 lg:text-base lg:leading-loose">
+                    {t("text-we-have-been-spending-long-hours")}
+                    <br className="hidden sm:inline-block" />
+                    {t("text-mailing-list-or-follow-us-on-facebook")}
+                </p>
+            </div>
+          
           <Link href={"/"}>
             <Button
               as="span"

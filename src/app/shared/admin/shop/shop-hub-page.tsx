@@ -7,6 +7,7 @@ import { PiEyeBold, PiCheckCircleBold, PiXCircleBold, PiMagnifyingGlassBold, PiS
 import { Link } from "@/i18n/routing";
 import { routes } from "@/config/routes";
 import { getAllShops, changeShopStatus } from "@/services/shop.service";
+import { getDocumentUrl } from "@/config/constants";
 import {
   Shop,
   ShopStatus,
@@ -199,7 +200,7 @@ export default function ShopHubPage() {
                 <div className="flex items-center gap-3">
                   {shop.logoUrl ? (
                     <img
-                      src={shop.logoUrl}
+                      src={getDocumentUrl(shop.logoUrl)}
                       alt={shop.name}
                       className="h-12 w-12 rounded-full object-cover"
                     />
@@ -259,14 +260,15 @@ export default function ShopHubPage() {
                           Approve
                         </Button>
                       </Popover.Trigger>
-                      <Popover.Content className="z-50 shadow-xl">
+                      <Popover.Content className="z-[9999] shadow-xl">
                         {({ setOpen }) => (
                           <div className="w-56 p-3">
                             <Title as="h6" className="mb-2 text-base font-semibold">Approve Shop?</Title>
                             <Text className="mb-4 text-sm text-gray-500">Are you sure you want to approve this shop?</Text>
-                            <div className="flex justify-end gap-2">
+                            <div className="flex items-center justify-end">
                               <Button 
-                                className="bg-green-600 text-white hover:bg-black hover:text-white active:bg-green-700"
+                                size="sm"
+                                className="me-1.5 h-7 bg-green-600 text-white hover:bg-black hover:text-white active:bg-green-700"
                                 onClick={() => { 
                                   handleApprove(shop.id); 
                                   setOpen(false); 
@@ -274,7 +276,7 @@ export default function ShopHubPage() {
                               >
                                 Yes
                               </Button>
-                              <Button size="sm" variant="outline" onClick={() => setOpen(false)}>No</Button>
+                              <Button size="sm" variant="outline" className="h-7" onClick={() => setOpen(false)}>No</Button>
                             </div>
                           </div>
                         )}
@@ -292,14 +294,15 @@ export default function ShopHubPage() {
                           Reject
                         </Button>
                       </Popover.Trigger>
-                      <Popover.Content className="z-50 shadow-xl">
+                      <Popover.Content className="z-[9999] shadow-xl">
                         {({ setOpen }) => (
                           <div className="w-56 p-3">
                             <Title as="h6" className="mb-2 text-base font-semibold">Reject Shop?</Title>
                             <Text className="mb-4 text-sm text-gray-500">Are you sure you want to reject this shop?</Text>
-                            <div className="flex justify-end gap-2">
+                            <div className="flex items-center justify-end">
                               <Button 
-                                className="bg-red-600 text-white hover:bg-black hover:text-white active:bg-red-700"
+                                size="sm"
+                                className="me-1.5 h-7 bg-red-600 text-white hover:bg-black hover:text-white active:bg-red-700"
                                 onClick={() => { 
                                   handleReject(shop.id); 
                                   setOpen(false); 
@@ -307,7 +310,7 @@ export default function ShopHubPage() {
                               >
                                 Yes
                               </Button>
-                              <Button size="sm" variant="outline" onClick={() => setOpen(false)}>No</Button>
+                              <Button size="sm" variant="outline" className="h-7" onClick={() => setOpen(false)}>No</Button>
                             </div>
                           </div>
                         )}

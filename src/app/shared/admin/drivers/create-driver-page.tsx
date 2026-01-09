@@ -369,7 +369,7 @@ export default function CreateDriverPage() {
             Driver Information
           </Title>
           <Text className="text-gray-500">
-            Enter the driver's basic information. After this, you'll upload their documents.
+            Enter the driver&apos;s basic information. After this, you&apos;ll upload their documents.
           </Text>
         </div>
 

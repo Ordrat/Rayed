@@ -7,6 +7,7 @@ import {
   PiShoppingBagDuotone,
   PiGridFourDuotone,
   PiListDashesDuotone,
+  PiPackageDuotone,
 } from 'react-icons/pi';
 import { routes } from '@/config/routes';
 
@@ -64,6 +65,11 @@ export const menuItems = [
         href: routes.shop.subCategories,
       },
     ],
+  },
+  {
+    name: 'sidebar-menu-products',
+    href: routes.products.list,
+    icon: PiPackageDuotone,
   },
 
   // label start

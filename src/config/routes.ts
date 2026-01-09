@@ -62,6 +62,11 @@ export const routes = {
     details: (id: string) => `/admin/sellers/${id}`,
     edit: (id: string) => `/admin/sellers/${id}/edit`,
   },
+  // Product management (admin)
+  products: {
+    list: "/admin/products",
+    details: (id: string) => `/admin/products/${id}`,
+  },
   // Shop management (admin)
   shop: {
     hub: "/admin/shop/hub",

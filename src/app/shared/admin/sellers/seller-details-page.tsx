@@ -8,6 +8,9 @@ import {
   PiXCircleBold,
   PiArrowLeftBold,
   PiFileBold,
+  PiBankBold,
+  PiMoneyBold,
+  PiCalendarBlankBold,
 } from "react-icons/pi";
 import { Link } from "@/i18n/routing";
 import { routes } from "@/config/routes";
@@ -30,6 +33,9 @@ import {
 import PageHeader from "@/app/shared/page-header";
 import toast from "react-hot-toast";
 import { useRouter } from "@/i18n/routing";
+import { useTranslations } from "next-intl";
+import WidgetCard from "@core/components/cards/widget-card";
+import DocumentCard from "@/app/shared/document-card";
 
 interface SellerDetailsPageProps {
   sellerId: string;
@@ -65,18 +71,19 @@ function getDocStatusBadgeColor(status: DocumentVerificationStatus) {
 export default function SellerDetailsPage({ sellerId }: SellerDetailsPageProps) {
   const { data: session, status } = useSession();
   const router = useRouter();
+  const t = useTranslations("common");
   const [seller, setSeller] = useState<Seller | null>(null);
   const [documents, setDocuments] = useState<SellerDocument[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [processingId, setProcessingId] = useState<string | null>(null);
 
   const pageHeader = {
-    title: seller ? `${seller.firstName} ${seller.lastName}` : "Seller Details",
+    title: seller ? `${seller.firstName} ${seller.lastName}` : t("Seller Details"),
     breadcrumb: [
-      { name: "Home", href: "/" },
-      { name: "Admin", href: "#" },
-      { name: "Sellers", href: routes.sellers.list },
-      { name: "Details" },
+      { name: t("Home"), href: "/" },
+      { name: t("Admin"), href: "#" },
+      { name: t("Sellers"), href: routes.sellers.list },
+      { name: t("Details") },
     ],
   };
 
@@ -98,7 +105,7 @@ export default function SellerDetailsPage({ sellerId }: SellerDetailsPageProps) 
       setSeller(sellerData);
       setDocuments(docsData);
     } catch (error: any) {
-      toast.error(error.message || "Failed to fetch seller details");
+      toast.error(error.message || t("failed-to-fetch-seller-details"));
     } finally {
       setIsLoading(false);
     }
@@ -113,9 +120,9 @@ export default function SellerDetailsPage({ sellerId }: SellerDetailsPageProps) 
         session?.accessToken || ""
       );
       setSeller({ ...seller, accountStatus: SellerAccountStatus.APPROVED });
-      toast.success("Seller approved successfully");
+      toast.success(t("seller-approved-successfully"));
     } catch (error: any) {
-      toast.error(error.message || "Failed to approve seller");
+      toast.error(error.message || t("failed-to-approve-seller"));
     } finally {
       setProcessingId(null);
     }
@@ -130,35 +137,35 @@ export default function SellerDetailsPage({ sellerId }: SellerDetailsPageProps) 
         session?.accessToken || ""
       );
       setSeller({ ...seller, accountStatus: SellerAccountStatus.REJECTED });
-      toast.success("Seller rejected");
+      toast.success(t("seller-rejected-successfully"));
     } catch (error: any) {
-      toast.error(error.message || "Failed to reject seller");
+      toast.error(error.message || t("failed-to-reject-seller"));
     } finally {
       setProcessingId(null);
     }
   };
 
-  const handleApproveDocument = async (docId: string) => {
-    setProcessingId(docId);
-    try {
-      await changeSellerDocumentStatus(
-        { documentId: docId, verificationStatus: DocumentVerificationStatus.APPROVED },
-        session?.accessToken || ""
-      );
-      setDocuments(
-        documents.map((d) =>
-          d.id === docId
-            ? { ...d, verificationStatus: DocumentVerificationStatus.APPROVED }
-            : d
-        )
-      );
-      toast.success("Document approved");
-    } catch (error: any) {
-      toast.error(error.message || "Failed to approve document");
-    } finally {
-      setProcessingId(null);
-    }
-  };
+  const handleApproveSellerDocument = async (docId: string) => {
+      setProcessingId(docId);
+      try {
+        await changeSellerDocumentStatus(
+          { documentId: docId, verificationStatus: DocumentVerificationStatus.APPROVED },
+          session?.accessToken || ""
+        );
+        setDocuments(
+          documents.map((d) =>
+            d.id === docId
+              ? { ...d, verificationStatus: DocumentVerificationStatus.APPROVED }
+              : d
+          )
+        );
+        toast.success(t("document-approved-successfully"));
+      } catch (error: any) {
+        toast.error(error.message || t("failed-to-approve-document"));
+      } finally {
+        setProcessingId(null);
+      }
+    };
 
   const handleRejectDocument = async (docId: string) => {
     setProcessingId(docId);
@@ -167,7 +174,7 @@ export default function SellerDetailsPage({ sellerId }: SellerDetailsPageProps) 
         {
           documentId: docId,
           verificationStatus: DocumentVerificationStatus.REJECTED,
-          rejectionReason: "Document does not meet requirements",
+          rejectionReason: t("document-rejection-default-reason"),
         },
         session?.accessToken || ""
       );
@@ -178,9 +185,9 @@ export default function SellerDetailsPage({ sellerId }: SellerDetailsPageProps) 
             : d
         )
       );
-      toast.success("Document rejected");
+      toast.success(t("document-rejected-successfully"));
     } catch (error: any) {
-      toast.error(error.message || "Failed to reject document");
+      toast.error(error.message || t("failed-to-reject-document"));
     } finally {
       setProcessingId(null);
     }
@@ -197,11 +204,11 @@ export default function SellerDetailsPage({ sellerId }: SellerDetailsPageProps) 
   if (!seller) {
     return (
       <div className="flex h-[400px] flex-col items-center justify-center">
-        <Text className="mb-4 text-gray-500">Seller not found</Text>
+        <Text className="mb-4 text-gray-500">{t("Seller not found")}</Text>
         <Link href={routes.sellers.list}>
           <Button>
             <PiArrowLeftBold className="me-1.5 h-4 w-4" />
-            Back to Sellers
+            {t("Back to Sellers")}
           </Button>
         </Link>
       </div>
@@ -218,20 +225,16 @@ export default function SellerDetailsPage({ sellerId }: SellerDetailsPageProps) 
         <Link href={routes.sellers.list}>
           <Button variant="outline" className="mt-4 sm:mt-0">
             <PiArrowLeftBold className="me-1.5 h-4 w-4" />
-            Back to Sellers
+            {t("Back to Sellers")}
           </Button>
         </Link>
       </PageHeader>
 
       {/* Seller Info Card */}
-      <div className="mb-6 rounded-lg border border-gray-200 bg-white p-6 dark:border-gray-700 dark:bg-gray-800">
-        <div className="mb-4 flex items-start justify-between">
-          <div>
-            <Title as="h3" className="mb-2 text-xl font-semibold">
-              Seller Information
-            </Title>
-            <Text className="text-gray-500">{seller.email}</Text>
-          </div>
+      <WidgetCard 
+        title={t("Seller Information")}
+        description={seller.email}
+        action={
           <Badge
             variant="flat"
             color={getStatusBadgeColor(seller.accountStatus)}
@@ -239,65 +242,80 @@ export default function SellerDetailsPage({ sellerId }: SellerDetailsPageProps) 
           >
             {getSellerAccountStatusLabel(seller.accountStatus)}
           </Badge>
-        </div>
+        }
+      >
+        <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3 mt-4">
+          {/* Contact Group */}
+          <div className="space-y-4">
+            <Title as="h6" className="text-sm font-semibold uppercase tracking-wider text-gray-500 mb-2">{t("Personal Information")}</Title>
+             <div>
+               <Text className="text-sm text-gray-500">{t("Phone")}</Text>
+               <Text className="font-medium text-lg">{seller.phoneNumber}</Text>
+             </div>
+          </div>
 
-        <div className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3">
-          <div>
-            <Text className="text-sm text-gray-500">Phone</Text>
-            <Text className="font-medium">{seller.phoneNumber}</Text>
+          {/* Financial Group */}
+          <div className="space-y-4">
+            <Title as="h6" className="text-sm font-semibold uppercase tracking-wider text-gray-500 mb-2">{t("Financial")}</Title>
+             <div>
+               <Text className="text-sm text-gray-500 flex items-center gap-1"><PiBankBold /> {t("Bank Name")}</Text>
+               <Text className="font-medium">{seller.bankName}</Text>
+             </div>
+             <div>
+               <Text className="text-sm text-gray-500">{t("Bank Account")}</Text>
+               <Text className="font-medium">{seller.bankAccountNumber}</Text>
+             </div>
           </div>
-          <div>
-            <Text className="text-sm text-gray-500">Bank Name</Text>
-            <Text className="font-medium">{seller.bankName}</Text>
-          </div>
-          <div>
-            <Text className="text-sm text-gray-500">Bank Account</Text>
-            <Text className="font-medium">{seller.bankAccountNumber}</Text>
-          </div>
-          <div>
-            <Text className="text-sm text-gray-500">Total Earnings</Text>
-            <Text className="font-medium">{seller.totalEarnings.toFixed(2)} SAR</Text>
-          </div>
-          <div>
-            <Text className="text-sm text-gray-500">Commission Rate</Text>
-            <Text className="font-medium">{seller.commissionRate}%</Text>
-          </div>
-          <div>
-            <Text className="text-sm text-gray-500">Joined</Text>
-            <Text className="font-medium">
-              {new Date(seller.createdAt).toLocaleDateString()}
-            </Text>
+
+          {/* Statistics/Other Group */}
+          <div className="space-y-4">
+            <Title as="h6" className="text-sm font-semibold uppercase tracking-wider text-gray-500 mb-2">{t("Statistics")}</Title>
+             <div>
+               <Text className="text-sm text-gray-500 flex items-center gap-1"><PiMoneyBold /> {t("Total Earnings")}</Text>
+               <Text className="font-medium text-green-600 font-bold">{seller.totalEarnings.toFixed(2)} {t("SAR")}</Text>
+             </div>
+             <div>
+               <Text className="text-sm text-gray-500">{t("Commission Rate")}</Text>
+               <Text className="font-medium">{seller.commissionRate}%</Text>
+             </div>
+             <div>
+                <Text className="text-sm text-gray-500 flex items-center gap-1"><PiCalendarBlankBold /> {t("Joined")}</Text>
+                <Text className="font-medium">
+                  {new Date(seller.createdAt).toLocaleDateString()}
+                </Text>
+             </div>
           </div>
         </div>
 
         {seller.accountStatus === SellerAccountStatus.PENDING && (
-          <div className="mt-6 flex gap-4">
+          <div className="mt-8 flex gap-4 pt-6 border-t border-gray-100 dark:border-gray-700">
             <Popover placement="top">
               <Popover.Trigger>
                 <Button
-                  className="bg-green-600 text-white hover:bg-black hover:text-white active:bg-green-700"
+                  className="flex-1 bg-green-600 text-white hover:bg-black hover:text-white active:bg-green-700"
                   disabled={processingId === "seller"}
                 >
                   <PiCheckCircleBold className="me-1.5 h-4 w-4" />
-                  Approve Seller
+                  {t("Approve Seller")}
                 </Button>
               </Popover.Trigger>
-              <Popover.Content className="z-50 shadow-xl">
+              <Popover.Content className="z-[9999] shadow-xl">
                 {({ setOpen }) => (
                   <div className="w-56 p-3">
-                    <Title as="h6" className="mb-2 text-base font-semibold">Approve Seller?</Title>
-                    <Text className="mb-4 text-sm text-gray-500">Are you sure you want to approve this seller?</Text>
-                    <div className="flex justify-end gap-2">
+                    <Title as="h6" className="mb-2 text-base font-semibold">{t("Approve Seller")}?</Title>
+                    <Text className="mb-4 text-sm text-gray-500">{t("approve-seller-confirm")}</Text>
+                    <div className="flex items-center justify-end">
                       <Button 
-                        className="bg-green-600 text-white hover:bg-black hover:text-white active:bg-green-700"
+                        size="sm"
+                        className="me-1.5 h-7 bg-green-600 text-white hover:bg-black hover:text-white active:bg-green-700"
                         onClick={() => { 
                           handleApproveSeller(); 
                           setOpen(false); 
                         }}
                       >
-                        Yes
+                        {t("text-yes")}
                       </Button>
-                      <Button size="sm" variant="outline" onClick={() => setOpen(false)}>No</Button>
+                      <Button size="sm" variant="outline" className="h-7" onClick={() => setOpen(false)}>{t("text-no")}</Button>
                     </div>
                   </div>
                 )}
@@ -308,29 +326,30 @@ export default function SellerDetailsPage({ sellerId }: SellerDetailsPageProps) 
               <Popover.Trigger>
                 <Button
                   variant="outline"
-                  className="bg-red-600 text-white hover:bg-black hover:text-white hover:border-black active:bg-red-700 border-transparent"
+                  className="flex-1 bg-red-600 text-white hover:bg-black hover:text-white hover:border-black active:bg-red-700 border-transparent"
                   disabled={processingId === "seller"}
                 >
                   <PiXCircleBold className="me-1.5 h-4 w-4" />
-                  Reject Seller
+                  {t("Reject Seller")}
                 </Button>
               </Popover.Trigger>
-              <Popover.Content className="z-50 shadow-xl">
+              <Popover.Content className="z-[9999] shadow-xl">
                 {({ setOpen }) => (
                   <div className="w-56 p-3">
-                    <Title as="h6" className="mb-2 text-base font-semibold">Reject Seller?</Title>
-                    <Text className="mb-4 text-sm text-gray-500">Are you sure you want to reject this seller?</Text>
-                    <div className="flex justify-end gap-2">
+                    <Title as="h6" className="mb-2 text-base font-semibold">{t("Reject Seller")}?</Title>
+                    <Text className="mb-4 text-sm text-gray-500">{t("reject-seller-confirm")}</Text>
+                    <div className="flex items-center justify-end">
                       <Button 
-                        className="bg-red-600 text-white hover:bg-black hover:text-white active:bg-red-700"
+                        size="sm"
+                        className="me-1.5 h-7 bg-red-600 text-white hover:bg-black hover:text-white active:bg-red-700"
                         onClick={() => { 
                           handleRejectSeller(); 
                           setOpen(false); 
                         }}
                       >
-                        Yes
+                        {t("text-yes")}
                       </Button>
-                      <Button size="sm" variant="outline" onClick={() => setOpen(false)}>No</Button>
+                      <Button size="sm" variant="outline" className="h-7" onClick={() => setOpen(false)}>{t("text-no")}</Button>
                     </div>
                   </div>
                 )}
@@ -338,131 +357,33 @@ export default function SellerDetailsPage({ sellerId }: SellerDetailsPageProps) 
             </Popover>
           </div>
         )}
-      </div>
+      </WidgetCard>
+
+
 
       {/* Documents Section */}
-      <div className="rounded-lg border border-gray-200 bg-white p-6 dark:border-gray-700 dark:bg-gray-800">
-        <Title as="h3" className="mb-4 text-xl font-semibold">
-          Documents
-        </Title>
-
+      <WidgetCard title={t("Documents")} className="mt-6">
         {documents.length === 0 ? (
-          <Text className="text-gray-500">No documents uploaded yet.</Text>
+          <Text className="text-gray-500">{t("no-documents-uploaded")}</Text>
         ) : (
-          <div className="grid grid-cols-1 gap-4 md:grid-cols-3">
+          <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-6">
             {documents.map((doc) => (
-              <div
+              <DocumentCard
                 key={doc.id}
-                className="rounded-lg border border-gray-200 p-4 dark:border-gray-600"
-              >
-                <div className="mb-3 flex items-start justify-between">
-                  <div className="flex items-center gap-2">
-                    <PiFileBold className="h-5 w-5 text-gray-500" />
-                    <Text className="font-medium">
-                      {getSellerDocumentTypeLabel(doc.documentType)}
-                    </Text>
-                  </div>
-                  <Badge
-                    variant="flat"
-                    color={getDocStatusBadgeColor(doc.verificationStatus)}
-                    className="capitalize"
-                  >
-                    {getDocumentVerificationStatusLabel(doc.verificationStatus)}
-                  </Badge>
-                </div>
-
-                {doc.documentUrl && (
-                  <a
-                    href={getDocumentUrl(doc.documentUrl)}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="mb-3 block text-sm text-blue-600 hover:underline"
-                  >
-                    View Document
-                  </a>
-                )}
-
-                {doc.verificationStatus === DocumentVerificationStatus.PENDING && (
-                  <div className="flex gap-2">
-                    <Popover placement="top">
-                      <Popover.Trigger>
-                        <Button
-                          size="sm"
-                          className="flex-1 bg-green-600 text-white hover:bg-black hover:text-white active:bg-green-700"
-                          disabled={processingId === doc.id}
-                        >
-                          Approve
-                        </Button>
-                      </Popover.Trigger>
-                      <Popover.Content className="z-50 shadow-xl">
-                        {({ setOpen }) => (
-                          <div className="w-56 p-3">
-                            <Title as="h6" className="mb-2 text-base font-semibold">Approve Document?</Title>
-                            <Text className="mb-4 text-sm text-gray-500">Are you sure you want to approve this document?</Text>
-                            <div className="flex justify-end gap-2">
-                              <Button 
-                                size="sm"
-                                className="bg-green-600 text-white hover:bg-black hover:text-white active:bg-green-700"
-                                onClick={() => { 
-                                  handleApproveDocument(doc.id); 
-                                  setOpen(false); 
-                                }}
-                              >
-                                Yes
-                              </Button>
-                              <Button size="sm" variant="outline" onClick={() => setOpen(false)}>No</Button>
-                            </div>
-                          </div>
-                        )}
-                      </Popover.Content>
-                    </Popover>
-
-                    <Popover placement="top">
-                      <Popover.Trigger>
-                        <Button
-                          size="sm"
-                          variant="outline"
-                          className="flex-1 bg-red-600 text-white hover:bg-black hover:text-white hover:border-black active:bg-red-700 border-transparent"
-                          disabled={processingId === doc.id}
-                        >
-                          Reject
-                        </Button>
-                      </Popover.Trigger>
-                      <Popover.Content className="z-50 shadow-xl">
-                        {({ setOpen }) => (
-                          <div className="w-56 p-3">
-                            <Title as="h6" className="mb-2 text-base font-semibold">Reject Document?</Title>
-                            <Text className="mb-4 text-sm text-gray-500">Are you sure you want to reject this document?</Text>
-                            <div className="flex justify-end gap-2">
-                              <Button 
-                                size="sm"
-                                className="bg-red-600 text-white hover:bg-black hover:text-white active:bg-red-700"
-                                onClick={() => { 
-                                  handleRejectDocument(doc.id); 
-                                  setOpen(false); 
-                                }}
-                              >
-                                Yes
-                              </Button>
-                              <Button size="sm" variant="outline" onClick={() => setOpen(false)}>No</Button>
-                            </div>
-                          </div>
-                        )}
-                      </Popover.Content>
-                    </Popover>
-                  </div>
-                )}
-
-                {doc.rejectionReason && (
-                  <Text className="mt-2 text-sm text-red-500">
-                    Rejection reason: {doc.rejectionReason}
-                  </Text>
-                )}
-              </div>
+                title={getSellerDocumentTypeLabel(doc.documentType)}
+                statusLabel={getDocumentVerificationStatusLabel(doc.verificationStatus)}
+                statusColor={getDocStatusBadgeColor(doc.verificationStatus)}
+                documentUrl={doc.documentUrl}
+                rejectionReason={doc.rejectionReason}
+                onApprove={() => handleApproveSellerDocument(doc.id)}
+                onReject={() => handleRejectDocument(doc.id)}
+                isProcessing={processingId === doc.id}
+                showActions={doc.verificationStatus === DocumentVerificationStatus.PENDING}
+              />
             ))}
           </div>
         )}
-      </div>
+      </WidgetCard>
     </>
   );
 }
