@@ -7,7 +7,7 @@ import { PiEyeBold, PiCheckCircleBold, PiXCircleBold, PiMagnifyingGlassBold, PiS
 import { Link } from "@/i18n/routing";
 import { routes } from "@/config/routes";
 import { getDocumentUrl } from "@/config/constants";
-import { getAllPendingProducts, approveProduct, rejectProduct, deleteProduct } from "@/services/product.service";
+import { getAllProducts, approveProduct, rejectProduct, deleteProduct } from "@/services/product.service";
 import {
   Product,
   ProductStatus,
@@ -53,9 +53,7 @@ export default function ProductsPage() {
       );
     }
 
-    if (statusFilter && statusFilter.value !== "all") {
-      result = result.filter((p) => p.status === parseInt(statusFilter.value));
-    }
+    // Status filtering is now done server-side via the API
 
     if (sortConfig) {
       const sortValue = sortConfig.value || sortConfig;
@@ -70,20 +68,29 @@ export default function ProductsPage() {
       });
     }
     return result;
-  }, [products, searchTerm, statusFilter, sortConfig]);
+  }, [products, searchTerm, sortConfig]);
 
   useEffect(() => {
     if (status === "authenticated") {
-      fetchProducts();
+      // Get all products on initial load (no status filter)
+      fetchProducts(null);
     } else if (status === "unauthenticated") {
       router.push(routes.auth.signIn);
     }
   }, [session, status, router]);
 
-  const fetchProducts = async () => {
+  // Refetch products when status filter changes
+  useEffect(() => {
+    if (status === "authenticated" && statusFilter !== null) {
+      const statusValue = statusFilter?.value === "all" ? null : parseInt(statusFilter?.value);
+      fetchProducts(statusValue);
+    }
+  }, [statusFilter]);
+
+  const fetchProducts = async (status?: number | null) => {
     try {
       setIsLoading(true);
-      const data = await getAllPendingProducts(session?.accessToken || "");
+      const data = await getAllProducts(session?.accessToken || "", status);
       setProducts(data);
     } catch (error: any) {
       toast.error(error.message || t("failed-to-fetch-products"));
@@ -217,7 +224,7 @@ export default function ProductsPage() {
               <PiMagnifyingGlassBold className="h-16 w-16 text-gray-400" />
             </div>
             <Text className="text-xl font-medium text-gray-900">
-              {t("no-pending-products-message")}
+              {t("no-products-found")}
             </Text>
           </div>
         ) : filteredProducts.length === 0 ? (
@@ -225,7 +232,7 @@ export default function ProductsPage() {
              {searchTerm ? (
                <Text className="mb-2">{t("no-results-found-for")} &quot;{searchTerm}&quot;</Text>
              ) : (
-               <Text className="mb-2">{t("no-pending-products-message")}</Text>
+               <Text className="mb-2">{t("no-products-found")}</Text>
              )}
              <Button variant="text" onClick={() => { setSearchTerm(""); setStatusFilter(null); }} className="text-[#1f502a]">{t("Clear Search")}</Button>
           </div>

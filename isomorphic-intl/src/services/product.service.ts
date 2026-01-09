@@ -45,10 +45,19 @@ export async function getProductById(
 }
 
 /**
- * Get all pending products (admin only)
+ * Get all products with optional status filter (admin only)
+ * @param token - Auth token
+ * @param status - Optional status filter: null = all, 0 = pending, 1 = approved, 2 = rejected
  */
-export async function getAllPendingProducts(token: string): Promise<Product[]> {
-  return apiRequest<Product[]>('/api/Product/GetAllPendingProducts/pending', {
+export async function getAllProducts(
+  token: string,
+  status?: number | null
+): Promise<Product[]> {
+  const url = status !== null && status !== undefined
+    ? `/api/Product/GetAllProducts?status=${status}`
+    : '/api/Product/GetAllProducts';
+  
+  return apiRequest<Product[]>(url, {
     method: 'GET',
     token,
   });

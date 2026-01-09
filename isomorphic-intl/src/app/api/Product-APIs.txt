@@ -389,11 +389,20 @@ Schema
 }
 
 GET
-/api/Product/GetAllPendingProducts/pending
+/api/Product/GetAllProducts
 
 Parameters
-Try it out
+Cancel
 Name	Description
+status
+integer($int32)
+(query)
+
+--
+api-version
+string
+(query)
+api-version
 X-Api-Version
 string
 (header)
@@ -404,10 +413,7 @@ string
 Language of the request
 
 Accept-Language
-api-version
-string
-(query)
-api-version
+Execute
 Responses
 Code	Description	Links
 200	
@@ -437,9 +443,9 @@ Schema
     "totalOrders": 0,
     "status": 0,
     "approvedByUserName": "string",
-    "approvedAt": "2026-01-08T11:20:21.354Z",
-    "createdAt": "2026-01-08T11:20:21.354Z",
-    "updatedAt": "2026-01-08T11:20:21.354Z",
+    "approvedAt": "2026-01-09T14:49:17.351Z",
+    "createdAt": "2026-01-09T14:49:17.351Z",
+    "updatedAt": "2026-01-09T14:49:17.351Z",
     "productImages": [
       {
         "id": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
@@ -482,7 +488,6 @@ Schema
     ]
   }
 ]
-No links
 
 DELETE
 /api/Product/Delete/{id}

@@ -195,6 +195,7 @@
     "Approved At": "Approved At",
     "Approved By": "Approved By",
     "no-pending-products-message": "No pending products found.",
+    "no-products-found": "No products found.",
     "failed-to-fetch-products": "Failed to fetch products",
     "failed-to-fetch-product": "Failed to fetch product",
     "product-approved-successfully": "Product approved successfully",

@@ -122,6 +122,7 @@
     "Approved At": "تاريخ الموافقة",
     "Approved By": "تمت الموافقة بواسطة",
     "no-pending-products-message": "لا توجد منتجات قيد الانتظار.",
+    "no-products-found": "لا توجد منتجات.",
     "failed-to-fetch-products": "فشل في جلب المنتجات",
     "failed-to-fetch-product": "فشل في جلب المنتج",
     "product-approved-successfully": "تمت الموافقة على المنتج بنجاح",
