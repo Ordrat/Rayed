@@ -73,7 +73,7 @@ export function useFirebaseChat({
   const [isOtherTyping, setIsOtherTyping] = useState(false);
   const [error, setError] = useState<string | null>(null);
   
-  const typingTimeoutRef = useRef<NodeJS.Timeout>();
+  const typingTimeoutRef = useRef<NodeJS.Timeout | undefined>(undefined);
   const unsubscribersRef = useRef<(() => void)[]>([]);
   const processedMessageIds = useRef<Set<string>>(new Set());
 

@@ -39,7 +39,7 @@ import {
 import PageHeader from '@/app/shared/page-header';
 import toast from 'react-hot-toast';
 import { useRouter } from '@/i18n/routing';
-import { cn } from '@/lib/utils';
+import cn from "@core/utils/class-names";
 import TablePagination from '@/app/shared/controlled-table/table-pagination';
 import { useLocale } from 'next-intl';
 

@@ -5,7 +5,7 @@
  * Displays a single message bubble
  */
 
-import { cn } from '@/lib/utils';
+import cn from "@core/utils/class-names";
 import { ChatMessage as ChatMessageType } from '@/types/firebase-chat.types';
 import { MessageType, SenderType, SenderTypeLabels } from '@/types/firebase.enums';
 

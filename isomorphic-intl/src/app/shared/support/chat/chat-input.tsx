@@ -6,7 +6,7 @@
  */
 
 import { useState, useCallback, KeyboardEvent, ChangeEvent } from 'react';
-import { cn } from '@/lib/utils';
+import cn from "@core/utils/class-names";
 import { PiPaperPlaneTiltFill } from 'react-icons/pi';
 import { Button, Input } from 'rizzui';
 

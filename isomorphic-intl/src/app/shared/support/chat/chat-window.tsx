@@ -6,7 +6,7 @@
  */
 
 import { useRef, useEffect } from 'react';
-import { cn } from '@/lib/utils';
+import cn from "@core/utils/class-names";
 import { useFirebaseChat } from '@/hooks/use-firebase-chat';
 import { SupportTicket } from '@/types/support-ticket.types';
 import { SenderType } from '@/types/firebase.enums';

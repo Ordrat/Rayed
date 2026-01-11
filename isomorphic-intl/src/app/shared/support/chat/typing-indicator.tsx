@@ -5,7 +5,7 @@
  * Animated dots showing someone is typing
  */
 
-import { cn } from '@/lib/utils';
+import cn from "@core/utils/class-names";
 
 interface TypingIndicatorProps {
   className?: string;
