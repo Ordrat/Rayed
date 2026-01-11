@@ -6,9 +6,6 @@ import { routing } from "./i18n/routing";
 const publicPages = [
   "/auth/sign-in",
   "/auth/sign-up",
-  "/auth/sign-in-1",
-  "/auth/sign-up-1",
-  "/auth/otp-1",
   "/auth/forgot-password-1",
   "/auth/driver-signup",
   "/auth/seller-signup",

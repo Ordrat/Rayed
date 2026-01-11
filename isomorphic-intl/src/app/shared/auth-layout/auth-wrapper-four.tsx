@@ -144,7 +144,7 @@ function AuthFooter() {
       <div className="text-center leading-relaxed text-gray-500 lg:text-start">
         {t("auth-copyright")}{" "}
         <Link
-          href="https://rayed.vercel.app/"
+          href={routes.auth.signIn}
           className="font-medium transition-colors hover:text-primary"
         >
           {t("auth-redq")}
