@@ -1,0 +1,1422 @@
+FirebaseChat
+
+
+POST
+/api/v1/FirebaseChat/messages/text
+
+Parameters
+Try it out
+Name	Description
+Accept-Language
+string
+(header)
+Language of the request
+
+Accept-Language
+Request body
+
+application/json
+Example Value
+Schema
+{
+  "chatId": "string",
+  "content": "string"
+}
+Responses
+Code	Description	Links
+200	
+Success
+
+Media type
+
+text/plain
+Controls Accept header.
+Example Value
+Schema
+string
+No links
+400	
+Bad Request
+
+Media type
+
+text/plain
+Example Value
+Schema
+{
+  "type": "string",
+  "title": "string",
+  "status": 0,
+  "detail": "string",
+  "instance": "string",
+  "additionalProp1": "string",
+  "additionalProp2": "string",
+  "additionalProp3": "string"
+}
+No links
+401	
+Unauthorized
+
+Media type
+
+text/plain
+Example Value
+Schema
+{
+  "type": "string",
+  "title": "string",
+  "status": 0,
+  "detail": "string",
+  "instance": "string",
+  "additionalProp1": "string",
+  "additionalProp2": "string",
+  "additionalProp3": "string"
+}
+
+POST
+/api/v1/FirebaseChat/messages/action
+
+Parameters
+Try it out
+Name	Description
+Accept-Language
+string
+(header)
+Language of the request
+
+Accept-Language
+Request body
+
+application/json
+Example Value
+Schema
+{
+  "chatId": "string",
+  "actionType": "string",
+  "content": "string",
+  "actionData": "string"
+}
+Responses
+Code	Description	Links
+200	
+Success
+
+Media type
+
+text/plain
+Controls Accept header.
+Example Value
+Schema
+string
+No links
+401	
+Unauthorized
+
+Media type
+
+text/plain
+Example Value
+Schema
+{
+  "type": "string",
+  "title": "string",
+  "status": 0,
+  "detail": "string",
+  "instance": "string",
+  "additionalProp1": "string",
+  "additionalProp2": "string",
+  "additionalProp3": "string"
+}
+
+PUT
+/api/v1/FirebaseChat/typing
+
+Parameters
+Try it out
+Name	Description
+Accept-Language
+string
+(header)
+Language of the request
+
+Accept-Language
+Request body
+
+application/json
+Example Value
+Schema
+{
+  "chatId": "string",
+  "isTyping": true
+}
+Responses
+Code	Description	Links
+200	
+Success
+
+No links
+401	
+Unauthorized
+
+Media type
+
+text/plain
+Example Value
+Schema
+{
+  "type": "string",
+  "title": "string",
+  "status": 0,
+  "detail": "string",
+  "instance": "string",
+  "additionalProp1": "string",
+  "additionalProp2": "string",
+  "additionalProp3": "string"
+}
+
+PUT
+/api/v1/FirebaseChat/messages/read
+
+Parameters
+Try it out
+Name	Description
+chatId
+string
+(query)
+chatId
+Accept-Language
+string
+(header)
+Language of the request
+
+Accept-Language
+Responses
+Code	Description	Links
+200	
+Success
+
+No links
+401	
+Unauthorized
+
+Media type
+
+text/plain
+Example Value
+Schema
+{
+  "type": "string",
+  "title": "string",
+  "status": 0,
+  "detail": "string",
+  "instance": "string",
+  "additionalProp1": "string",
+  "additionalProp2": "string",
+  "additionalProp3": "string"
+}
+No links
+
+PUT
+/api/v1/FirebaseChat/online-status
+
+Parameters
+Try it out
+Name	Description
+Accept-Language
+string
+(header)
+Language of the request
+
+Accept-Language
+Request body
+
+application/json
+Example Value
+Schema
+{
+  "chatId": "string",
+  "isOnline": true
+}
+Responses
+Code	Description	Links
+200	
+Success
+
+No links
+401	
+Unauthorized
+
+Media type
+
+text/plain
+Example Value
+Schema
+{
+  "type": "string",
+  "title": "string",
+  "status": 0,
+  "detail": "string",
+  "instance": "string",
+  "additionalProp1": "string",
+  "additionalProp2": "string",
+  "additionalProp3": "string"
+}
+No links
+
+GET
+/api/v1/FirebaseChat/unread-count
+
+Parameters
+Try it out
+Name	Description
+chatId
+string
+(query)
+chatId
+Accept-Language
+string
+(header)
+Language of the request
+
+Accept-Language
+Responses
+Code	Description	Links
+200	
+Success
+
+Media type
+
+text/plain
+Controls Accept header.
+Example Value
+Schema
+0
+No links
+401	
+Unauthorized
+
+Media type
+
+text/plain
+Example Value
+Schema
+{
+  "type": "string",
+  "title": "string",
+  "status": 0,
+  "detail": "string",
+  "instance": "string",
+  "additionalProp1": "string",
+  "additionalProp2": "string",
+  "additionalProp3": "string"
+}
+No links
+
+GET
+/api/v1/FirebaseChat/metadata
+
+Parameters
+Try it out
+Name	Description
+chatId
+string
+(query)
+chatId
+Accept-Language
+string
+(header)
+Language of the request
+
+Accept-Language
+Responses
+Code	Description	Links
+200	
+Success
+
+Media type
+
+text/plain
+Controls Accept header.
+Example Value
+Schema
+{
+  "additionalProp1": "string",
+  "additionalProp2": "string",
+  "additionalProp3": "string"
+}
+No links
+401	
+Unauthorized
+
+Media type
+
+text/plain
+Example Value
+Schema
+{
+  "type": "string",
+  "title": "string",
+  "status": 0,
+  "detail": "string",
+  "instance": "string",
+  "additionalProp1": "string",
+  "additionalProp2": "string",
+  "additionalProp3": "string"
+}
+No links
+404	
+Not Found
+
+Media type
+
+text/plain
+Example Value
+Schema
+{
+  "type": "string",
+  "title": "string",
+  "status": 0,
+  "detail": "string",
+  "instance": "string",
+  "additionalProp1": "string",
+  "additionalProp2": "string",
+  "additionalProp3": "string"
+}
+
+FirebaseNotification
+
+GET
+/api/FirebaseNotification/user
+
+Parameters
+Try it out
+Name	Description
+X-Api-Version
+string
+(header)
+X-Api-Version
+Accept-Language
+string
+(header)
+Language of the request
+
+Accept-Language
+api-version
+string
+(query)
+api-version
+Responses
+Code	Description	Links
+200	
+Success
+
+No links
+
+POST
+/api/FirebaseNotification/mark-read
+
+Parameters
+Try it out
+Name	Description
+X-Api-Version
+string
+(header)
+X-Api-Version
+Accept-Language
+string
+(header)
+Language of the request
+
+Accept-Language
+api-version
+string
+(query)
+api-version
+Request body
+
+application/json
+Example Value
+Schema
+{
+  "userid": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
+  "notificationId": "3fa85f64-5717-4562-b3fc-2c963f66afa6"
+}
+Responses
+Code	Description	Links
+200	
+Success
+
+POST
+/api/FirebaseNotification/update-token
+
+Parameters
+Try it out
+Name	Description
+X-Api-Version
+string
+(header)
+X-Api-Version
+Accept-Language
+string
+(header)
+Language of the request
+
+Accept-Language
+api-version
+string
+(query)
+api-version
+Request body
+
+application/json
+Example Value
+Schema
+{
+  "userId": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
+  "fcmToken": "string"
+}
+Responses
+Code	Description	Links
+200	
+Success
+
+POST
+/api/FirebaseNotification/validate-token
+
+Parameters
+Try it out
+Name	Description
+X-Api-Version
+string
+(header)
+X-Api-Version
+Accept-Language
+string
+(header)
+Language of the request
+
+Accept-Language
+api-version
+string
+(query)
+api-version
+Request body
+
+application/json
+Example Value
+Schema
+{
+  "fcmToken": "string"
+}
+Responses
+Code	Description	Links
+200	
+Success
+
+SupportTicket
+
+
+POST
+/api/SupportTicket/CreateSupportTicket
+
+Parameters
+Try it out
+Name	Description
+X-Api-Version
+string
+(header)
+X-Api-Version
+Accept-Language
+string
+(header)
+Language of the request
+
+Accept-Language
+api-version
+string
+(query)
+api-version
+Request body
+
+application/json
+Example Value
+Schema
+{
+  "subject": "string",
+  "category": 1,
+  "orderId": "3fa85f64-5717-4562-b3fc-2c963f66afa6"
+}
+Responses
+Code	Description	Links
+201	
+Created
+
+Media type
+
+text/plain
+Controls Accept header.
+Example Value
+Schema
+{
+  "id": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
+  "ticketNumber": "string",
+  "subject": "string",
+  "category": 1,
+  "priority": 1,
+  "status": 1,
+  "createdByUserId": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
+  "orderId": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
+  "assignedToSupportId": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
+  "createdAt": "2026-01-10T16:02:46.910Z",
+  "assignedAt": "2026-01-10T16:02:46.910Z",
+  "firstResponseAt": "2026-01-10T16:02:46.910Z",
+  "resolvedAt": "2026-01-10T16:02:46.910Z",
+  "closedAt": "2026-01-10T16:02:46.910Z",
+  "lastMessageAt": "2026-01-10T16:02:46.910Z",
+  "resolutionTimeHours": 0,
+  "customerSatisfactionRating": 0
+}
+No links
+400	
+Bad Request
+
+Media type
+
+text/plain
+Example Value
+Schema
+{
+  "type": "string",
+  "title": "string",
+  "status": 0,
+  "detail": "string",
+  "instance": "string",
+  "additionalProp1": "string",
+  "additionalProp2": "string",
+  "additionalProp3": "string"
+}
+No links
+
+PUT
+/api/SupportTicket/UpdateSupportTicket/{ticketId}
+
+Parameters
+Try it out
+Name	Description
+ticketId *
+string($uuid)
+(path)
+ticketId
+X-Api-Version
+string
+(header)
+X-Api-Version
+Accept-Language
+string
+(header)
+Language of the request
+
+Accept-Language
+api-version
+string
+(query)
+api-version
+Request body
+
+application/json
+Example Value
+Schema
+{
+  "subject": "string",
+  "category": 1,
+  "priority": 1,
+  "status": 1,
+  "assignedToSupportId": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
+  "customerSatisfactionRating": 0
+}
+Responses
+Code	Description	Links
+200	
+Success
+
+Media type
+
+text/plain
+Controls Accept header.
+Example Value
+Schema
+{
+  "id": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
+  "ticketNumber": "string",
+  "subject": "string",
+  "category": 1,
+  "priority": 1,
+  "status": 1,
+  "createdByUserId": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
+  "orderId": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
+  "assignedToSupportId": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
+  "createdAt": "2026-01-10T16:02:46.915Z",
+  "assignedAt": "2026-01-10T16:02:46.915Z",
+  "firstResponseAt": "2026-01-10T16:02:46.915Z",
+  "resolvedAt": "2026-01-10T16:02:46.915Z",
+  "closedAt": "2026-01-10T16:02:46.915Z",
+  "lastMessageAt": "2026-01-10T16:02:46.915Z",
+  "resolutionTimeHours": 0,
+  "customerSatisfactionRating": 0
+}
+No links
+400	
+Bad Request
+
+Media type
+
+text/plain
+Example Value
+Schema
+{
+  "type": "string",
+  "title": "string",
+  "status": 0,
+  "detail": "string",
+  "instance": "string",
+  "additionalProp1": "string",
+  "additionalProp2": "string",
+  "additionalProp3": "string"
+}
+No links
+404	
+Not Found
+
+Media type
+
+text/plain
+Example Value
+Schema
+{
+  "type": "string",
+  "title": "string",
+  "status": 0,
+  "detail": "string",
+  "instance": "string",
+  "additionalProp1": "string",
+  "additionalProp2": "string",
+  "additionalProp3": "string"
+}
+No links
+
+GET
+/api/SupportTicket/GetSupportTicketById/{ticketId}
+
+Parameters
+Try it out
+Name	Description
+ticketId *
+string($uuid)
+(path)
+ticketId
+X-Api-Version
+string
+(header)
+X-Api-Version
+Accept-Language
+string
+(header)
+Language of the request
+
+Accept-Language
+api-version
+string
+(query)
+api-version
+Responses
+Code	Description	Links
+200	
+Success
+
+Media type
+
+text/plain
+Controls Accept header.
+Example Value
+Schema
+{
+  "id": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
+  "ticketNumber": "string",
+  "subject": "string",
+  "category": 1,
+  "priority": 1,
+  "status": 1,
+  "createdByUserId": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
+  "orderId": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
+  "assignedToSupportId": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
+  "createdAt": "2026-01-10T16:02:46.924Z",
+  "assignedAt": "2026-01-10T16:02:46.924Z",
+  "firstResponseAt": "2026-01-10T16:02:46.924Z",
+  "resolvedAt": "2026-01-10T16:02:46.924Z",
+  "closedAt": "2026-01-10T16:02:46.924Z",
+  "lastMessageAt": "2026-01-10T16:02:46.924Z",
+  "resolutionTimeHours": 0,
+  "customerSatisfactionRating": 0
+}
+No links
+404	
+Not Found
+
+Media type
+
+text/plain
+Example Value
+Schema
+{
+  "type": "string",
+  "title": "string",
+  "status": 0,
+  "detail": "string",
+  "instance": "string",
+  "additionalProp1": "string",
+  "additionalProp2": "string",
+  "additionalProp3": "string"
+}
+No links
+
+GET
+/api/SupportTicket/GetUserSupportTickets/user
+
+Parameters
+Try it out
+Name	Description
+pageNumber
+integer($int32)
+(query)
+Default value : 1
+
+1
+pageSize
+integer($int32)
+(query)
+Default value : 10
+
+10
+api-version
+string
+(query)
+api-version
+X-Api-Version
+string
+(header)
+X-Api-Version
+Accept-Language
+string
+(header)
+Language of the request
+
+Accept-Language
+Responses
+Code	Description	Links
+200	
+Success
+
+Media type
+
+text/plain
+Controls Accept header.
+Example Value
+Schema
+[
+  {
+    "id": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
+    "ticketNumber": "string",
+    "subject": "string",
+    "category": 1,
+    "priority": 1,
+    "status": 1,
+    "createdByUserId": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
+    "orderId": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
+    "assignedToSupportId": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
+    "createdAt": "2026-01-10T16:02:46.927Z",
+    "assignedAt": "2026-01-10T16:02:46.928Z",
+    "firstResponseAt": "2026-01-10T16:02:46.928Z",
+    "resolvedAt": "2026-01-10T16:02:46.928Z",
+    "closedAt": "2026-01-10T16:02:46.928Z",
+    "lastMessageAt": "2026-01-10T16:02:46.928Z",
+    "resolutionTimeHours": 0,
+    "customerSatisfactionRating": 0
+  }
+]
+No links
+
+POST
+/api/SupportTicket/AddSupportTicketAction/{ticketId}/actions
+
+Parameters
+Try it out
+Name	Description
+ticketId *
+string($uuid)
+(path)
+ticketId
+X-Api-Version
+string
+(header)
+X-Api-Version
+Accept-Language
+string
+(header)
+Language of the request
+
+Accept-Language
+api-version
+string
+(query)
+api-version
+Request body
+
+application/json
+Example Value
+Schema
+{
+  "actionType": 1,
+  "actionDetails": "string",
+  "refundAmount": 0,
+  "compensationType": 1,
+  "compensationValue": 0
+}
+Responses
+Code	Description	Links
+201	
+Created
+
+Media type
+
+text/plain
+Controls Accept header.
+Example Value
+Schema
+{
+  "id": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
+  "ticketId": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
+  "supportUserId": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
+  "actionType": 1,
+  "actionDetails": "string",
+  "refundAmount": 0,
+  "compensationType": 1,
+  "compensationValue": 0,
+  "createdAt": "2026-01-10T16:02:46.931Z"
+}
+No links
+400	
+Bad Request
+
+Media type
+
+text/plain
+Example Value
+Schema
+{
+  "type": "string",
+  "title": "string",
+  "status": 0,
+  "detail": "string",
+  "instance": "string",
+  "additionalProp1": "string",
+  "additionalProp2": "string",
+  "additionalProp3": "string"
+}
+No links
+404	
+Not Found
+
+Media type
+
+text/plain
+Example Value
+Schema
+{
+  "type": "string",
+  "title": "string",
+  "status": 0,
+  "detail": "string",
+  "instance": "string",
+  "additionalProp1": "string",
+  "additionalProp2": "string",
+  "additionalProp3": "string"
+}
+No links
+
+GET
+/api/SupportTicket/GetAllSupportTickets/all
+
+Parameters
+Try it out
+Name	Description
+status
+integer($int32)
+(query)
+Available values : 1, 2, 3, 4, 5, 6
+
+
+--
+category
+integer($int32)
+(query)
+Available values : 1, 2, 3, 4, 5, 6, 7, 8
+
+
+--
+priority
+integer($int32)
+(query)
+Available values : 1, 2, 3, 4
+
+
+--
+pageNumber
+integer($int32)
+(query)
+Default value : 1
+
+1
+pageSize
+integer($int32)
+(query)
+Default value : 10
+
+10
+api-version
+string
+(query)
+api-version
+X-Api-Version
+string
+(header)
+X-Api-Version
+Accept-Language
+string
+(header)
+Language of the request
+
+Accept-Language
+Responses
+Code	Description	Links
+200	
+Success
+
+Media type
+
+text/plain
+Controls Accept header.
+Example Value
+Schema
+string
+No links
+
+GET
+/api/SupportTicket/GetSupportTickets/support
+
+Parameters
+Try it out
+Name	Description
+status
+integer($int32)
+(query)
+Available values : 1, 2, 3, 4, 5, 6
+
+
+--
+category
+integer($int32)
+(query)
+Available values : 1, 2, 3, 4, 5, 6, 7, 8
+
+
+--
+priority
+integer($int32)
+(query)
+Available values : 1, 2, 3, 4
+
+
+--
+pageNumber
+integer($int32)
+(query)
+Default value : 1
+
+1
+pageSize
+integer($int32)
+(query)
+Default value : 10
+
+10
+api-version
+string
+(query)
+api-version
+X-Api-Version
+string
+(header)
+X-Api-Version
+Accept-Language
+string
+(header)
+Language of the request
+
+Accept-Language
+Responses
+Code	Description	Links
+200	
+Success
+
+Media type
+
+text/plain
+Controls Accept header.
+Example Value
+Schema
+string
+
+GET
+/api/SupportTicket/GetSupportTicketActions/{ticketId}/actions
+
+Parameters
+Try it out
+Name	Description
+ticketId *
+string($uuid)
+(path)
+ticketId
+X-Api-Version
+string
+(header)
+X-Api-Version
+Accept-Language
+string
+(header)
+Language of the request
+
+Accept-Language
+api-version
+string
+(query)
+api-version
+Responses
+Code	Description	Links
+200	
+Success
+
+Media type
+
+text/plain
+Controls Accept header.
+Example Value
+Schema
+[
+  {
+    "id": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
+    "ticketId": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
+    "supportUserId": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
+    "actionType": 1,
+    "actionDetails": "string",
+    "refundAmount": 0,
+    "compensationType": 1,
+    "compensationValue": 0,
+    "createdAt": "2026-01-10T16:02:46.935Z"
+  }
+]
+No links
+
+POST
+/api/SupportTicket/UploadSupportTicketAttachment/{ticketId}/attachments
+
+
+GET
+/api/SupportTicket/GetSupportTicketAttachments/{ticketId}/attachments
+
+Parameters
+Try it out
+Name	Description
+ticketId *
+string($uuid)
+(path)
+ticketId
+X-Api-Version
+string
+(header)
+X-Api-Version
+Accept-Language
+string
+(header)
+Language of the request
+
+Accept-Language
+api-version
+string
+(query)
+api-version
+Responses
+Code	Description	Links
+200	
+Success
+
+Media type
+
+text/plain
+Controls Accept header.
+Example Value
+Schema
+[
+  {
+    "id": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
+    "ticketId": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
+    "uploadedByUserId": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
+    "fileUrl": "string",
+    "firebaseMessageId": "string",
+    "createdAt": "2026-01-10T16:02:46.938Z"
+  }
+]
+No links
+
+POST
+/api/SupportTicket/CloseSupportTicket/{ticketId}/close
+
+Parameters
+Try it out
+Name	Description
+ticketId *
+string($uuid)
+(path)
+ticketId
+X-Api-Version
+string
+(header)
+X-Api-Version
+Accept-Language
+string
+(header)
+Language of the request
+
+Accept-Language
+api-version
+string
+(query)
+api-version
+Request body
+
+application/json
+Example Value
+Schema
+{
+  "archiveMessages": true,
+  "deleteFirebaseChat": true,
+  "closureNotes": "string"
+}
+Responses
+Code	Description	Links
+200	
+Success
+
+Media type
+
+text/plain
+Controls Accept header.
+Example Value
+Schema
+{
+  "id": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
+  "ticketNumber": "string",
+  "subject": "string",
+  "category": 1,
+  "priority": 1,
+  "status": 1,
+  "createdByUserId": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
+  "orderId": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
+  "assignedToSupportId": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
+  "createdAt": "2026-01-10T16:02:46.941Z",
+  "assignedAt": "2026-01-10T16:02:46.941Z",
+  "firstResponseAt": "2026-01-10T16:02:46.941Z",
+  "resolvedAt": "2026-01-10T16:02:46.941Z",
+  "closedAt": "2026-01-10T16:02:46.941Z",
+  "lastMessageAt": "2026-01-10T16:02:46.941Z",
+  "resolutionTimeHours": 0,
+  "customerSatisfactionRating": 0
+}
+No links
+400	
+Bad Request
+
+Media type
+
+text/plain
+Example Value
+Schema
+{
+  "type": "string",
+  "title": "string",
+  "status": 0,
+  "detail": "string",
+  "instance": "string",
+  "additionalProp1": "string",
+  "additionalProp2": "string",
+  "additionalProp3": "string"
+}
+No links
+404	
+Not Found
+
+Media type
+
+text/plain
+Example Value
+Schema
+{
+  "type": "string",
+  "title": "string",
+  "status": 0,
+  "detail": "string",
+  "instance": "string",
+  "additionalProp1": "string",
+  "additionalProp2": "string",
+  "additionalProp3": "string"
+}
+No links
+
+GET
+/api/SupportTicket/GetArchivedMessages/{ticketId}/messages
+
+Parameters
+Try it out
+Name	Description
+ticketId *
+string($uuid)
+(path)
+ticketId
+pageNumber
+integer($int32)
+(query)
+Default value : 1
+
+1
+pageSize
+integer($int32)
+(query)
+Default value : 50
+
+50
+api-version
+string
+(query)
+api-version
+X-Api-Version
+string
+(header)
+X-Api-Version
+Accept-Language
+string
+(header)
+Language of the request
+
+Accept-Language
+Responses
+Code	Description	Links
+200	
+Success
+
+Media type
+
+text/plain
+Controls Accept header.
+Example Value
+Schema
+[
+  {
+    "id": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
+    "ticketId": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
+    "senderId": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
+    "senderName": "string",
+    "senderType": 0,
+    "messageType": 0,
+    "messageText": "string",
+    "imageUrl": "string",
+    "actionType": "string",
+    "actionData": "string",
+    "isInternal": true,
+    "sentAt": "2026-01-10T16:02:46.946Z",
+    "readAt": "2026-01-10T16:02:46.946Z"
+  }
+]
+
+public enum TicketCategory
+{
+    OrderIssue = 1,          // "Food was cold", "Wrong items"
+    PaymentIssue = 2,        // "Double charged", "Payment failed"
+    DriverIssue = 3,         // "Rude driver", "Delayed delivery"
+    RestaurantIssue = 4,     // "Restaurant closed", "Food quality"
+    AppIssue = 5,            // "App crash", "Can't track order"
+    AccountIssue = 6,        // "Can't login", "Account suspended"
+    RefundRequest = 7,
+    Other = 8
+}
+namespace Rayde.Domain.Enums;
+
+public enum TicketPriority
+{
+    Low = 1,
+    Medium = 2,
+    High = 3,
+    Urgent = 4
+}
+namespace Rayde.Domain.Enums;
+
+public enum TicketStatus
+{
+    Open = 1,       
+    Assigned = 2,       
+    InProgress = 3,    
+    WaitingCustomer = 4, 
+    Resolved = 5,      
+    Closed = 6        
+}
+namespace Rayde.Domain.Enums;
+
+public enum ActionType
+{
+    Refund = 1,
+    Reorder = 2,
+    Compensation = 3,
+    Warning = 4,
+    Ban = 5,
+    Note = 6,
+    EscalateToManager = 7
+}
+public enum CompensationType
+{
+    Voucher = 1,
+    WalletCredit = 2,
+    FreeDelivery = 3,
+    Discount = 4
+}
+
+public enum SenderType
+  {
+      Customer = 0,
+      Support = 1,
+      System = 2,
+      Driver = 3
+  }  public enum MessageType
+  {
+      Text = 0,
+      Image = 1,
+      System = 2,
+      Action = 3
+  }
+public enum ActionType
+{
+    Refund = 1,
+    Reorder = 2,
+    Compensation = 3,
+    Warning = 4,
+    Ban = 5,
+    Note = 6,
+    EscalateToManager = 7
+}

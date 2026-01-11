@@ -67,6 +67,9 @@
   },
   "common": {
     "Support Agents": "وكلاء الدعم",
+    "Support Tickets": "تذاكر الدعم",
+    "Support Dashboard": "لوحة الدعم",
+    "My Tickets": "تذاكري",
     "Home": "الرئيسية",
     "Admin": "الإدارة",
     "Create": "إنشاء",
@@ -1761,7 +1764,10 @@
     "sidebar-menu-support-description": "مساعدة سهلة في متناول يدك!",
     "sidebar-menu-invoice-description": "فواتير ذات مظهر احترافي لكل طلب عميل",
     "sidebar-menu-logistics-description": "تبسيط الشحنات: اكتشف الكفاءة مع خدماتنا اللوجستية!",
-    "sidebar-menu-file-manager-description": "التنظيم والوصول والمشاركة: قم بتبسيط عالمك الرقمي معنا!"
+    "sidebar-menu-file-manager-description": "التنظيم والوصول والمشاركة: قم بتبسيط عالمك الرقمي معنا!",
+    "sidebar-menu-support-tickets": "تذاكر الدعم",
+    "sidebar-menu-support-dashboard": "لوحة الدعم",
+    "sidebar-menu-my-tickets": "تذاكري"
   },
   "table": {
     "table-text-id": "بطاقة تعريف",

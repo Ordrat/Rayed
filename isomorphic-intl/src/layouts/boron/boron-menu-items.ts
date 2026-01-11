@@ -8,6 +8,8 @@ import {
   PiGridFourDuotone,
   PiListDashesDuotone,
   PiPackageDuotone,
+  PiTicketDuotone,
+  PiChatCircleDotsDuotone,
 } from 'react-icons/pi';
 import { routes } from '@/config/routes';
 
@@ -37,6 +39,11 @@ export const menuItems = [
     name: 'sidebar-menu-support-agents',
     href: routes.support.agents,
     icon: PiHeadsetDuotone,
+  },
+  {
+    name: 'sidebar-menu-support-tickets',
+    href: routes.support.tickets,
+    icon: PiTicketDuotone,
   },
   {
     name: 'sidebar-menu-drivers',
@@ -74,6 +81,17 @@ export const menuItems = [
 
   // label start
   {
+    name: 'sidebar-menu-support-dashboard',
+  },
+  // label end
+  {
+    name: 'sidebar-menu-my-tickets',
+    href: routes.supportDashboard.tickets,
+    icon: PiChatCircleDotsDuotone,
+  },
+
+  // label start
+  {
     name: 'sidebar-menu-settings',
   },
   // label end
@@ -83,4 +101,3 @@ export const menuItems = [
     icon: PiUserGearDuotone,
   },
 ];
-

@@ -135,10 +135,16 @@
     "sidebar-menu-shop-hub": "Shop Hub",
     "sidebar-menu-shop-categories": "Shop Categories",
     "sidebar-menu-shop-sub-categories": "Sub Categories",
-    "sidebar-menu-products": "Products"
+    "sidebar-menu-products": "Products",
+    "sidebar-menu-support-tickets": "Support Tickets",
+    "sidebar-menu-support-dashboard": "Support Dashboard",
+    "sidebar-menu-my-tickets": "My Tickets"
   },
   "common": {
     "Support Agents": "Support Agents",
+    "Support Tickets": "Support Tickets",
+    "Support Dashboard": "Support Dashboard",
+    "My Tickets": "My Tickets",
     "Home": "Home",
     "Admin": "Admin",
     "Create": "Create",

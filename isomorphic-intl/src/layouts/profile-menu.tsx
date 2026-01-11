@@ -130,8 +130,11 @@ function DropdownMenu() {
       console.error("Logout API error:", error);
       // Continue with local signout even if API call fails
     } finally {
-      // Sign out locally
-      await signOut({ callbackUrl: routes.auth.signIn });
+      // Sign out locally - use window.location.origin to ensure redirect stays on current domain
+      const callbackUrl = typeof window !== 'undefined' 
+        ? `${window.location.origin}${routes.auth.signIn}` 
+        : routes.auth.signIn;
+      await signOut({ callbackUrl });
       toast.success("Logged out successfully");
     }
   };

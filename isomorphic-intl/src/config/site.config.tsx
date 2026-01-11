@@ -23,16 +23,18 @@ export const metaObject = (
   openGraph?: OpenGraph,
   description: string = siteConfig.description
 ): Metadata => {
+  const baseUrl = process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3001';
+  
   return {
     title: title ? `${title} - Rayed` : siteConfig.title,
     description,
     openGraph: openGraph ?? {
       title: title ? `${title} - Rayed` : siteConfig.title,
       description,
-      url: 'https://rayed-dashboard.netlify.app',
+      url: baseUrl,
       siteName: 'Rayed', // https://developers.google.com/search/docs/appearance/site-names
       images: {
-        url: 'https://rayed-dashboard.netlify.app/logo/OG-Rayed.jpg',
+        url: `${baseUrl}/logo/OG-Rayed.jpg`,
         width: 1200,
         height: 630,
       },

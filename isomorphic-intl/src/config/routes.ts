@@ -41,11 +41,15 @@ export const routes = {
     createAgent: "/admin/support-agents/create",
     editAgent: (id: string) => `/admin/support-agents/${id}/edit`,
     agentDetails: (id: string) => `/admin/support-agents/${id}`,
+    // Support tickets management (for admin)
+    tickets: "/admin/support-tickets",
+    ticketDetails: (id: string) => `/admin/support-tickets/${id}`,
   },
   // Support agent dashboard (for logged in support agents)
   supportDashboard: {
     home: "/support-dashboard",
     tickets: "/support-dashboard/tickets",
+    chat: (ticketId: string) => `/support-dashboard/chat/${ticketId}`,
     profile: "/support-dashboard/profile",
   },
   // Driver management (admin)
