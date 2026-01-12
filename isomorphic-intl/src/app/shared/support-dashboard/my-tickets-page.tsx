@@ -37,7 +37,7 @@ export default function MyTicketsPage() {
   const { data: session, status } = useSession();
   const router = useRouter();
   const locale = useLocale();
-  const lang = locale === 'ar' ? 'ar' : 'en';
+  const lang: 'en' | 'ar' = locale === 'ar' ? 'ar' : 'en';
 
   const [activeTickets, setActiveTickets] = useState<SupportTicket[]>([]);
   const [historyTickets, setHistoryTickets] = useState<SupportTicket[]>([]);
@@ -188,7 +188,7 @@ export default function MyTicketsPage() {
 }
 
 // Reusable Ticket Card Component
-function TicketCard({ ticket, lang, isHistory = false }: { ticket: SupportTicket, lang: string, isHistory?: boolean }) {
+function TicketCard({ ticket, lang, isHistory = false }: { ticket: SupportTicket, lang: 'en' | 'ar', isHistory?: boolean }) {
   // Helper for status colors
   const getStatusColor = (s: number) => {
     switch (s) {
