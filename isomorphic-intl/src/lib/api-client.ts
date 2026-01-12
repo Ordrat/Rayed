@@ -53,10 +53,18 @@ export async function apiRequest<T>(
     const contentType = response.headers.get('content-type');
     let data;
 
-    if (contentType?.includes('application/json') || contentType?.includes('text/plain')) {
+    if (contentType?.includes('application/json')) {
       data = await response.json();
     } else {
-      data = await response.text();
+      // For text/plain or other content types, get as text
+      const textData = await response.text();
+      // Try to parse as JSON in case the content-type header is wrong
+      try {
+        data = JSON.parse(textData);
+      } catch {
+        // If not valid JSON, return as-is (could be a plain text success message)
+        data = textData;
+      }
     }
 
     if (!response.ok) {

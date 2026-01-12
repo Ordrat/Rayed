@@ -56,7 +56,7 @@ function NotificationsList({
 }) {
   const locale = useLocale();
   const lang = locale === 'ar' ? 'ar' : 'en';
-  const { notifications, isLoading, markAsRead, markAllAsRead, unreadCount } = useFirebaseNotifications();
+  const { notifications, isLoading, markAsRead, markAllAsRead, unreadCount, error, refresh } = useFirebaseNotifications();
 
   const handleMarkAllAsRead = useCallback(() => {
     markAllAsRead();
@@ -68,6 +68,10 @@ function NotificationsList({
     }
     setIsOpen(false);
   }, [markAsRead, setIsOpen]);
+
+  const handleRefresh = useCallback(() => {
+    refresh();
+  }, [refresh]);
 
   if (isLoading) {
     return (
@@ -88,15 +92,36 @@ function NotificationsList({
             </Badge>
           )}
         </Title>
-        {unreadCount > 0 && (
+        <div className="flex items-center gap-2">
           <button 
-            onClick={handleMarkAllAsRead}
-            className="text-sm text-primary hover:underline"
+            onClick={handleRefresh}
+            className="text-sm text-gray-500 hover:text-primary"
+            title={lang === 'ar' ? 'تحديث' : 'Refresh'}
           >
-            {lang === 'ar' ? 'تحديد الكل كمقروء' : 'Mark all as read'}
+            <svg className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
+            </svg>
           </button>
-        )}
+          {unreadCount > 0 && (
+            <button 
+              onClick={handleMarkAllAsRead}
+              className="text-sm text-primary hover:underline"
+            >
+              {lang === 'ar' ? 'تحديد الكل كمقروء' : 'Mark all as read'}
+            </button>
+          )}
+        </div>
       </div>
+      
+      {error && (
+        <div className="mx-4 mb-3 rounded-md bg-red-50 p-2 text-center text-sm text-red-600">
+          {lang === 'ar' ? 'فشل تحميل الإشعارات' : 'Failed to load notifications'}
+          <button onClick={handleRefresh} className="ms-2 underline">
+            {lang === 'ar' ? 'إعادة المحاولة' : 'Retry'}
+          </button>
+        </div>
+      )}
+      
       <div className="custom-scrollbar overflow-y-auto scroll-smooth max-h-[420px]">
         {notifications.length === 0 ? (
           <div className="py-12 text-center text-gray-400">

@@ -6,14 +6,11 @@
  */
 
 import { useState, useEffect, useCallback, useRef } from 'react';
-import { initializeApp, getApps, FirebaseApp } from 'firebase/app';
 import {
-  getDatabase,
   ref,
   onChildAdded,
   onValue,
   get,
-  Database,
 } from 'firebase/database';
 import { ChatMessage, TypingState } from '@/types/firebase-chat.types';
 import { SenderType } from '@/types/firebase.enums';
@@ -22,25 +19,7 @@ import {
   updateTypingStatus,
   markMessagesAsRead,
 } from '@/services/firebase-chat.service';
-
-// Firebase config - uses only the database URL
-const FIREBASE_DATABASE_URL = process.env.NEXT_PUBLIC_FIREBASE_DATABASE_URL || 
-  'https://rayed-586e3-default-rtdb.asia-southeast1.firebasedatabase.app';
-
-let firebaseApp: FirebaseApp | null = null;
-let firebaseDb: Database | null = null;
-
-function initFirebase(): Database {
-  if (!firebaseDb) {
-    if (!getApps().length) {
-      firebaseApp = initializeApp({
-        databaseURL: FIREBASE_DATABASE_URL,
-      });
-    }
-    firebaseDb = getDatabase(firebaseApp || getApps()[0]);
-  }
-  return firebaseDb;
-}
+import { getFirebaseDatabase } from '@/lib/firebase-config';
 
 interface UseFirebaseChatOptions {
   chatId: string;
@@ -94,7 +73,7 @@ export function useFirebaseChat({
 
     try {
       setIsLoading(true);
-      const db = initFirebase();
+      const db = getFirebaseDatabase();
       const messagesRef = ref(db, `support_chats/${chatId}/messages`);
       const snapshot = await get(messagesRef);
 
@@ -186,7 +165,7 @@ export function useFirebaseChat({
   useEffect(() => {
     if (!chatId) return;
 
-    const db = initFirebase();
+    const db = getFirebaseDatabase();
     
     // Clean up previous listeners
     unsubscribersRef.current.forEach((unsub) => unsub());

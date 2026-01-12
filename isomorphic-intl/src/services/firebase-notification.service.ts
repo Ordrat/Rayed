@@ -10,8 +10,13 @@ import {
   ValidateFcmTokenRequest,
   MarkNotificationReadRequest,
 } from '@/types/firebase-chat.types';
+import { getToken, onMessage, Messaging } from 'firebase/messaging';
+import { getFirebaseMessaging } from '@/lib/firebase-config';
 
 const BASE_URL = '/api/FirebaseNotification';
+
+// VAPID key for web push - should be set from environment variables
+const VAPID_KEY = process.env.NEXT_PUBLIC_FIREBASE_VAPID_KEY;
 
 /**
  * Update FCM token for a user
@@ -47,10 +52,30 @@ export async function validateFcmToken(
 export async function getUserNotifications(
   token: string
 ): Promise<FirebaseNotification[]> {
-  return apiRequest<FirebaseNotification[]>(`${BASE_URL}/user`, {
-    method: 'GET',
-    token,
-  });
+  try {
+    const result = await apiRequest<FirebaseNotification[] | { notifications?: FirebaseNotification[]; items?: FirebaseNotification[] }>(`${BASE_URL}/user`, {
+      method: 'GET',
+      token,
+    });
+    
+    // Handle different response formats
+    if (Array.isArray(result)) {
+      return result;
+    } else if (result && typeof result === 'object') {
+      if ('notifications' in result && Array.isArray(result.notifications)) {
+        return result.notifications;
+      }
+      if ('items' in result && Array.isArray(result.items)) {
+        return result.items;
+      }
+    }
+    
+    console.warn('[Notifications] Unexpected response format:', result);
+    return [];
+  } catch (error) {
+    console.error('[Notifications] Failed to fetch notifications:', error);
+    return [];
+  }
 }
 
 /**
@@ -72,23 +97,198 @@ export async function markNotificationAsRead(
  * This is a client-side only function
  */
 export async function requestNotificationPermission(): Promise<string | null> {
-  if (typeof window === 'undefined' || !('Notification' in window)) {
-    console.warn('Notifications not supported');
+  console.log('[FCM] requestNotificationPermission called');
+
+  if (typeof window === 'undefined') {
+    console.warn('[FCM] Cannot request notification permission on server');
     return null;
   }
 
+  if (!('Notification' in window)) {
+    console.warn('[FCM] Notifications not supported in this browser');
+    return null;
+  }
+
+  console.log('[FCM] Current notification permission:', Notification.permission);
+
   try {
+    // Request permission
     const permission = await Notification.requestPermission();
+    console.log('[FCM] Permission after request:', permission);
+
     if (permission !== 'granted') {
-      console.warn('Notification permission denied');
+      console.warn('[FCM] Notification permission denied:', permission);
       return null;
     }
 
-    // FCM token will be obtained through Firebase messaging
-    // This is a placeholder - actual implementation depends on Firebase setup
-    return null;
+    // Get Firebase Messaging instance
+    console.log('[FCM] Getting Firebase Messaging instance...');
+    const messaging = await getFirebaseMessaging();
+    if (!messaging) {
+      console.warn('[FCM] Firebase Messaging not available');
+      return null;
+    }
+    console.log('[FCM] Firebase Messaging instance obtained');
+
+    // Get FCM token
+    console.log('[FCM] VAPID_KEY configured:', !!VAPID_KEY);
+    if (!VAPID_KEY) {
+      console.warn('[FCM] VAPID key not configured - FCM token cannot be obtained');
+      console.warn('[FCM] Expected env var: NEXT_PUBLIC_FIREBASE_VAPID_KEY');
+      return null;
+    }
+
+    console.log('[FCM] Requesting FCM token with VAPID key...');
+    const fcmToken = await getToken(messaging, { vapidKey: VAPID_KEY });
+    console.log('[FCM] Token obtained successfully, length:', fcmToken?.length);
+    return fcmToken;
   } catch (error) {
-    console.error('Error requesting notification permission:', error);
+    console.error('[FCM] Error requesting notification permission:', error);
     return null;
+  }
+}
+
+/**
+ * Register the FCM token with the backend
+ */
+export async function registerFcmToken(
+  userId: string,
+  authToken: string
+): Promise<boolean> {
+  try {
+    const fcmToken = await requestNotificationPermission();
+    if (!fcmToken) {
+      console.warn('[FCM] Could not obtain FCM token');
+      return false;
+    }
+
+    // Store token in localStorage to avoid re-registering the same token
+    const storedToken = localStorage.getItem('fcm_token');
+    if (storedToken === fcmToken) {
+      console.log('[FCM] Token already registered');
+      return true;
+    }
+
+    // Register with backend
+    await updateFcmToken({ userId, fcmToken }, authToken);
+    
+    // Store token locally
+    localStorage.setItem('fcm_token', fcmToken);
+    console.log('[FCM] Token registered with backend');
+    return true;
+  } catch (error) {
+    console.error('[FCM] Error registering token:', error);
+    return false;
+  }
+}
+
+/**
+ * Set up foreground message listener
+ */
+export async function setupForegroundMessageListener(
+  onMessage: (notification: { title?: string; body?: string; data?: Record<string, unknown> }) => void
+): Promise<(() => void) | null> {
+  try {
+    const messaging = await getFirebaseMessaging();
+    if (!messaging) {
+      console.warn('Firebase Messaging not available for foreground listener');
+      return null;
+    }
+
+    const { onMessage: onFcmMessage } = await import('firebase/messaging');
+    
+    const unsubscribe = onFcmMessage(messaging, (payload) => {
+      console.log('[FCM] Foreground message received:', payload);
+      
+      const notification = {
+        title: payload.notification?.title,
+        body: payload.notification?.body,
+        data: payload.data,
+      };
+      
+      onMessage(notification);
+    });
+
+    console.log('[FCM] Foreground message listener set up');
+    return unsubscribe;
+  } catch (error) {
+    console.error('[FCM] Error setting up foreground listener:', error);
+    return null;
+  }
+}
+
+/**
+ * Show a local notification (fallback when FCM is not available)
+ */
+export function showLocalNotification(
+  title: string,
+  options?: NotificationOptions
+): void {
+  if (typeof window === 'undefined' || !('Notification' in window)) {
+    return;
+  }
+
+  if (Notification.permission === 'granted') {
+    const notification = new Notification(title, {
+      icon: '/logo/R.png',
+      badge: '/logo/R.png',
+      ...options,
+    });
+
+    // Auto-close after 5 seconds
+    setTimeout(() => notification.close(), 5000);
+  }
+}
+
+/**
+ * Play notification sound using Web Audio API
+ * Generates a pleasant notification tone programmatically
+ */
+export function playNotificationSound(): void {
+  if (typeof window === 'undefined') return;
+
+  try {
+    const audioContext = new (window.AudioContext || (window as any).webkitAudioContext)();
+    
+    // Create oscillator for main tone
+    const oscillator = audioContext.createOscillator();
+    const gainNode = audioContext.createGain();
+    
+    oscillator.connect(gainNode);
+    gainNode.connect(audioContext.destination);
+    
+    // Use a pleasant frequency (like a notification chime)
+    oscillator.frequency.setValueAtTime(880, audioContext.currentTime); // A5
+    oscillator.type = 'sine';
+    
+    // Quick fade in and out for a nice notification sound
+    gainNode.gain.setValueAtTime(0, audioContext.currentTime);
+    gainNode.gain.linearRampToValueAtTime(0.3, audioContext.currentTime + 0.1);
+    gainNode.gain.linearRampToValueAtTime(0, audioContext.currentTime + 0.4);
+    
+    oscillator.start(audioContext.currentTime);
+    oscillator.stop(audioContext.currentTime + 0.4);
+    
+    // Play a second tone for a more pleasing effect
+    setTimeout(() => {
+      const oscillator2 = audioContext.createOscillator();
+      const gainNode2 = audioContext.createGain();
+      
+      oscillator2.connect(gainNode2);
+      gainNode2.connect(audioContext.destination);
+      
+      oscillator2.frequency.setValueAtTime(1174.66, audioContext.currentTime); // D6
+      oscillator2.type = 'sine';
+      
+      gainNode2.gain.setValueAtTime(0, audioContext.currentTime);
+      gainNode2.gain.linearRampToValueAtTime(0.3, audioContext.currentTime + 0.1);
+      gainNode2.gain.linearRampToValueAtTime(0, audioContext.currentTime + 0.3);
+      
+      oscillator2.start(audioContext.currentTime);
+      oscillator2.stop(audioContext.currentTime + 0.3);
+    }, 150);
+    
+  } catch (error) {
+    console.warn('[Notification] Error playing sound:', error);
   }
 }
