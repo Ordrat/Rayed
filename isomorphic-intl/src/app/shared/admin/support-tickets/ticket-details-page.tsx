@@ -21,6 +21,7 @@ import {
   PiChatCircleText,
   PiCheckCircleBold,
   PiUserCirclePlus,
+  PiXCircleBold,
 } from 'react-icons/pi';
 import { Link } from '@/i18n/routing';
 import { routes } from '@/config/routes';
@@ -43,6 +44,7 @@ import {
 } from '@/types/firebase.enums';
 import PageHeader from '@/app/shared/page-header';
 import { ChatWindow } from '@/app/shared/support/chat';
+import { TicketActionsPanel } from '@/app/shared/support/ticket-actions-panel';
 import toast from 'react-hot-toast';
 import { useRouter } from '@/i18n/routing';
 import { useLocale } from 'next-intl';
@@ -154,7 +156,10 @@ export default function TicketDetailsPage() {
   }
 
   const isClosed = ticket.status === TicketStatus.Closed;
-  const chatId = `ticket_${ticket.id}`;
+  const isResolved = ticket.status === TicketStatus.Resolved;
+  const isReadOnly = isClosed || isResolved;
+  // ChatId format: ticket_{ticketId without dashes} - must match Firebase format
+  const chatId = `ticket_${ticket.id.replace(/-/g, '')}`;
 
   return (
     <>
@@ -180,7 +185,7 @@ export default function TicketDetailsPage() {
       </PageHeader>
 
       <div className="grid grid-cols-1 gap-6 lg:grid-cols-3">
-        {/* Ticket Info Panel */}
+        {/* Left Panel - Ticket Info & Actions */}
         <div className="lg:col-span-1 space-y-6">
           {/* Status Card */}
           <div className="rounded-lg border border-gray-200 bg-white p-6 dark:border-gray-700 dark:bg-gray-800">
@@ -239,8 +244,8 @@ export default function TicketDetailsPage() {
             </div>
           </div>
 
-          {/* Assignment Card */}
-          {!isClosed && (
+          {/* Assignment Card - Only show for open tickets */}
+          {!isReadOnly && (
             <div className="rounded-lg border border-gray-200 bg-white p-6 dark:border-gray-700 dark:bg-gray-800">
               <Title as="h4" className="mb-4 text-lg font-semibold">
                 {lang === 'ar' ? 'تعيين لوكيل' : 'Assign to Agent'}
@@ -267,11 +272,21 @@ export default function TicketDetailsPage() {
               />
             </div>
           )}
+
+          {/* Actions History Panel */}
+          <div className="rounded-lg border border-gray-200 bg-white dark:border-gray-700 dark:bg-gray-800 overflow-hidden">
+            <TicketActionsPanel
+              ticketId={ticket.id}
+              token={session?.accessToken || ''}
+              locale={locale}
+              isClosed={isReadOnly}
+            />
+          </div>
         </div>
 
         {/* Chat Panel */}
         <div className="lg:col-span-2">
-          <div className="h-[600px] rounded-lg border border-gray-200 overflow-hidden dark:border-gray-700">
+          <div className="h-[600px] rounded-lg border border-gray-200 overflow-hidden dark:border-gray-700 flex flex-col">
             {isClosed ? (
               // Show archived messages for closed tickets
               <div className="flex flex-col h-full">
@@ -318,6 +333,25 @@ export default function TicketDetailsPage() {
                   )}
                 </div>
               </div>
+            ) : isResolved ? (
+              // Show chat window in read-only mode for resolved tickets
+              <div className="flex flex-col h-full">
+                <ChatWindow
+                  ticket={ticket}
+                  chatId={chatId}
+                  token={session?.accessToken || ''}
+                  userType="support"
+                  locale={locale}
+                  className="flex-1"
+                  readOnly={true}
+                />
+                <div className="flex items-center justify-center gap-2 p-3 bg-green-50 dark:bg-green-900/20 border-t border-green-200 dark:border-green-800 text-green-700 dark:text-green-400">
+                  <PiCheckCircleBold className="w-4 h-4" />
+                  <Text className="text-sm font-medium">
+                    {lang === 'ar' ? 'تم حل هذه التذكرة - وضع القراءة فقط' : 'This ticket is resolved - Read only mode'}
+                  </Text>
+                </div>
+              </div>
             ) : (
               // Show live chat for active tickets
               <ChatWindow
@@ -334,3 +368,4 @@ export default function TicketDetailsPage() {
     </>
   );
 }
+

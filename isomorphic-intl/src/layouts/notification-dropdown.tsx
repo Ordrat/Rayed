@@ -11,6 +11,7 @@ import { useMedia } from "@core/hooks/use-media";
 import dayjs from "dayjs";
 import relativeTime from "dayjs/plugin/relativeTime";
 import { ReactElement, RefObject, useState, useCallback } from "react";
+import { PiArrowsClockwiseBold } from "react-icons/pi";
 import { PiCheck, PiBellSimple, PiChatCircleText, PiTicket, PiUserCircle } from "react-icons/pi";
 import { Badge, Checkbox, Popover, Text, Title, Loader } from "rizzui";
 import { useFirebaseNotifications } from "@/hooks/use-firebase-notifications";
@@ -56,7 +57,19 @@ function NotificationsList({
 }) {
   const locale = useLocale();
   const lang = locale === 'ar' ? 'ar' : 'en';
-  const { notifications, isLoading, markAsRead, markAllAsRead, unreadCount, error, refresh } = useFirebaseNotifications();
+  const { notifications, isLoading, markAsRead, markAllAsRead, unreadCount, error, refresh, reRegisterFcm } = useFirebaseNotifications();
+  const [isRefreshing, setIsRefreshing] = useState(false);
+
+  const handleRefresh = useCallback(async () => {
+    setIsRefreshing(true);
+    try {
+      // Also re-register FCM token on manual refresh to ensure backend has it
+      await reRegisterFcm();
+      await refresh();
+    } finally {
+      setIsRefreshing(false);
+    }
+  }, [reRegisterFcm, refresh]);
 
   const handleMarkAllAsRead = useCallback(() => {
     markAllAsRead();
@@ -68,10 +81,6 @@ function NotificationsList({
     }
     setIsOpen(false);
   }, [markAsRead, setIsOpen]);
-
-  const handleRefresh = useCallback(() => {
-    refresh();
-  }, [refresh]);
 
   if (isLoading) {
     return (
@@ -93,17 +102,16 @@ function NotificationsList({
           )}
         </Title>
         <div className="flex items-center gap-2">
-          <button 
+          <button
             onClick={handleRefresh}
-            className="text-sm text-gray-500 hover:text-primary"
+            disabled={isRefreshing}
+            className={`text-sm text-gray-500 hover:text-primary transition-transform ${isRefreshing ? 'animate-spin' : ''}`}
             title={lang === 'ar' ? 'تحديث' : 'Refresh'}
           >
-            <svg className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
-            </svg>
+            <PiArrowsClockwiseBold className="h-4 w-4" />
           </button>
           {unreadCount > 0 && (
-            <button 
+            <button
               onClick={handleMarkAllAsRead}
               className="text-sm text-primary hover:underline"
             >

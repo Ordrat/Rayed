@@ -75,6 +75,7 @@ export default function SupportChatPage() {
       );
       setTicket(updated);
       toast.success(lang === 'ar' ? 'تم وضع علامة محلولة' : 'Marked as resolved');
+      router.push(routes.supportDashboard.tickets);
     } catch (error: any) {
       toast.error(error.message || 'Failed to update ticket');
     } finally {
@@ -124,27 +125,32 @@ export default function SupportChatPage() {
     );
   }
 
-  const chatId = `ticket_${ticket.id}`;
+  // ChatId format: ticket_{ticketId without dashes} - must match Firebase format
+  const chatId = `ticket_${ticket.id.replace(/-/g, '')}`;
   const isClosed = ticket.status === TicketStatus.Closed;
   const isResolved = ticket.status === TicketStatus.Resolved;
 
   return (
-    <div className="space-y-4">
-      {/* Top Bar */}
-      <div className="flex items-center justify-between border rounded-lg bg-white px-4 py-3 dark:bg-gray-900">
+    <div className="flex flex-col h-[calc(100vh-140px)] gap-4">
+      {/* Sleek Header */}
+      <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 bg-white dark:bg-gray-800 p-4 rounded-xl border border-gray-100 dark:border-gray-700 shadow-sm shrink-0">
         <div className="flex items-center gap-4">
-          <Link href={routes.supportDashboard.tickets}>
-            <Button variant="text" size="sm">
-              <PiArrowLeftBold className="h-5 w-5" />
+          <Link href={routes.supportDashboard.tickets} className="shrink-0">
+            <Button variant="outline" size="sm" className="w-9 h-9 p-0 rounded-full border-gray-200 hover:border-primary hover:text-primary transition-colors">
+              <PiArrowLeftBold className="h-4 w-4" />
             </Button>
           </Link>
+          
+          <div className="h-8 w-[1px] bg-gray-200 dark:bg-gray-700 mx-1 hidden md:block"></div>
+          
           <div>
-            <div className="flex items-center gap-2">
-              <Title as="h5" className="font-semibold">
-                #{ticket.ticketNumber}
+            <div className="flex items-center gap-3">
+              <Title as="h5" className="font-bold text-gray-900 dark:text-gray-50 text-base md:text-lg">
+                {ticket.subject}
               </Title>
               <Badge
                 size="sm"
+                variant="flat"
                 color={
                   isClosed
                     ? 'secondary'
@@ -156,47 +162,79 @@ export default function SupportChatPage() {
                 {TicketStatusLabels[ticket.status]?.[lang]}
               </Badge>
             </div>
-            <Text className="text-sm text-gray-500">
-              {TicketCategoryLabels[ticket.category]?.[lang]} • {ticket.subject}
-            </Text>
+            <div className="flex items-center gap-2 mt-1">
+              <Badge variant="outline" size="sm" className="font-mono text-xs text-gray-400">
+                #{ticket.ticketNumber}
+              </Badge>
+              <span className="text-gray-300">•</span>
+              <Text className="text-xs text-gray-500 font-medium bg-gray-100 dark:bg-gray-700/50 px-2 py-0.5 rounded-md">
+                {TicketCategoryLabels[ticket.category]?.[lang]}
+              </Text>
+            </div>
           </div>
         </div>
 
-        {/* Actions */}
+        {/* Actions Toolbar */}
         {!isClosed && (
-          <div className="flex gap-2">
+          <div className="flex items-center gap-3">
             {!isResolved && (
               <Button
                 variant="outline"
-                size="sm"
                 onClick={handleMarkResolved}
                 isLoading={isUpdating}
-                className="border-green-500 text-green-600 hover:bg-green-50"
+                className="gap-2 border-green-200 text-green-700 hover:bg-green-50 hover:border-green-300 hover:text-green-800 transition-all dark:border-green-800 dark:text-green-400 dark:hover:bg-green-900/20"
               >
-                <PiCheckCircleBold className="me-1 h-4 w-4" />
-                {lang === 'ar' ? 'تم الحل' : 'Resolved'}
+                <PiCheckCircleBold className="h-4 w-4" />
+                {lang === 'ar' ? 'تم الحل' : 'Mark Resolved'}
               </Button>
             )}
             <Button
-              size="sm"
               onClick={handleCloseTicket}
               isLoading={isUpdating}
-              className="bg-gray-600 hover:bg-gray-700"
+              className="gap-2 bg-gray-900 hover:bg-gray-800 text-white dark:bg-gray-700 dark:hover:bg-gray-600 shadow-sm"
             >
-              <PiXCircleBold className="me-1 h-4 w-4" />
-              {lang === 'ar' ? 'إغلاق' : 'Close'}
+              <PiXCircleBold className="h-4 w-4" />
+              {lang === 'ar' ? 'إغلاق التذكرة' : 'Close Ticket'}
             </Button>
           </div>
         )}
       </div>
 
-      {/* Main Content - Chat and Actions side by side */}
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
-        {/* Chat Window */}
-        <div className="lg:col-span-2" style={{ height: '500px' }}>
-          {isClosed ? (
-            <div className="flex h-full items-center justify-center text-gray-500 border rounded-lg bg-white dark:bg-gray-900">
-              {lang === 'ar' ? 'هذه التذكرة مغلقة' : 'This ticket is closed'}
+      {/* Main Content Area - Full height grid */}
+      <div className="grid grid-cols-1 lg:grid-cols-12 gap-5 flex-1 min-h-0">
+        
+        {/* Chat Section - Takes up more space */}
+        <div className="lg:col-span-8 flex flex-col min-h-0 bg-white dark:bg-gray-800 rounded-xl border border-gray-100 dark:border-gray-700 shadow-sm overflow-hidden">
+          {(isClosed || isResolved) ? (
+            <div className="flex-1 flex flex-col">
+              {/* Show chat history in read-only mode */}
+              <ChatWindow
+                ticket={ticket}
+                chatId={chatId}
+                token={session?.accessToken || ''}
+                userType="support"
+                locale={locale}
+                className="h-full border-none"
+                readOnly={true}
+              />
+              {/* Read-only notice at the bottom */}
+              <div className="flex items-center justify-center gap-2 p-3 bg-gray-100 dark:bg-gray-900 border-t border-gray-200 dark:border-gray-700 text-gray-500">
+                {isClosed ? (
+                  <>
+                    <PiXCircleBold className="w-4 h-4" />
+                    <Text className="text-sm">
+                      {lang === 'ar' ? 'هذه التذكرة مغلقة - لا يمكن إرسال رسائل جديدة' : 'This ticket is closed - no new messages can be sent'}
+                    </Text>
+                  </>
+                ) : (
+                  <>
+                    <PiCheckCircleBold className="w-4 h-4 text-green-500" />
+                    <Text className="text-sm">
+                      {lang === 'ar' ? 'تم حل هذه التذكرة - لا يمكن إرسال رسائل جديدة' : 'This ticket is resolved - no new messages can be sent'}
+                    </Text>
+                  </>
+                )}
+              </div>
             </div>
           ) : (
             <ChatWindow
@@ -205,18 +243,18 @@ export default function SupportChatPage() {
               token={session?.accessToken || ''}
               userType="support"
               locale={locale}
-              className="h-full"
+              className="h-full border-none"
             />
           )}
         </div>
 
-        {/* Actions Panel */}
-        <div className="lg:col-span-1">
+        {/* Actions Panel - Fixed sidebar on large screens */}
+        <div className="lg:col-span-4 flex flex-col min-h-0">
           <TicketActionsPanel
             ticketId={ticket.id}
             token={session?.accessToken || ''}
             locale={locale}
-            isClosed={isClosed}
+            isClosed={isClosed || isResolved}
           />
         </div>
       </div>

@@ -5,11 +5,12 @@
  * Main chat container combining all components
  */
 
-import { useRef, useEffect } from 'react';
+import { useRef, useEffect, useCallback } from 'react';
 import cn from "@core/utils/class-names";
 import { useFirebaseChat } from '@/hooks/use-firebase-chat';
 import { SupportTicket } from '@/types/support-ticket.types';
 import { SenderType } from '@/types/firebase.enums';
+import { ChatMessage } from '@/types/firebase-chat.types';
 import { ChatMessageBubble } from './chat-message';
 import { TypingIndicator } from './typing-indicator';
 import { ChatInput } from './chat-input';
@@ -26,6 +27,31 @@ interface ChatWindowProps {
   locale?: string;
   onClose?: () => void;
   className?: string;
+  readOnly?: boolean;
+}
+
+// Play notification sound using Web Audio API
+function playNotificationSound() {
+  try {
+    const audioContext = new (window.AudioContext || (window as any).webkitAudioContext)();
+    const oscillator = audioContext.createOscillator();
+    const gainNode = audioContext.createGain();
+    
+    oscillator.connect(gainNode);
+    gainNode.connect(audioContext.destination);
+    
+    // Pleasant notification tone
+    oscillator.frequency.value = 800;
+    oscillator.type = 'sine';
+    
+    gainNode.gain.setValueAtTime(0.3, audioContext.currentTime);
+    gainNode.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + 0.5);
+    
+    oscillator.start(audioContext.currentTime);
+    oscillator.stop(audioContext.currentTime + 0.5);
+  } catch (e) {
+    // Audio not available or blocked - silently ignore
+  }
 }
 
 export function ChatWindow({
@@ -37,8 +63,26 @@ export function ChatWindow({
   locale = 'en',
   onClose,
   className,
+  readOnly = false,
 }: ChatWindowProps) {
   const messagesEndRef = useRef<HTMLDivElement>(null);
+  const lastMessageCountRef = useRef<number>(0);
+
+  // Determine if a message is from current user
+  const isOwnMessage = useCallback((senderType: SenderType): boolean => {
+    if (userType === 'customer') {
+      return senderType === SenderType.Customer;
+    }
+    return senderType === SenderType.Support;
+  }, [userType]);
+
+  // Handle new message notification
+  const handleNewMessage = useCallback((message: ChatMessage) => {
+    // Only play sound for messages from the other party
+    if (!isOwnMessage(message.senderType)) {
+      playNotificationSound();
+    }
+  }, [isOwnMessage]);
 
   const {
     messages,
@@ -53,6 +97,7 @@ export function ChatWindow({
     chatId,
     token,
     userType,
+    onNewMessage: handleNewMessage,
   });
 
   // Scroll to bottom when new messages arrive
@@ -60,18 +105,13 @@ export function ChatWindow({
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
   }, [messages, isOtherTyping]);
 
-  // Mark messages as read when window is focused
+  // Mark messages as read once when chat loads
+  // The hook handles preventing duplicate calls
   useEffect(() => {
-    markAsRead();
-  }, [markAsRead]);
-
-  // Determine if a message is from current user
-  const isOwnMessage = (senderType: SenderType): boolean => {
-    if (userType === 'customer') {
-      return senderType === SenderType.Customer;
+    if (messages.length > 0) {
+      markAsRead();
     }
-    return senderType === SenderType.Support;
-  };
+  }, [messages.length > 0, markAsRead]); // Only trigger when messages exist
 
   return (
     <div
@@ -131,17 +171,20 @@ export function ChatWindow({
         <div ref={messagesEndRef} />
       </div>
 
-      {/* Input area */}
-      <ChatInput
-        onSend={sendMessage}
-        onTyping={setTyping}
-        disabled={!isConnected}
-        placeholder={
-          locale === 'ar' ? 'اكتب رسالة...' : 'Type a message...'
-        }
-      />
+      {/* Input area - hide when readOnly */}
+      {!readOnly && (
+        <ChatInput
+          onSend={sendMessage}
+          onTyping={setTyping}
+          disabled={!isConnected}
+          placeholder={
+            locale === 'ar' ? 'اكتب رسالة...' : 'Type a message...'
+          }
+        />
+      )}
     </div>
   );
 }
 
 export default ChatWindow;
+

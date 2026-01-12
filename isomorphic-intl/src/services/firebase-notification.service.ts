@@ -52,29 +52,41 @@ export async function validateFcmToken(
 export async function getUserNotifications(
   token: string
 ): Promise<FirebaseNotification[]> {
+  console.log('[Notifications] Fetching notifications from API...');
+
   try {
-    const result = await apiRequest<FirebaseNotification[] | { notifications?: FirebaseNotification[]; items?: FirebaseNotification[] }>(`${BASE_URL}/user`, {
+    const result = await apiRequest<FirebaseNotification[] | { notifications?: FirebaseNotification[]; items?: FirebaseNotification[]; data?: FirebaseNotification[] }>(`${BASE_URL}/user`, {
       method: 'GET',
       token,
     });
-    
+
+    console.log('[Notifications] API response:', result);
+
     // Handle different response formats
     if (Array.isArray(result)) {
+      console.log('[Notifications] Got array with', result.length, 'notifications');
       return result;
     } else if (result && typeof result === 'object') {
       if ('notifications' in result && Array.isArray(result.notifications)) {
+        console.log('[Notifications] Got notifications property with', result.notifications.length, 'items');
         return result.notifications;
       }
       if ('items' in result && Array.isArray(result.items)) {
+        console.log('[Notifications] Got items property with', result.items.length, 'items');
         return result.items;
       }
+      if ('data' in result && Array.isArray(result.data)) {
+        console.log('[Notifications] Got data property with', result.data.length, 'items');
+        return result.data;
+      }
     }
-    
-    console.warn('[Notifications] Unexpected response format:', result);
+
+    console.warn('[Notifications] Unexpected response format:', typeof result, result);
     return [];
-  } catch (error) {
-    console.error('[Notifications] Failed to fetch notifications:', error);
-    return [];
+  } catch (error: any) {
+    console.error('[Notifications] Failed to fetch notifications:', error?.message || error);
+    console.error('[Notifications] Full error:', error);
+    throw error; // Re-throw so the caller can handle it
   }
 }
 
@@ -150,36 +162,69 @@ export async function requestNotificationPermission(): Promise<string | null> {
 
 /**
  * Register the FCM token with the backend
+ * ALWAYS sends the token to the backend to ensure it's registered
  */
 export async function registerFcmToken(
   userId: string,
-  authToken: string
+  authToken: string,
+  forceRefresh: boolean = false
 ): Promise<boolean> {
   try {
+    console.log('[FCM] registerFcmToken called for user:', userId);
+
     const fcmToken = await requestNotificationPermission();
     if (!fcmToken) {
       console.warn('[FCM] Could not obtain FCM token');
       return false;
     }
 
-    // Store token in localStorage to avoid re-registering the same token
-    const storedToken = localStorage.getItem('fcm_token');
-    if (storedToken === fcmToken) {
-      console.log('[FCM] Token already registered');
-      return true;
+    console.log('[FCM] FCM token obtained, length:', fcmToken.length);
+    console.log('[FCM] Sending token to backend...');
+
+    // ALWAYS register with backend - the backend should handle deduplication
+    // This ensures the token is always registered even if localStorage was cleared
+    await updateFcmToken({ userId, fcmToken }, authToken);
+
+    // Store locally for reference (not for caching/skipping)
+    localStorage.setItem('fcm_token', fcmToken);
+    localStorage.setItem('fcm_user_id', userId);
+    localStorage.setItem('fcm_registered_at', new Date().toISOString());
+
+    console.log('[FCM] Token registered with backend successfully');
+    return true;
+  } catch (error: any) {
+    const errorMessage = error?.message || 'Unknown error';
+
+    console.error('[FCM] Error registering token:', errorMessage);
+    console.error('[FCM] Full error:', error);
+
+    // Check if this is a backend configuration error
+    if (errorMessage.includes('ServiceAccountKeyPath') ||
+        errorMessage.includes('not configured')) {
+      console.warn('[FCM] Backend Firebase not configured:', errorMessage);
+      console.warn('[FCM] The backend needs to configure Firebase:ServiceAccountKeyPath');
+      return false;
     }
 
-    // Register with backend
-    await updateFcmToken({ userId, fcmToken }, authToken);
-    
-    // Store token locally
-    localStorage.setItem('fcm_token', fcmToken);
-    console.log('[FCM] Token registered with backend');
-    return true;
-  } catch (error) {
-    console.error('[FCM] Error registering token:', error);
+    // Clear stored token on failures so next attempt will try again
+    localStorage.removeItem('fcm_token');
+    localStorage.removeItem('fcm_user_id');
+    localStorage.removeItem('fcm_registered_at');
     return false;
   }
+}
+
+/**
+ * Force re-register FCM token (clears cache and registers again)
+ */
+export async function forceRegisterFcmToken(
+  userId: string,
+  authToken: string
+): Promise<boolean> {
+  console.log('[FCM] Force re-registering token...');
+  localStorage.removeItem('fcm_token');
+  localStorage.removeItem('fcm_user_id');
+  return registerFcmToken(userId, authToken, true);
 }
 
 /**

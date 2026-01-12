@@ -17,6 +17,7 @@ import {
   getUserNotifications,
   markNotificationAsRead,
   registerFcmToken,
+  forceRegisterFcmToken,
   setupForegroundMessageListener,
   showLocalNotification,
   playNotificationSound,
@@ -29,9 +30,11 @@ interface UseFirebaseNotificationsReturn {
   unreadCount: number;
   isLoading: boolean;
   error: string | null;
+  fcmRegistered: boolean;
   refresh: () => Promise<void>;
   markAsRead: (notificationId: string) => Promise<void>;
   markAllAsRead: () => Promise<void>;
+  reRegisterFcm: () => Promise<boolean>;
 }
 
 export function useFirebaseNotifications(): UseFirebaseNotificationsReturn {
@@ -39,38 +42,79 @@ export function useFirebaseNotifications(): UseFirebaseNotificationsReturn {
   const [notifications, setNotifications] = useState<FirebaseNotification[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-  
+  const [fcmRegistered, setFcmRegistered] = useState(false);
+
   const fcmInitializedRef = useRef(false);
   const unsubscribersRef = useRef<(() => void)[]>([]);
   const processedNotificationIds = useRef<Set<string>>(new Set());
 
   const unreadCount = notifications.filter(n => !n.isRead).length;
 
+  // Function to force re-register FCM token
+  const reRegisterFcm = useCallback(async (): Promise<boolean> => {
+    if (!session?.user?.id || !session?.accessToken) {
+      console.warn('[Notifications] Cannot re-register FCM: no session');
+      return false;
+    }
+
+    console.log('[Notifications] Force re-registering FCM token...');
+    try {
+      const result = await forceRegisterFcmToken(session.user.id, session.accessToken);
+      setFcmRegistered(result);
+      console.log('[Notifications] FCM re-registration result:', result);
+      return result;
+    } catch (err) {
+      console.error('[Notifications] FCM re-registration error:', err);
+      setFcmRegistered(false);
+      return false;
+    }
+  }, [session?.user?.id, session?.accessToken]);
+
   // Fetch notifications from API
   const fetchNotifications = useCallback(async () => {
-    if (!session?.accessToken) return;
+    if (!session?.accessToken) {
+      console.log('[Notifications] No access token, skipping fetch');
+      return;
+    }
 
     try {
       setIsLoading(true);
       setError(null);
+      console.log('[Notifications] Fetching notifications...');
+
       const data = await getUserNotifications(session.accessToken);
-      
+
       // Sort by createdAt descending (newest first)
       const sortedData = [...(data || [])].sort((a, b) => {
         const dateA = new Date(a.createdAt).getTime();
         const dateB = new Date(b.createdAt).getTime();
         return dateB - dateA;
       });
-      
+
       // Track processed notification IDs
       sortedData.forEach(n => processedNotificationIds.current.add(n.id));
-      
+
       setNotifications(sortedData);
-      console.log('[Notifications] Fetched', sortedData.length, 'notifications');
+      console.log('[Notifications] Fetched and set', sortedData.length, 'notifications');
     } catch (err: any) {
-      console.error('[Notifications] Failed to fetch:', err);
-      setError(err.message || 'Failed to fetch notifications');
-      setNotifications([]);
+      const errorMessage = err?.message || 'Failed to fetch notifications';
+
+      console.error('[Notifications] Failed to fetch:', errorMessage);
+
+      // Check if this is a backend configuration error (not user-facing)
+      if (errorMessage.includes('ServiceAccountKeyPath') ||
+          errorMessage.includes('not configured')) {
+        console.warn('[Notifications] Backend Firebase not configured');
+        // Don't show error to user, just log it
+        setNotifications([]);
+      } else if (errorMessage.includes('401') || errorMessage.includes('Unauthorized')) {
+        console.warn('[Notifications] Unauthorized - token may be expired');
+        setError(null); // Don't show auth errors, they'll re-auth
+        setNotifications([]);
+      } else {
+        setError(errorMessage);
+        setNotifications([]);
+      }
     } finally {
       setIsLoading(false);
     }
@@ -193,33 +237,51 @@ export function useFirebaseNotifications(): UseFirebaseNotificationsReturn {
 
   // Initialize FCM token registration
   useEffect(() => {
-    console.log('[Notifications] Auth status:', status, 'User ID:', session?.user?.id ? 'present' : 'missing', 'Token:', session?.accessToken ? 'present' : 'missing');
+    console.log('[Notifications] Auth check - status:', status, 'User ID:', session?.user?.id ? 'present' : 'missing', 'Token:', session?.accessToken ? 'present' : 'missing');
 
     if (status !== 'authenticated' || !session?.user?.id || !session?.accessToken) {
       console.log('[Notifications] Waiting for authentication...');
       return;
     }
 
-    if (fcmInitializedRef.current) {
-      console.log('[Notifications] FCM already initialized');
+    // Reset if user changes
+    const currentUserId = session.user.id;
+    const storedUserId = typeof window !== 'undefined' ? localStorage.getItem('fcm_user_id') : null;
+    const userChanged = storedUserId && storedUserId !== currentUserId;
+
+    if (fcmInitializedRef.current && !userChanged) {
+      console.log('[Notifications] FCM already initialized for this user');
       return;
     }
 
     fcmInitializedRef.current = true;
 
     const initializeFcm = async () => {
-      console.log('[Notifications] Initializing FCM for user:', session.user?.id);
-      
-      // Register FCM token with backend
-      const registered = await registerFcmToken(session.user!.id, session.accessToken!);
-      if (registered) {
-        console.log('[Notifications] FCM token registered successfully');
+      console.log('[Notifications] Initializing FCM for user:', currentUserId, userChanged ? '(user changed)' : '');
+
+      // Register FCM token with backend - ALWAYS register to ensure backend has token
+      try {
+        const registered = await registerFcmToken(currentUserId, session.accessToken!);
+        setFcmRegistered(registered);
+        if (registered) {
+          console.log('[Notifications] FCM token registered with backend successfully');
+        } else {
+          console.warn('[Notifications] FCM token registration returned false');
+        }
+      } catch (err) {
+        console.error('[Notifications] FCM token registration error:', err);
+        setFcmRegistered(false);
       }
 
       // Set up foreground message listener
-      const unsubscribe = await setupForegroundMessageListener(handleNewNotification);
-      if (unsubscribe) {
-        unsubscribersRef.current.push(unsubscribe);
+      try {
+        const unsubscribe = await setupForegroundMessageListener(handleNewNotification);
+        if (unsubscribe) {
+          unsubscribersRef.current.push(unsubscribe);
+          console.log('[Notifications] Foreground message listener set up');
+        }
+      } catch (err) {
+        console.error('[Notifications] Foreground listener setup error:', err);
       }
 
       // Set up Firebase Realtime Database listener as a fallback
@@ -240,11 +302,11 @@ export function useFirebaseNotifications(): UseFirebaseNotificationsReturn {
     }
   }, [session?.accessToken, fetchNotifications]);
 
-  // Poll for new notifications every 30 seconds as a fallback
+  // Poll for new notifications every 15 seconds as a fallback
   useEffect(() => {
     if (!session?.accessToken) return;
 
-    const interval = setInterval(fetchNotifications, 30000);
+    const interval = setInterval(fetchNotifications, 15000);
     return () => clearInterval(interval);
   }, [session?.accessToken, fetchNotifications]);
 
@@ -278,9 +340,11 @@ export function useFirebaseNotifications(): UseFirebaseNotificationsReturn {
     unreadCount,
     isLoading,
     error,
+    fcmRegistered,
     refresh: fetchNotifications,
     markAsRead,
     markAllAsRead,
+    reRegisterFcm,
   };
 }
 

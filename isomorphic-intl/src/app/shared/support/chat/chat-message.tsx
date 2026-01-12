@@ -92,14 +92,23 @@ export function ChatMessageBubble({ message, isOwn, locale = 'en' }: ChatMessage
           />
         )}
         
-        {/* Timestamp */}
+        {/* Timestamp and read status */}
         <div
-          className={cn('text-xs mt-1', {
-            'text-primary-foreground/70': isOwn,
+          className={cn('flex items-center gap-1 text-xs mt-1', {
+            'text-primary-foreground/70 justify-end': isOwn,
             'text-muted-foreground': !isOwn,
           })}
         >
-          {formatTime(message.timestamp)}
+          <span>{formatTime(message.timestamp)}</span>
+          {/* Read status checkmarks for own messages */}
+          {isOwn && (
+            <span className={cn('ml-1', {
+              'text-primary-foreground/70': !message.isRead,
+              'text-blue-300': message.isRead,
+            })}>
+              {message.isRead ? '✓✓' : '✓'}
+            </span>
+          )}
         </div>
       </div>
     </div>

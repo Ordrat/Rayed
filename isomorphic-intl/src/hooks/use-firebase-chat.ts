@@ -9,6 +9,7 @@ import { useState, useEffect, useCallback, useRef } from 'react';
 import {
   ref,
   onChildAdded,
+  onChildChanged,
   onValue,
   get,
 } from 'firebase/database';
@@ -71,19 +72,56 @@ export function useFirebaseChat({
   const loadExistingMessages = useCallback(async () => {
     if (!chatId) return;
 
+    // Load existing messages silently
+
     try {
       setIsLoading(true);
       const db = getFirebaseDatabase();
-      const messagesRef = ref(db, `support_chats/${chatId}/messages`);
-      const snapshot = await get(messagesRef);
+      // Firebase path: support_chats/{chatId}/messages (e.g., support_chats/ticket_xxx/messages)
+      const messagesPath = `support_chats/${chatId}/messages`;
+      const messagesRef = ref(db, messagesPath);
+      console.log('[Chat] Firebase path:', messagesPath);
+      console.log('[Chat] Database URL:', db.app.options.databaseURL);
 
+      // Try to read the database root to test connectivity
+      const rootRef = ref(db);
+      const rootSnapshot = await get(rootRef);
+      console.log('[Chat] Database root exists:', rootSnapshot.exists());
+      if (rootSnapshot.exists()) {
+        console.log('[Chat] Database root keys:', Object.keys(rootSnapshot.val() || {}));
+      }
+
+      // Also try to read the parent (chat metadata) to diagnose access issues
+      const chatRef = ref(db, `support_chats/${chatId}`);
+      const chatSnapshot = await get(chatRef);
+      console.log('[Chat] Chat root exists:', chatSnapshot.exists());
+      if (chatSnapshot.exists()) {
+        console.log('[Chat] Chat root data keys:', Object.keys(chatSnapshot.val() || {}));
+      }
+
+      const snapshot = await get(messagesRef);
       if (snapshot.exists()) {
         const messagesData = snapshot.val();
+
         const messagesList: ChatMessage[] = Object.entries(messagesData).map(
-          ([key, value]) => ({
-            id: key,
-            ...(value as Omit<ChatMessage, 'id'>),
-          })
+          ([key, value]) => {
+            const msg = value as Record<string, any>;
+            // Map Firebase PascalCase to TypeScript camelCase
+            return {
+              id: key,
+              chatId: msg.ChatId || msg.chatId || chatId,
+              senderId: msg.SenderId || msg.senderId || '',
+              senderName: msg.SenderName || msg.senderName || '',
+              senderType: msg.SenderType ?? msg.senderType ?? 0,
+              messageType: msg.MessageType ?? msg.messageType ?? 0,
+              content: msg.Content || msg.content || '',
+              imageUrl: msg.ImageUrl || msg.imageUrl,
+              actionType: msg.ActionType || msg.actionType,
+              actionData: msg.ActionData || msg.actionData,
+              timestamp: msg.Timestamp || msg.timestamp || Date.now(),
+              isRead: msg.IsRead ?? msg.isRead ?? false,
+            };
+          }
         );
 
         // Sort by timestamp
@@ -99,10 +137,17 @@ export function useFirebaseChat({
         });
 
         setMessages(messagesList);
+      } else {
+        // No messages found
       }
-    } catch (err) {
-      console.error('Error loading messages:', err);
-      setError('Failed to load messages');
+    } catch (err: any) {
+      console.error('[Chat] Error loading messages:', err?.message);
+      // Check for permission denied error
+      if (err?.code === 'PERMISSION_DENIED' || err?.message?.includes('permission')) {
+        setError('Permission denied - check Firebase security rules');
+      } else {
+        setError('Failed to load messages');
+      }
     } finally {
       setIsLoading(false);
     }
@@ -115,13 +160,14 @@ export function useFirebaseChat({
 
       try {
         await sendTextMessage({ chatId, content }, token);
+
         // Clear typing indicator after sending
         if (typingTimeoutRef.current) {
           clearTimeout(typingTimeoutRef.current);
         }
         await updateTypingStatus({ chatId, isTyping: false }, token);
       } catch (err) {
-        console.error('Error sending message:', err);
+        console.error('[Chat] Error sending message:', err);
         throw err;
       }
     },
@@ -151,13 +197,32 @@ export function useFirebaseChat({
     [chatId, token]
   );
 
-  // Mark messages as read
+  // Track if we've already called markAsRead to avoid repeated calls
+  const markAsReadCalledRef = useRef<boolean>(false);
+  const lastMarkAsReadChatId = useRef<string>('');
+
+  // Mark messages as read via backend API
+  // The backend is responsible for updating Firebase
   const markAsRead = useCallback(async () => {
     if (!chatId || !token) return;
+    
+    // Prevent calling multiple times for the same chat session
+    if (markAsReadCalledRef.current && lastMarkAsReadChatId.current === chatId) {
+      return;
+    }
+
     try {
+      markAsReadCalledRef.current = true;
+      lastMarkAsReadChatId.current = chatId;
+      
+      // Use the backend API to mark messages as read
+      // The backend has proper permissions to update Firebase
       await markMessagesAsRead(chatId, token);
-    } catch (err) {
-      console.error('Error marking as read:', err);
+      
+    } catch (err: any) {
+      // Reset flag on error so we can retry
+      markAsReadCalledRef.current = false;
+      // Silently ignore - not critical for chat functionality
     }
   }, [chatId, token]);
 
@@ -171,27 +236,74 @@ export function useFirebaseChat({
     unsubscribersRef.current.forEach((unsub) => unsub());
     unsubscribersRef.current = [];
 
-    // Listen for new messages
+    // Listen for new messages - Firebase path: support_chats/{chatId}/messages
     const messagesRef = ref(db, `support_chats/${chatId}/messages`);
-    const messageUnsub = onChildAdded(messagesRef, (snapshot) => {
-      const messageId = snapshot.key;
-      if (!messageId || processedMessageIds.current.has(messageId)) {
-        return;
+
+    const messageUnsub = onChildAdded(
+      messagesRef,
+      (snapshot) => {
+        const messageId = snapshot.key;
+
+        if (!messageId || processedMessageIds.current.has(messageId)) {
+          return;
+        }
+
+        processedMessageIds.current.add(messageId);
+        const msg = snapshot.val() as Record<string, any>;
+
+        // Map Firebase PascalCase to TypeScript camelCase
+        const newMessage: ChatMessage = {
+          id: messageId,
+          chatId: msg.ChatId || msg.chatId || chatId,
+          senderId: msg.SenderId || msg.senderId || '',
+          senderName: msg.SenderName || msg.senderName || '',
+          senderType: msg.SenderType ?? msg.senderType ?? 0,
+          messageType: msg.MessageType ?? msg.messageType ?? 0,
+          content: msg.Content || msg.content || '',
+          imageUrl: msg.ImageUrl || msg.imageUrl,
+          actionType: msg.ActionType || msg.actionType,
+          actionData: msg.ActionData || msg.actionData,
+          timestamp: msg.Timestamp || msg.timestamp || Date.now(),
+          isRead: msg.IsRead ?? msg.isRead ?? false,
+        };
+
+        setMessages((prev) => [...prev, newMessage]);
+        onNewMessage?.(newMessage);
+      },
+      (error) => {
+        console.error('[Chat] Listener error:', error?.message);
+        setError(`Firebase error: ${error?.message || 'Unknown error'}`);
       }
-
-      processedMessageIds.current.add(messageId);
-      const messageData = snapshot.val() as Omit<ChatMessage, 'id'>;
-      const newMessage: ChatMessage = {
-        id: messageId,
-        ...messageData,
-      };
-
-      setMessages((prev) => [...prev, newMessage]);
-      onNewMessage?.(newMessage);
-    });
+    );
     unsubscribersRef.current.push(messageUnsub);
 
-    // Listen for typing status
+    // Listen for message changes (read status updates)
+    const messageChangeUnsub = onChildChanged(
+      messagesRef,
+      (snapshot) => {
+        const messageId = snapshot.key;
+        if (!messageId) return;
+
+        const msg = snapshot.val() as Record<string, any>;
+        const newIsRead = msg.IsRead ?? msg.isRead ?? false;
+
+        // Update the message in state
+        setMessages((prev) =>
+          prev.map((m) => {
+            if (m.id === messageId && m.isRead !== newIsRead) {
+              return { ...m, isRead: newIsRead };
+            }
+            return m;
+          })
+        );
+      },
+      (error) => {
+        // Silently ignore Firebase listener errors
+      }
+    );
+    unsubscribersRef.current.push(messageChangeUnsub);
+
+    // Listen for typing status - Firebase path: support_chats/{chatId}/typing
     const typingRef = ref(db, `support_chats/${chatId}/typing`);
     const typingUnsub = onValue(typingRef, (snapshot) => {
       const typingData = snapshot.val() as TypingState | null;

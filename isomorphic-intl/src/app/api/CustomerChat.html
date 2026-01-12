@@ -1,0 +1,1321 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Rayde Chat System</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: 350px 1fr;
+            gap: 20px;
+            height: calc(100vh - 40px);
+        }
+
+        .panel {
+            background: white;
+            border-radius: 16px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .sidebar {
+            background: white;
+        }
+
+        .sidebar-header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 20px;
+        }
+
+        .sidebar-header h2 {
+            font-size: 20px;
+            margin-bottom: 5px;
+        }
+
+        .sidebar-header p {
+            font-size: 12px;
+            opacity: 0.9;
+        }
+
+        .config-section {
+            padding: 20px;
+            border-bottom: 1px solid #eee;
+        }
+
+        .config-section h3 {
+            font-size: 14px;
+            margin-bottom: 12px;
+            color: #667eea;
+            font-weight: 600;
+        }
+
+        .input-group {
+            margin-bottom: 12px;
+        }
+
+        .input-group label {
+            display: block;
+            font-size: 12px;
+            color: #666;
+            margin-bottom: 5px;
+            font-weight: 500;
+        }
+
+        .input-group input {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            font-size: 14px;
+        }
+
+        .input-group input:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+
+        .btn {
+            width: 100%;
+            padding: 12px;
+            border: none;
+            border-radius: 8px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            margin-bottom: 8px;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+        }
+
+        .btn-success {
+            background: #10b981;
+            color: white;
+        }
+
+        .btn-info {
+            background: #3b82f6;
+            color: white;
+        }
+
+        .btn-warning {
+            background: #f59e0b;
+            color: white;
+        }
+
+        .btn-danger {
+            background: #ef4444;
+            color: white;
+        }
+
+        .btn-sm {
+            padding: 8px 12px;
+            font-size: 12px;
+        }
+
+        .chat-container {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .chat-header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 20px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .avatar {
+            width: 45px;
+            height: 45px;
+            border-radius: 50%;
+            background: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+        }
+
+        .header-info {
+            flex: 1;
+        }
+
+        .header-info h2 {
+            font-size: 18px;
+            margin-bottom: 3px;
+        }
+
+        .header-info p {
+            font-size: 12px;
+            opacity: 0.9;
+        }
+
+        .connection-indicator {
+            width: 8px;
+            height: 8px;
+            background: #10b981;
+            border-radius: 50%;
+            display: inline-block;
+            margin-right: 5px;
+            animation: pulse 2s infinite;
+        }
+
+        .connection-indicator.offline {
+            background: #ef4444;
+        }
+
+        @keyframes pulse {
+
+            0%,
+            100% {
+                opacity: 1;
+            }
+
+            50% {
+                opacity: 0.5;
+            }
+        }
+
+        .status-badge {
+            font-size: 11px;
+            padding: 4px 10px;
+            background: white;
+            color: #667eea;
+            border-radius: 12px;
+            font-weight: 600;
+        }
+
+        .action-panel {
+            padding: 10px 15px;
+            background: #fffbeb;
+            border-bottom: 1px solid #fcd34d;
+            display: none;
+            gap: 8px;
+        }
+
+        .action-panel.visible {
+            display: flex;
+            flex-wrap: wrap;
+        }
+
+        .action-btn {
+            flex: 1;
+            min-width: 120px;
+            padding: 8px 12px;
+            border: none;
+            border-radius: 6px;
+            font-size: 12px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .action-btn:hover {
+            transform: translateY(-2px);
+        }
+
+        .messages-container {
+            flex: 1;
+            overflow-y: auto;
+            padding: 20px;
+            background: #f9fafb;
+        }
+
+        .message {
+            margin-bottom: 16px;
+            animation: slideIn 0.3s ease;
+            display: flex;
+        }
+
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .message-bubble {
+            max-width: 75%;
+            padding: 12px 16px;
+            border-radius: 16px;
+            word-wrap: break-word;
+        }
+
+        .message.sent {
+            justify-content: flex-end;
+        }
+
+        .message.sent .message-bubble {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border-bottom-right-radius: 4px;
+        }
+
+        .message.received {
+            justify-content: flex-start;
+        }
+
+        .message.received .message-bubble {
+            background: white;
+            color: #333;
+            border-bottom-left-radius: 4px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .message.system {
+            justify-content: center;
+        }
+
+        .message.system .message-bubble {
+            background: #e5e7eb;
+            color: #6b7280;
+            font-size: 13px;
+            padding: 8px 12px;
+            border-radius: 12px;
+        }
+
+        .message.action {
+            justify-content: center;
+        }
+
+        .message.action .message-bubble {
+            background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+            color: white;
+            font-weight: 600;
+            padding: 14px 18px;
+            border-radius: 12px;
+        }
+
+        .action-details {
+            font-size: 12px;
+            margin-top: 6px;
+            opacity: 0.95;
+        }
+
+        .message-sender {
+            font-size: 11px;
+            font-weight: 600;
+            margin-bottom: 4px;
+            color: #667eea;
+        }
+
+        .message-time {
+            font-size: 10px;
+            opacity: 0.7;
+            margin-top: 4px;
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+
+        .read-indicator {
+            font-size: 12px;
+            font-weight: bold;
+        }
+
+        .read-indicator.sent {
+            opacity: 0.7;
+        }
+
+        .read-indicator.read {
+            color: #3b82f6;
+            opacity: 1;
+        }
+
+        .message-image {
+            max-width: 250px;
+            border-radius: 12px;
+            margin-top: 6px;
+            cursor: pointer;
+        }
+
+        .typing-indicator-container {
+            padding: 0 20px 10px 20px;
+            background: #f9fafb;
+        }
+
+        .typing-indicator {
+            padding: 10px 14px;
+            background: white;
+            border-radius: 16px;
+            display: inline-block;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .typing-indicator span {
+            height: 8px;
+            width: 8px;
+            background: #9ca3af;
+            border-radius: 50%;
+            display: inline-block;
+            margin: 0 2px;
+            animation: typing 1.4s infinite;
+        }
+
+        .typing-indicator span:nth-child(2) {
+            animation-delay: 0.2s;
+        }
+
+        .typing-indicator span:nth-child(3) {
+            animation-delay: 0.4s;
+        }
+
+        @keyframes typing {
+
+            0%,
+            60%,
+            100% {
+                transform: translateY(0);
+            }
+
+            30% {
+                transform: translateY(-8px);
+            }
+        }
+
+        .input-container {
+            padding: 15px;
+            background: white;
+            border-top: 1px solid #e0e0e0;
+        }
+
+        .input-wrapper {
+            display: flex;
+            gap: 10px;
+            align-items: center;
+        }
+
+        .input-wrapper input {
+            flex: 1;
+            padding: 12px 16px;
+            border: 1px solid #ddd;
+            border-radius: 24px;
+            font-size: 14px;
+            outline: none;
+        }
+
+        .input-wrapper input:focus {
+            border-color: #667eea;
+        }
+
+        .attachment-btn,
+        .send-btn {
+            width: 44px;
+            height: 44px;
+            border: none;
+            border-radius: 50%;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s;
+        }
+
+        .attachment-btn {
+            background: #f3f4f6;
+            color: #667eea;
+        }
+
+        .send-btn {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+
+        .send-btn:hover {
+            transform: scale(1.05);
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 60px 20px;
+            color: #9ca3af;
+        }
+
+        .empty-state svg {
+            width: 80px;
+            height: 80px;
+            margin-bottom: 16px;
+            opacity: 0.5;
+        }
+
+        ::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: #f1f1f1;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: #667eea;
+            border-radius: 3px;
+        }
+
+        input[type="file"] {
+            display: none;
+        }
+
+        .status {
+            padding: 8px 12px;
+            border-radius: 6px;
+            font-size: 12px;
+            margin-top: 10px;
+        }
+
+        .status.success {
+            background: #d1fae5;
+            color: #065f46;
+        }
+
+        .status.error {
+            background: #fee2e2;
+            color: #991b1b;
+        }
+
+        .user-type-selector {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 8px;
+            margin-bottom: 15px;
+        }
+
+        .user-type-btn {
+            padding: 10px;
+            border: 2px solid #ddd;
+            background: white;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-size: 13px;
+            font-weight: 600;
+        }
+
+        .user-type-btn.active {
+            border-color: #667eea;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <!-- Sidebar -->
+        <div class="panel sidebar">
+            <div class="sidebar-header">
+                <h2>🚀 Rayde Chat</h2>
+                <p>Real-time Firebase Chat</p>
+            </div>
+
+            <!-- User Type -->
+            <div class="config-section">
+                <h3>👤 User Type</h3>
+                <div class="user-type-selector">
+                    <button class="user-type-btn active" onclick="setUserType('customer')" id="btnCustomer">
+                        👤 Customer
+                    </button>
+                    <button class="user-type-btn" onclick="setUserType('support')" id="btnSupport">
+                        👨‍💼 Support
+                    </button>
+                </div>
+            </div>
+
+            <!-- Config -->
+            <div class="config-section">
+                <h3>⚙️ Configuration</h3>
+                <div class="input-group">
+                    <label>API URL</label>
+                    <input type="text" id="apiUrl" value="https://api.rayed.app/api/v1">
+                </div>
+                <div class="input-group">
+                    <label>Auth Token</label>
+                    <input type="text" id="authToken" placeholder="JWT token">
+                </div>
+                <div class="input-group">
+                    <label>Firebase URL</label>
+                    <input type="text" id="firebaseUrl"
+                        value="https://rayed-586e3-default-rtdb.asia-southeast1.firebasedatabase.app">
+                </div>
+                <div class="input-group">
+                    <label>Chat ID</label>
+                    <input type="text" id="chatId" placeholder="ticket_...">
+                </div>
+                <button class="btn btn-primary" onclick="connectToChat()">🔗 Connect</button>
+                <div id="configStatus"></div>
+            </div>
+
+            <!-- Quick Actions -->
+            <div class="config-section">
+                <h3>⚡ Quick Actions</h3>
+                <button class="btn btn-info btn-sm" onclick="loadExistingMessages()">🔄 Reload Messages</button>
+                <button class="btn btn-info btn-sm" onclick="getUnreadCount()">📊 Unread Count</button>
+                <button class="btn btn-info btn-sm" onclick="markAsRead()">✓ Mark Read</button>
+                <button class="btn btn-danger btn-sm" onclick="clearChat()">🗑️ Clear</button>
+            </div>
+        </div>
+
+        <!-- Chat Panel -->
+        <div class="panel chat-container">
+            <div class="chat-header">
+                <div class="avatar" id="avatarIcon">👤</div>
+                <div class="header-info">
+                    <h2 id="chatTitle">Customer Support Chat</h2>
+                    <p>
+                        <span class="connection-indicator offline" id="connIndicator"></span>
+                        <span id="statusText">Not connected</span>
+                    </p>
+                </div>
+                <div class="status-badge" id="userTypeBadge">CUSTOMER</div>
+            </div>
+
+            <!-- Action Panel -->
+            <div class="action-panel" id="actionPanel">
+                <button class="action-btn btn-success" onclick="sendRefund()">💰 Refund</button>
+                <button class="action-btn btn-info" onclick="sendSystemMessage('Agent joined')">📢 Joined</button>
+                <button class="action-btn btn-success" onclick="sendSystemMessage('Resolved')">✅ Resolved</button>
+                <button class="action-btn btn-danger" onclick="sendSystemMessage('Closed')">🔒 Closed</button>
+            </div>
+
+            <!-- Messages -->
+            <div class="messages-container" id="messagesContainer">
+                <div class="empty-state">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
+                    </svg>
+                    <h3>No messages yet</h3>
+                    <p>Connect to start chatting</p>
+                </div>
+            </div>
+
+            <!-- Typing -->
+            <div class="typing-indicator-container" id="typingContainer"></div>
+
+            <!-- Input -->
+            <div class="input-container">
+                <div class="input-wrapper">
+                    <button class="attachment-btn" onclick="document.getElementById('fileInput').click()">
+                        <svg width="20" height="20" viewBox="0 0 20 20" fill="currentColor">
+                            <path
+                                d="M8 4a3 3 0 00-3 3v4a5 5 0 0010 0V7a1 1 0 112 0v4a7 7 0 11-14 0V7a5 5 0 0110 0v4a3 3 0 11-6 0V7a1 1 0 012 0v4a1 1 0 102 0V7a3 3 0 00-3-3z" />
+                        </svg>
+                    </button>
+                    <input type="file" id="fileInput" accept="image/*" onchange="uploadImage(this)">
+                    <input type="text" id="messageInput" placeholder="Type a message..."
+                        onkeypress="if(event.key==='Enter') sendMessage()" oninput="handleTyping()" disabled>
+                    <button class="send-btn" onclick="sendMessage()" id="sendBtn" disabled>
+                        <svg width="20" height="20" viewBox="0 0 20 20" fill="currentColor">
+                            <path
+                                d="M10.894 2.553a1 1 0 00-1.788 0l-7 14a1 1 0 001.169 1.409l5-1.429A1 1 0 009 15.571V11a1 1 0 112 0v4.571a1 1 0 00.725.962l5 1.428a1 1 0 001.17-1.408l-7-14z" />
+                        </svg>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Firebase SDK -->
+    <script type="module">
+        import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js';
+        import { getDatabase, ref, onChildAdded, onChildChanged, onValue, get, update } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js';
+
+        // Enum mappings from C# backend
+        const MessageType = {
+            Text: 0,
+            Image: 1,
+            System: 2,
+            Action: 3
+        };
+
+        const SenderType = {
+            Customer: 0,
+            Support: 1,
+            System: 2,
+            Driver: 3
+        };
+
+        window.firebaseApp = null;
+        window.firebaseDb = null;
+        window.currentChatId = null;
+        window.messageListeners = [];
+        window.currentUserType = 'customer';
+
+        window.initFirebase = function (databaseURL) {
+            const firebaseConfig = { databaseURL: databaseURL };
+            window.firebaseApp = initializeApp(firebaseConfig);
+            window.firebaseDb = getDatabase(window.firebaseApp);
+            console.log('✅ Firebase initialized');
+        };
+
+        window.messageElements = {}; // Store message elements by ID for updating
+
+        window.listenToMessages = function (chatId) {
+            if (!window.firebaseDb) {
+                console.error('❌ Firebase not initialized');
+                return;
+            }
+
+            window.messageListeners.forEach(unsubscribe => unsubscribe());
+            window.messageListeners = [];
+
+            const messagesRef = ref(window.firebaseDb, `support_chats/${chatId}/messages`);
+
+            console.log(`📡 Listening to: support_chats/${chatId}/messages`);
+
+            // Listen for new messages
+            const unsubscribe = onChildAdded(messagesRef, (snapshot) => {
+                const messageId = snapshot.key;
+                const message = snapshot.val();
+                message._id = messageId;
+                console.log('📨 Message received:', message);
+                displayMessage(message);
+                scrollToBottom();
+                playNotificationSound(message);
+
+                // Auto-mark as read if message is from the other party
+                const senderType = message.SenderType ?? message.senderType ?? 0;
+                const isFromOther = (window.currentUserType === 'customer' && senderType === 1) ||
+                    (window.currentUserType === 'support' && senderType === 0);
+                if (isFromOther) {
+                    window.autoMarkAsRead();
+                }
+            });
+
+            window.messageListeners.push(unsubscribe);
+
+            // Listen for message changes (read status updates)
+            const changeUnsubscribe = onChildChanged(messagesRef, (snapshot) => {
+                const messageId = snapshot.key;
+                const message = snapshot.val();
+                const isRead = message.IsRead ?? message.isRead ?? false;
+                console.log(`📖 Message ${messageId} read status updated:`, isRead);
+
+                // Update the read status indicator in the UI
+                updateMessageReadStatus(messageId, isRead);
+            });
+
+            window.messageListeners.push(changeUnsubscribe);
+
+            const typingRef = ref(window.firebaseDb, `support_chats/${chatId}/typing`);
+            const typingUnsubscribe = onValue(typingRef, (snapshot) => {
+                const typingData = snapshot.val();
+                updateTypingIndicator(typingData);
+            });
+
+            window.messageListeners.push(typingUnsubscribe);
+        };
+
+        window.updateMessageReadStatus = function (messageId, isRead) {
+            const readIndicator = document.querySelector(`[data-message-id="${messageId}"] .read-indicator`);
+            if (readIndicator) {
+                readIndicator.textContent = isRead ? '✓✓' : '✓';
+                readIndicator.className = `read-indicator ${isRead ? 'read' : 'sent'}`;
+            }
+        };
+
+        window.loadExistingMessages = async function () {
+            if (!window.firebaseDb || !window.currentChatId) {
+                alert('Please connect to a chat first');
+                return;
+            }
+
+            try {
+                console.log('🔄 Loading existing messages...');
+                const messagesRef = ref(window.firebaseDb, `support_chats/${window.currentChatId}/messages`);
+                const snapshot = await get(messagesRef);
+
+                if (snapshot.exists()) {
+                    const messages = snapshot.val();
+                    const messageCount = Object.keys(messages).length;
+                    console.log(`📊 Found ${messageCount} messages`);
+
+                    // Clear existing messages
+                    document.getElementById('messagesContainer').innerHTML = '';
+
+                    // Display all messages with their IDs
+                    Object.entries(messages).forEach(([messageId, message]) => {
+                        message._id = messageId;
+                        displayMessage(message);
+                    });
+
+                    scrollToBottom();
+                } else {
+                    console.log('📭 No messages found');
+                }
+            } catch (error) {
+                console.error(`❌ Error loading messages:`, error);
+            }
+        };
+
+        window.displayMessage = function (message) {
+            if (!message) {
+                console.warn('⚠️ Received null/undefined message');
+                return;
+            }
+
+            const container = document.getElementById('messagesContainer');
+
+            const emptyState = container.querySelector('.empty-state');
+            if (emptyState) emptyState.remove();
+
+            const messageDiv = document.createElement('div');
+
+            // Handle both PascalCase and camelCase properties
+            const messageId = message._id || message.MessageId || message.messageId || '';
+            const msgType = message.MessageType ?? message.messageType ?? 0;
+            const content = message.Content ?? message.content ?? '';
+            const senderName = message.SenderName ?? message.senderName ?? '';
+            const senderTypeValue = message.SenderType ?? message.senderType ?? 0;
+            const timestamp = message.Timestamp ?? message.timestamp;
+            const imageUrl = message.ImageUrl ?? message.imageUrl ?? '';
+            const actionData = message.ActionData ?? message.actionData;
+            const isRead = message.IsRead ?? message.isRead ?? false;
+
+            console.log(`📨 Type: ${msgType}, Sender: ${senderTypeValue}, Read: ${isRead}`);
+
+            // Add messageId for later updates
+            if (messageId) {
+                messageDiv.setAttribute('data-message-id', messageId);
+            }
+
+            // System messages (MessageType.System = 2)
+            if (msgType === MessageType.System) {
+                messageDiv.className = 'message system';
+                messageDiv.innerHTML = `<div class="message-bubble">${content}</div>`;
+            }
+            // Action messages (MessageType.Action = 3)
+            else if (msgType === MessageType.Action) {
+                messageDiv.className = 'message action';
+                let details = '';
+                if (actionData) {
+                    const data = typeof actionData === 'string' ? JSON.parse(actionData) : actionData;
+                    details = `<div class="action-details">
+                        ${data.amount ? `Amount: ${data.amount} ${data.currency}` : ''}
+                        ${data.reason ? `<br>Reason: ${data.reason}` : ''}
+                    </div>`;
+                }
+                messageDiv.innerHTML = `<div class="message-bubble">💰 ${content}${details}</div>`;
+            }
+            // Image messages (MessageType.Image = 1)
+            else if (msgType === MessageType.Image) {
+                const isSent = isMyMessage(senderTypeValue);
+                messageDiv.className = `message ${isSent ? 'sent' : 'received'}`;
+                const imgSrc = imageUrl || content;
+                const readIndicator = isSent ? `<span class="read-indicator ${isRead ? 'read' : 'sent'}">${isRead ? '✓✓' : '✓'}</span>` : '';
+                messageDiv.innerHTML = `
+                    <div class="message-bubble">
+                        ${!isSent && senderName ? `<div class="message-sender">${senderName}</div>` : ''}
+                        <img src="${imgSrc}" class="message-image" alt="image" onclick="window.open('${imgSrc}')">
+                        <div class="message-time">${formatTime(timestamp)} ${readIndicator}</div>
+                    </div>
+                `;
+            }
+            // Text messages (MessageType.Text = 0)
+            else {
+                const isSent = isMyMessage(senderTypeValue);
+                messageDiv.className = `message ${isSent ? 'sent' : 'received'}`;
+                const readIndicator = isSent ? `<span class="read-indicator ${isRead ? 'read' : 'sent'}">${isRead ? '✓✓' : '✓'}</span>` : '';
+                messageDiv.innerHTML = `
+                    <div class="message-bubble">
+                        ${!isSent && senderName ? `<div class="message-sender">${senderName}</div>` : ''}
+                        ${content}
+                        <div class="message-time">${formatTime(timestamp)} ${readIndicator}</div>
+                    </div>
+                `;
+            }
+
+            container.appendChild(messageDiv);
+            console.log(`✅ Message displayed`);
+        };
+
+        window.isMyMessage = function (senderTypeValue) {
+            // SenderType: Customer=0, Support=1, System=2, Driver=3
+            if (window.currentUserType === 'customer') {
+                return senderTypeValue === SenderType.Customer;
+            } else {
+                return senderTypeValue === SenderType.Support;
+            }
+        };
+
+        window.formatTime = function (timestamp) {
+            if (!timestamp) return '';
+            const date = new Date(timestamp);
+            if (isNaN(date.getTime())) return '';
+            return date.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' });
+        };
+
+        window.updateTypingIndicator = function (typingData) {
+            const container = document.getElementById('typingContainer');
+
+            if (!typingData) {
+                container.innerHTML = '';
+                return;
+            }
+
+            const isTyping = Object.values(typingData).some(timestamp => {
+                return timestamp && (Date.now() - timestamp < 5000);
+            });
+
+            if (isTyping) {
+                container.innerHTML = `
+                    <div class="typing-indicator">
+                        <span></span><span></span><span></span>
+                    </div>
+                `;
+            } else {
+                container.innerHTML = '';
+            }
+        };
+
+        window.scrollToBottom = function () {
+            const container = document.getElementById('messagesContainer');
+            container.scrollTop = container.scrollHeight;
+        };
+
+        window.playNotificationSound = function (message) {
+            const senderTypeValue = message.SenderType ?? message.senderType ?? 0;
+            const isSent = isMyMessage(senderTypeValue);
+
+            if (!isSent) {
+                try {
+                    const audioContext = new (window.AudioContext || window.webkitAudioContext)();
+                    const oscillator = audioContext.createOscillator();
+                    const gainNode = audioContext.createGain();
+
+                    oscillator.connect(gainNode);
+                    gainNode.connect(audioContext.destination);
+
+                    oscillator.frequency.value = 800;
+                    oscillator.type = 'sine';
+
+                    gainNode.gain.setValueAtTime(0.3, audioContext.currentTime);
+                    gainNode.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + 0.5);
+
+                    oscillator.start(audioContext.currentTime);
+                    oscillator.stop(audioContext.currentTime + 0.5);
+                } catch (e) {
+                    // Audio not available
+                }
+            }
+        };
+    </script>
+
+    <script>
+        let typingTimeout;
+
+        function setUserType(type) {
+            window.currentUserType = type;
+
+            document.getElementById('btnCustomer').classList.toggle('active', type === 'customer');
+            document.getElementById('btnSupport').classList.toggle('active', type === 'support');
+
+            const actionPanel = document.getElementById('actionPanel');
+            const avatarIcon = document.getElementById('avatarIcon');
+            const userTypeBadge = document.getElementById('userTypeBadge');
+            const chatTitle = document.getElementById('chatTitle');
+
+            if (type === 'support') {
+                actionPanel.classList.add('visible');
+                avatarIcon.textContent = '👨‍💼';
+                userTypeBadge.textContent = 'SUPPORT';
+                chatTitle.textContent = 'Support Agent Chat';
+            } else {
+                actionPanel.classList.remove('visible');
+                avatarIcon.textContent = '👤';
+                userTypeBadge.textContent = 'CUSTOMER';
+                chatTitle.textContent = 'Customer Support Chat';
+            }
+
+            console.log(`👤 User type: ${type}`);
+        }
+
+        function connectToChat() {
+            const firebaseUrl = document.getElementById('firebaseUrl').value;
+            let chatId = document.getElementById('chatId').value.trim();
+
+            if (!chatId) {
+                showStatus('configStatus', '❌ Enter Chat ID', 'error');
+                return;
+            }
+
+            // Normalize chat ID format - remove dashes to match Firebase path
+            // If user enters a UUID (with or without ticket_ prefix), format it correctly
+            if (chatId.includes('-')) {
+                // Remove dashes from the ID portion
+                const hasPrefix = chatId.startsWith('ticket_');
+                const idPart = hasPrefix ? chatId.replace('ticket_', '') : chatId;
+                const normalizedId = idPart.replace(/-/g, '');
+                chatId = `ticket_${normalizedId}`;
+                console.log(`🔄 Normalized chat ID: ${chatId}`);
+            } else if (!chatId.startsWith('ticket_')) {
+                // Add prefix if missing
+                chatId = `ticket_${chatId}`;
+            }
+
+            // Update the input field with normalized value
+            document.getElementById('chatId').value = chatId;
+
+            try {
+                window.initFirebase(firebaseUrl);
+                window.listenToMessages(chatId);
+                window.currentChatId = chatId;
+
+                document.getElementById('statusText').textContent = 'Connected';
+                document.getElementById('connIndicator').classList.remove('offline');
+                document.getElementById('messageInput').disabled = false;
+                document.getElementById('sendBtn').disabled = false;
+
+                showStatus('configStatus', '✅ Connected!', 'success');
+
+                // Load existing messages
+                setTimeout(() => window.loadExistingMessages(), 1000);
+            } catch (error) {
+                showStatus('configStatus', `❌ ${error.message}`, 'error');
+                console.error('❌ Error:', error);
+            }
+        }
+
+        async function sendMessage() {
+            const apiUrl = document.getElementById('apiUrl').value;
+            const token = document.getElementById('authToken').value;
+            const chatId = window.currentChatId;
+            const messageInput = document.getElementById('messageInput');
+            const content = messageInput.value.trim();
+
+            if (!content) return;
+            if (!chatId) {
+                alert('Connect to chat first');
+                return;
+            }
+            if (!token) {
+                alert('Please enter an Auth Token');
+                return;
+            }
+
+            try {
+                console.log(`📤 Sending: ${content}`);
+                console.log(`📤 API URL: ${apiUrl}/FirebaseChat/messages/text`);
+                console.log(`📤 Chat ID: ${chatId}`);
+
+                const response = await fetch(`${apiUrl}/FirebaseChat/messages/text`, {
+                    method: 'POST',
+                    headers: {
+                        'Authorization': `Bearer ${token}`,
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        chatId: chatId,
+                        content: content
+                    })
+                });
+
+                if (!response.ok) {
+                    const errorText = await response.text();
+                    console.error(`❌ HTTP ${response.status}: ${response.statusText}`);
+                    console.error(`❌ Response: ${errorText}`);
+                    throw new Error(`HTTP ${response.status}: ${errorText || response.statusText}`);
+                }
+
+                console.log('✅ Sent');
+                messageInput.value = '';
+                updateTyping(false);
+            } catch (error) {
+                console.error('❌ Error:', error);
+                alert('Error sending message: ' + error.message);
+            }
+        }
+
+        async function uploadImage(input) {
+            const file = input.files[0];
+            if (!file) return;
+
+            const apiUrl = document.getElementById('apiUrl').value;
+            const token = document.getElementById('authToken').value;
+            const chatId = window.currentChatId;
+
+            if (!chatId) {
+                alert('Connect to chat first');
+                return;
+            }
+
+            try {
+                console.log(`📤 Uploading: ${file.name}`);
+                const formData = new FormData();
+                formData.append('ChatId', chatId);
+                formData.append('Image', file);
+
+                const response = await fetch(`${apiUrl}/FirebaseChat/messages/image`, {
+                    method: 'POST',
+                    headers: {
+                        'Authorization': `Bearer ${token}`
+                    },
+                    body: formData
+                });
+
+                if (!response.ok) throw new Error(`HTTP ${response.status}`);
+
+                console.log('✅ Image uploaded');
+            } catch (error) {
+                console.error('❌ Error:', error);
+                alert('Error: ' + error.message);
+            }
+
+            input.value = '';
+        }
+
+        async function sendSystemMessage(content) {
+            const apiUrl = document.getElementById('apiUrl').value;
+            const token = document.getElementById('authToken').value;
+            const chatId = window.currentChatId;
+
+            if (!chatId) {
+                alert('Connect to chat first');
+                return;
+            }
+
+            try {
+                const response = await fetch(`${apiUrl}/FirebaseChat/messages/system?chatId=${chatId}`, {
+                    method: 'POST',
+                    headers: {
+                        'Authorization': `Bearer ${token}`,
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(content)
+                });
+
+                if (!response.ok) throw new Error(`HTTP ${response.status}`);
+                console.log('✅ System message sent');
+            } catch (error) {
+                console.error('❌ Error:', error);
+                alert('Error: ' + error.message);
+            }
+        }
+
+        async function sendRefund() {
+            const amount = prompt('Refund amount:', '50.00');
+            if (!amount) return;
+
+            const apiUrl = document.getElementById('apiUrl').value;
+            const token = document.getElementById('authToken').value;
+            const chatId = window.currentChatId;
+
+            try {
+                const response = await fetch(`${apiUrl}/FirebaseChat/messages/action`, {
+                    method: 'POST',
+                    headers: {
+                        'Authorization': `Bearer ${token}`,
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        chatId: chatId,
+                        actionType: 'refund',
+                        content: `Refunded ${amount} EGP`,
+                        actionData: {
+                            amount: parseFloat(amount),
+                            currency: 'EGP',
+                            reason: 'Compensation'
+                        }
+                    })
+                });
+
+                if (!response.ok) throw new Error(`HTTP ${response.status}`);
+                console.log('✅ Refund sent');
+            } catch (error) {
+                console.error('❌ Error:', error);
+                alert('Error: ' + error.message);
+            }
+        }
+
+        async function getUnreadCount() {
+            const apiUrl = document.getElementById('apiUrl').value;
+            const token = document.getElementById('authToken').value;
+            const chatId = window.currentChatId;
+
+            if (!chatId) {
+                alert('Connect to chat first');
+                return;
+            }
+
+            try {
+                const response = await fetch(`${apiUrl}/FirebaseChat/unread-count?chatId=${chatId}`, {
+                    method: 'GET',
+                    headers: {
+                        'Authorization': `Bearer ${token}`
+                    }
+                });
+
+                if (!response.ok) throw new Error(`HTTP ${response.status}`);
+
+                const data = await response.json();
+                console.log(`📊 Unread: ${data.unreadCount}`);
+                alert(`Unread: ${data.unreadCount}`);
+            } catch (error) {
+                console.error('❌ Error:', error);
+            }
+        }
+
+        async function markAsRead() {
+            const chatId = window.currentChatId;
+
+            if (!chatId || !window.firebaseDb) {
+                console.log('Cannot mark as read - not connected');
+                return;
+            }
+
+            try {
+                console.log(`📖 Marking messages as read directly in Firebase...`);
+
+                // Get all messages
+                const messagesRef = ref(window.firebaseDb, `support_chats/${chatId}/messages`);
+                const snapshot = await get(messagesRef);
+
+                if (!snapshot.exists()) {
+                    console.log('No messages to mark as read');
+                    return;
+                }
+
+                const messages = snapshot.val();
+                const updates = {};
+                let count = 0;
+
+                // Find unread messages from support (if we're customer) or from customer (if we're support)
+                Object.entries(messages).forEach(([msgId, msg]) => {
+                    const isRead = msg.IsRead ?? msg.isRead ?? false;
+                    const senderType = msg.SenderType ?? msg.senderType ?? 0;
+
+                    // Mark messages from the other party as read
+                    if (!isRead) {
+                        if (window.currentUserType === 'customer' && senderType === 1) {
+                            // Customer marking support messages as read
+                            updates[`support_chats/${chatId}/messages/${msgId}/IsRead`] = true;
+                            count++;
+                        } else if (window.currentUserType === 'support' && senderType === 0) {
+                            // Support marking customer messages as read
+                            updates[`support_chats/${chatId}/messages/${msgId}/IsRead`] = true;
+                            count++;
+                        }
+                    }
+                });
+
+                if (count === 0) {
+                    console.log('No unread messages to mark');
+                    return;
+                }
+
+                // Update Firebase directly
+                await update(ref(window.firebaseDb), updates);
+                console.log(`✅ Marked ${count} messages as read in Firebase`);
+
+                // Update UI
+                document.querySelectorAll('.read-indicator.sent').forEach(el => {
+                    el.textContent = '✓✓';
+                    el.className = 'read-indicator read';
+                });
+
+            } catch (error) {
+                console.error('❌ Error marking as read in Firebase:', error);
+            }
+        }
+
+        // Auto mark messages as read when they are displayed
+        window.autoMarkAsRead = function () {
+            if (window.currentChatId && window.firebaseDb) {
+                // Debounce to avoid too many calls
+                clearTimeout(window.markAsReadTimeout);
+                window.markAsReadTimeout = setTimeout(() => markAsRead(), 500);
+            }
+        };
+
+        function handleTyping() {
+            updateTyping(true);
+            clearTimeout(typingTimeout);
+            typingTimeout = setTimeout(() => updateTyping(false), 3000);
+        }
+
+        async function updateTyping(isTyping) {
+            const apiUrl = document.getElementById('apiUrl').value;
+            const token = document.getElementById('authToken').value;
+            const chatId = window.currentChatId;
+
+            if (!chatId || !token) return;
+
+            try {
+                await fetch(`${apiUrl}/FirebaseChat/typing`, {
+                    method: 'PUT',
+                    headers: {
+                        'Authorization': `Bearer ${token}`,
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        chatId: chatId,
+                        isTyping: isTyping
+                    })
+                });
+            } catch (error) {
+                // Ignore typing errors
+            }
+        }
+
+        function clearChat() {
+            document.getElementById('messagesContainer').innerHTML = `
+                <div class="empty-state">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
+                    </svg>
+                    <h3>No messages yet</h3>
+                    <p>Connect to start chatting</p>
+                </div>
+            `;
+        }
+
+        function showStatus(elementId, message, type) {
+            const element = document.getElementById(elementId);
+            element.className = `status ${type}`;
+            element.textContent = message;
+
+            if (type === 'success') {
+                setTimeout(() => {
+                    element.textContent = '';
+                    element.className = 'status';
+                }, 5000);
+            }
+        }
+    </script>
+</body>
+
+</html>
