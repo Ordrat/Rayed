@@ -35,7 +35,7 @@ export const Form = <TFormValues extends Record<string, any> = Record<string, an
   };
 
   if (validationSchema) {
-    formOptions.resolver = zodResolver(validationSchema) as Resolver<TFormValues>;
+    formOptions.resolver = zodResolver(validationSchema) as unknown as Resolver<TFormValues>;
   }
 
   const methods = useForm<TFormValues>(formOptions);
