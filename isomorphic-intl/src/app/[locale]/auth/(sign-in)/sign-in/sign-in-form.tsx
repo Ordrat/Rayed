@@ -1,16 +1,15 @@
 "use client";
 
-import { Link } from "@/i18n/routing";
+import { Link, useRouter } from "@/i18n/routing";
 import { useState } from "react";
 import { signIn, getSession } from "next-auth/react";
 import { SubmitHandler } from "react-hook-form";
-import { PiArrowRightBold} from "react-icons/pi";
+import { PiArrowRightBold } from "react-icons/pi";
 import { Checkbox, Password, Button, Input, Text } from "rizzui";
 import { Form } from "@core/ui/form";
 import { routes } from "@/config/routes";
 import { loginSchema, LoginSchema } from "@/validators/login.schema";
 import { useTranslations } from "next-intl";
-import { useRouter } from "@/i18n/routing";
 import toast from "react-hot-toast";
 import { changeSupportStatus } from "@/services/support.service";
 import { SupportStatus } from "@/types/support.types";

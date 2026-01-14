@@ -3,24 +3,24 @@
 import { useState, useEffect, useMemo, useCallback } from "react";
 import { useSession } from "next-auth/react";
 import { Title, Text, Badge, Button, Loader, Input, Select, ActionIcon, Tooltip } from "rizzui";
-import { 
-  PiPlusBold, 
-  PiMagnifyingGlassBold, 
-  PiSortAscendingBold, 
-  PiPencilBold, 
+import {
+  PiPlusBold,
+  PiMagnifyingGlassBold,
+  PiSortAscendingBold,
+  PiPencilBold,
   PiTrashBold,
   PiEyeBold,
   PiGridFourDuotone
 } from "react-icons/pi";
-import { Link } from "@/i18n/routing";
+import { Link, useRouter } from "@/i18n/routing";
 import { routes } from "@/config/routes";
 import { getAllShopCategories, deleteShopCategory } from "@/services/shop.service";
 import { getDocumentUrl } from "@/config/constants";
 import { ShopCategory } from "@/types/shop.types";
 import PageHeader from "@/app/shared/page-header";
 import toast from "react-hot-toast";
-import { useRouter } from "@/i18n/routing";
 import DeletePopover from "@/app/shared/delete-popover";
+import Image from "next/image";
 
 const pageHeader = {
   title: "Shop Categories",
@@ -61,15 +61,7 @@ export default function ShopCategoriesPage() {
     return result;
   }, [categories, searchTerm, sortConfig]);
 
-  useEffect(() => {
-    if (status === "authenticated") {
-      fetchCategories();
-    } else if (status === "unauthenticated") {
-      router.push(routes.auth.signIn);
-    }
-  }, [session, status, router]);
-
-  const fetchCategories = async () => {
+  const fetchCategories = useCallback(async () => {
     try {
       setIsLoading(true);
       const data = await getAllShopCategories(session?.accessToken || "");
@@ -79,7 +71,15 @@ export default function ShopCategoriesPage() {
     } finally {
       setIsLoading(false);
     }
-  };
+  }, [session?.accessToken]);
+
+  useEffect(() => {
+    if (status === "authenticated") {
+      fetchCategories();
+    } else if (status === "unauthenticated") {
+      router.push(routes.auth.signIn);
+    }
+  }, [status, fetchCategories, router]);
 
   const handleDelete = useCallback(async (id: string) => {
     try {
@@ -185,11 +185,15 @@ export default function ShopCategoriesPage() {
                 <tr key={category.id} className="hover:bg-gray-50 dark:hover:bg-gray-700">
                   <td className="whitespace-nowrap px-6 py-4">
                     {category.iconUrl ? (
-                      <img
-                        src={getDocumentUrl(category.iconUrl) || ''}
-                        alt={category.name}
-                        className="h-10 w-10 rounded-lg object-cover"
-                      />
+                      <div className="relative h-10 w-10">
+                        <Image
+                          src={getDocumentUrl(category.iconUrl) || ''}
+                          alt={category.name}
+                          fill
+                          className="rounded-lg object-cover"
+                          sizes="40px"
+                        />
+                      </div>
                     ) : (
                       <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-gray-100 dark:bg-gray-700">
                         <PiGridFourDuotone className="h-5 w-5 text-gray-500" />

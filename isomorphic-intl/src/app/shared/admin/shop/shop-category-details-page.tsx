@@ -1,18 +1,18 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { useSession } from "next-auth/react";
 import { Title, Text, Badge, Button, Loader } from "rizzui";
 import { PiPencilBold, PiArrowLeftBold, PiGridFourDuotone } from "react-icons/pi";
-import { Link } from "@/i18n/routing";
+import { Link, useRouter } from "@/i18n/routing";
 import { routes } from "@/config/routes";
 import { getShopCategoryById, deleteShopCategory } from "@/services/shop.service";
 import { getDocumentUrl } from "@/config/constants";
 import { ShopCategory } from "@/types/shop.types";
 import PageHeader from "@/app/shared/page-header";
 import toast from "react-hot-toast";
-import { useRouter } from "@/i18n/routing";
 import DeletePopover from "@/app/shared/delete-popover";
+import Image from "next/image";
 
 interface ShopCategoryDetailsPageProps {
   categoryId: string;
@@ -35,15 +35,7 @@ export default function ShopCategoryDetailsPage({ categoryId }: ShopCategoryDeta
     ],
   };
 
-  useEffect(() => {
-    if (status === "authenticated") {
-      fetchCategory();
-    } else if (status === "unauthenticated") {
-      router.push(routes.auth.signIn);
-    }
-  }, [session, status, router, categoryId]);
-
-  const fetchCategory = async () => {
+  const fetchCategory = useCallback(async () => {
     try {
       setIsLoading(true);
       const data = await getShopCategoryById(categoryId, session?.accessToken || "");
@@ -53,7 +45,15 @@ export default function ShopCategoryDetailsPage({ categoryId }: ShopCategoryDeta
     } finally {
       setIsLoading(false);
     }
-  };
+  }, [categoryId, session?.accessToken]);
+
+  useEffect(() => {
+    if (status === "authenticated") {
+      fetchCategory();
+    } else if (status === "unauthenticated") {
+      router.push(routes.auth.signIn);
+    }
+  }, [status, fetchCategory, router]);
 
   const handleDelete = async () => {
     try {
@@ -111,11 +111,15 @@ export default function ShopCategoryDetailsPage({ categoryId }: ShopCategoryDeta
           {/* Category Icon */}
           <div className="flex-shrink-0">
             {category.iconUrl ? (
-              <img
-                src={getDocumentUrl(category.iconUrl) || ''}
-                alt={category.name}
-                className="h-32 w-32 rounded-xl object-cover shadow-md"
-              />
+              <div className="relative h-32 w-32">
+                <Image
+                  src={getDocumentUrl(category.iconUrl) || ''}
+                  alt={category.name}
+                  fill
+                  className="rounded-xl object-cover shadow-md"
+                  sizes="128px"
+                />
+              </div>
             ) : (
               <div className="flex h-32 w-32 items-center justify-center rounded-xl bg-gray-100 dark:bg-gray-700">
                 <PiGridFourDuotone className="h-16 w-16 text-gray-400" />

@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { useSession } from "next-auth/react";
 import { Title, Text, Badge, Button, Loader, Popover } from "rizzui";
 import {
@@ -11,7 +11,7 @@ import {
   PiCarProfileBold,
   PiTrendUpBold,
 } from "react-icons/pi";
-import { Link } from "@/i18n/routing";
+import { Link, useRouter } from "@/i18n/routing";
 import { routes } from "@/config/routes";
 import { getDocumentUrl } from "@/config/constants";
 import {
@@ -33,7 +33,6 @@ import {
 } from "@/types/driver.types";
 import PageHeader from "@/app/shared/page-header";
 import toast from "react-hot-toast";
-import { useRouter } from "@/i18n/routing";
 import { useTranslations } from "next-intl";
 import WidgetCard from "@core/components/cards/widget-card";
 import DocumentCard from "@/app/shared/document-card";
@@ -88,15 +87,7 @@ export default function DriverDetailsPage({ driverId }: DriverDetailsPageProps) 
     ],
   };
 
-  useEffect(() => {
-    if (status === "authenticated") {
-      fetchDriverDetails();
-    } else if (status === "unauthenticated") {
-      router.push(routes.auth.signIn);
-    }
-  }, [session, status, driverId]);
-
-  const fetchDriverDetails = async () => {
+  const fetchDriverDetails = useCallback(async () => {
     try {
       setIsLoading(true);
       const [driverData, docsData] = await Promise.all([
@@ -110,7 +101,15 @@ export default function DriverDetailsPage({ driverId }: DriverDetailsPageProps) 
     } finally {
       setIsLoading(false);
     }
-  };
+  }, [driverId, session?.accessToken, t]);
+
+  useEffect(() => {
+    if (status === "authenticated") {
+      fetchDriverDetails();
+    } else if (status === "unauthenticated") {
+      router.push(routes.auth.signIn);
+    }
+  }, [status, fetchDriverDetails, router]);
 
   const handleApproveDriver = async () => {
     if (!driver) return;

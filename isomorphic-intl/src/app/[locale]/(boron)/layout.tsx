@@ -4,19 +4,14 @@ import { useLayout } from "@/layouts/use-layout";
 import HydrogenLayout from "@/layouts/hydrogen/layout";
 import HeliumLayout from "@/layouts/helium/helium-layout";
 import BerylLiumLayout from "@/layouts/beryllium/beryllium-layout";
-import { useIsMounted } from "@core/hooks/use-is-mounted";
 import LithiumLayout from "@/layouts/lithium/lithium-layout";
 import BoronLayout from "@/layouts/boron/boron-layout";
 import CarbonLayout from "@/layouts/carbon/carbon-layout";
 
 export default function DefaultLayout({ children }: { children: React.ReactNode }) {
   const { layout } = useLayout();
-  const isMounted = useIsMounted();
 
-  if (!isMounted) {
-    return null;
-  }
-
+  // React 19 handles hydration properly - no mount check needed
   if (layout === LAYOUT_OPTIONS.HELIUM) {
     return <HeliumLayout>{children}</HeliumLayout>;
   }

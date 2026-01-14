@@ -3,24 +3,24 @@
 import { useState, useEffect, useMemo, useCallback } from "react";
 import { useSession } from "next-auth/react";
 import { Title, Text, Badge, Button, Loader, Input, Select, ActionIcon, Tooltip } from "rizzui";
-import { 
-  PiPlusBold, 
-  PiMagnifyingGlassBold, 
-  PiSortAscendingBold, 
-  PiPencilBold, 
+import {
+  PiPlusBold,
+  PiMagnifyingGlassBold,
+  PiSortAscendingBold,
+  PiPencilBold,
   PiTrashBold,
   PiEyeBold,
   PiListDashesDuotone
 } from "react-icons/pi";
-import { Link } from "@/i18n/routing";
+import { Link, useRouter } from "@/i18n/routing";
 import { routes } from "@/config/routes";
 import { getAllSubCategories, deleteSubCategory, getAllShopCategories } from "@/services/shop.service";
 import { getDocumentUrl } from "@/config/constants";
 import { SubCategory, ShopCategory } from "@/types/shop.types";
 import PageHeader from "@/app/shared/page-header";
 import toast from "react-hot-toast";
-import { useRouter } from "@/i18n/routing";
 import DeletePopover from "@/app/shared/delete-popover";
+import Image from "next/image";
 
 const pageHeader = {
   title: "Sub Categories",
@@ -84,15 +84,7 @@ export default function SubCategoriesPage() {
     return category?.name || "Unknown";
   }, [categories]);
 
-  useEffect(() => {
-    if (status === "authenticated") {
-      fetchData();
-    } else if (status === "unauthenticated") {
-      router.push(routes.auth.signIn);
-    }
-  }, [session, status, router]);
-
-  const fetchData = async () => {
+  const fetchData = useCallback(async () => {
     try {
       setIsLoading(true);
       const [subCatsData, catsData] = await Promise.all([
@@ -106,7 +98,15 @@ export default function SubCategoriesPage() {
     } finally {
       setIsLoading(false);
     }
-  };
+  }, [session?.accessToken]);
+
+  useEffect(() => {
+    if (status === "authenticated") {
+      fetchData();
+    } else if (status === "unauthenticated") {
+      router.push(routes.auth.signIn);
+    }
+  }, [status, fetchData, router]);
 
   const handleDelete = useCallback(async (id: string) => {
     try {
@@ -224,11 +224,15 @@ export default function SubCategoriesPage() {
                 <tr key={subCategory.id} className="hover:bg-gray-50 dark:hover:bg-gray-700">
                   <td className="whitespace-nowrap px-6 py-4">
                     {subCategory.iconUrl ? (
-                      <img
-                        src={getDocumentUrl(subCategory.iconUrl) || ''}
-                        alt={subCategory.name}
-                        className="h-10 w-10 rounded-lg object-cover"
-                      />
+                      <div className="relative h-10 w-10">
+                        <Image
+                          src={getDocumentUrl(subCategory.iconUrl) || ''}
+                          alt={subCategory.name}
+                          fill
+                          className="rounded-lg object-cover"
+                          sizes="40px"
+                        />
+                      </div>
                     ) : (
                       <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-gray-100 dark:bg-gray-700">
                         <PiListDashesDuotone className="h-5 w-5 text-gray-500" />

@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { useSession } from "next-auth/react";
 import { Title, Text, Badge, Button, Loader, Popover } from "rizzui";
 import {
@@ -12,7 +12,7 @@ import {
   PiMoneyBold,
   PiCalendarBlankBold,
 } from "react-icons/pi";
-import { Link } from "@/i18n/routing";
+import { Link, useRouter } from "@/i18n/routing";
 import { routes } from "@/config/routes";
 import { getDocumentUrl } from "@/config/constants";
 import {
@@ -32,7 +32,6 @@ import {
 } from "@/types/seller.types";
 import PageHeader from "@/app/shared/page-header";
 import toast from "react-hot-toast";
-import { useRouter } from "@/i18n/routing";
 import { useTranslations } from "next-intl";
 import WidgetCard from "@core/components/cards/widget-card";
 import DocumentCard from "@/app/shared/document-card";
@@ -87,15 +86,7 @@ export default function SellerDetailsPage({ sellerId }: SellerDetailsPageProps) 
     ],
   };
 
-  useEffect(() => {
-    if (status === "authenticated") {
-      fetchSellerDetails();
-    } else if (status === "unauthenticated") {
-      router.push(routes.auth.signIn);
-    }
-  }, [session, status, sellerId]);
-
-  const fetchSellerDetails = async () => {
+  const fetchSellerDetails = useCallback(async () => {
     try {
       setIsLoading(true);
       const [sellerData, docsData] = await Promise.all([
@@ -109,7 +100,15 @@ export default function SellerDetailsPage({ sellerId }: SellerDetailsPageProps) 
     } finally {
       setIsLoading(false);
     }
-  };
+  }, [sellerId, session?.accessToken, t]);
+
+  useEffect(() => {
+    if (status === "authenticated") {
+      fetchSellerDetails();
+    } else if (status === "unauthenticated") {
+      router.push(routes.auth.signIn);
+    }
+  }, [status, fetchSellerDetails, router]);
 
   const handleApproveSeller = async () => {
     if (!seller) return;

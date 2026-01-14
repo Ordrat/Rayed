@@ -1,10 +1,10 @@
 "use client";
 
-import { useState, useEffect, useMemo } from "react";
+import { useState, useEffect, useMemo, useCallback } from "react";
 import { useSession } from "next-auth/react";
 import { Title, Text, Badge, Button, Loader, Input, Select, Popover } from "rizzui";
 import { PiPlusBold, PiEyeBold, PiCheckCircleBold, PiXCircleBold, PiMagnifyingGlassBold, PiSortAscendingBold } from "react-icons/pi";
-import { Link } from "@/i18n/routing";
+import { Link, useRouter } from "@/i18n/routing";
 import { routes } from "@/config/routes";
 import { getAllDrivers, changeDriverAccountStatus } from "@/services/driver.service";
 import {
@@ -15,7 +15,6 @@ import {
 } from "@/types/driver.types";
 import PageHeader from "@/app/shared/page-header";
 import toast from "react-hot-toast";
-import { useRouter } from "@/i18n/routing";
 
 const pageHeader = {
   title: "Drivers Management",
@@ -75,15 +74,7 @@ export default function DriversPage() {
     return result;
   }, [drivers, searchTerm, sortConfig]);
 
-  useEffect(() => {
-    if (status === "authenticated") {
-      fetchDrivers();
-    } else if (status === "unauthenticated") {
-      router.push(routes.auth.signIn);
-    }
-  }, [session, status, router]);
-
-  const fetchDrivers = async () => {
+  const fetchDrivers = useCallback(async () => {
     try {
       setIsLoading(true);
       const data = await getAllDrivers(session?.accessToken || "");
@@ -93,7 +84,15 @@ export default function DriversPage() {
     } finally {
       setIsLoading(false);
     }
-  };
+  }, [session?.accessToken]);
+
+  useEffect(() => {
+    if (status === "authenticated") {
+      fetchDrivers();
+    } else if (status === "unauthenticated") {
+      router.push(routes.auth.signIn);
+    }
+  }, [status, fetchDrivers, router]);
 
   const handleApprove = async (driverId: string) => {
     setProcessingId(driverId);

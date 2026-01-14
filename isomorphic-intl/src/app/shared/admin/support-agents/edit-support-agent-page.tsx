@@ -1,29 +1,14 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { useSession } from "next-auth/react";
 import { SubmitHandler } from "react-hook-form";
-import {
-  Title,
-  Text,
-  Button,
-  Input,
-  Select,
-  Switch,
-  Loader,
-} from "rizzui";
+import { Title, Text, Button, Input, Select, Switch, Loader } from "rizzui";
 import { Form } from "@core/ui/form";
 import { routes } from "@/config/routes";
-import {
-  getSupportById,
-  updateSupport,
-  isAdmin,
-} from "@/services/support.service";
+import { getSupportById, updateSupport, isAdmin } from "@/services/support.service";
 import { SupportAgent, SupportDepartment } from "@/types/support.types";
-import {
-  updateSupportSchema,
-  UpdateSupportSchema,
-} from "@/validators/support.schema";
+import { updateSupportSchema, UpdateSupportSchema } from "@/validators/support.schema";
 import PageHeader from "@/app/shared/page-header";
 import toast from "react-hot-toast";
 import { useRouter } from "@/i18n/routing";
@@ -54,6 +39,19 @@ export default function EditSupportAgentPage({ agentId }: { agentId: string }) {
     ],
   };
 
+  const fetchAgent = useCallback(async () => {
+    try {
+      setIsLoading(true);
+      const data = await getSupportById(agentId, session?.accessToken || "");
+      setAgent(data);
+    } catch (error: any) {
+      toast.error(error.message || "Failed to fetch agent details");
+      router.push(routes.support.agents);
+    } finally {
+      setIsLoading(false);
+    }
+  }, [agentId, session?.accessToken, router]);
+
   useEffect(() => {
     if (status === "authenticated") {
       // TODO: Re-enable permission check when backend permissions are implemented
@@ -66,20 +64,7 @@ export default function EditSupportAgentPage({ agentId }: { agentId: string }) {
     } else if (status === "unauthenticated") {
       router.push(routes.auth.signIn1);
     }
-  }, [session, status, router, agentId]);
-
-  const fetchAgent = async () => {
-    try {
-      setIsLoading(true);
-      const data = await getSupportById(agentId, session?.accessToken || "");
-      setAgent(data);
-    } catch (error: any) {
-      toast.error(error.message || "Failed to fetch agent details");
-      router.push(routes.support.agents);
-    } finally {
-      setIsLoading(false);
-    }
-  };
+  }, [status, router, fetchAgent]);
 
   const onSubmit: SubmitHandler<UpdateSupportSchema> = async (data) => {
     setIsSubmitting(true);
@@ -148,9 +133,7 @@ export default function EditSupportAgentPage({ agentId }: { agentId: string }) {
           <Title as="h3" className="mb-2 text-xl font-semibold">
             Edit Agent Information
           </Title>
-          <Text className="text-gray-500">
-            Update the support agent&apos;s information and permissions.
-          </Text>
+          <Text className="text-gray-500">Update the support agent&apos;s information and permissions.</Text>
         </div>
 
         <Form<UpdateSupportSchema>
@@ -202,12 +185,8 @@ export default function EditSupportAgentPage({ agentId }: { agentId: string }) {
               <Select
                 label="Department"
                 options={departmentOptions}
-                value={departmentOptions.find(
-                  (opt) => opt.value === watch("department")
-                )}
-                onChange={(option: any) =>
-                  setValue("department", option?.value ?? SupportDepartment.GENERAL)
-                }
+                value={departmentOptions.find((opt) => opt.value === watch("department"))}
+                onChange={(option: any) => setValue("department", option?.value ?? SupportDepartment.GENERAL)}
                 disabled={isSubmitting}
               />
 
@@ -219,9 +198,7 @@ export default function EditSupportAgentPage({ agentId }: { agentId: string }) {
                   <div className="flex items-center justify-between rounded-md border border-gray-100 p-4 dark:border-gray-700/50">
                     <div>
                       <Text className="font-medium">Can Close Tickets</Text>
-                      <Text className="text-sm text-gray-500">
-                        Allow this agent to close support tickets
-                      </Text>
+                      <Text className="text-sm text-gray-500">Allow this agent to close support tickets</Text>
                     </div>
                     <Switch
                       checked={watch("canCloseTickets")}
@@ -232,9 +209,7 @@ export default function EditSupportAgentPage({ agentId }: { agentId: string }) {
                   <div className="flex items-center justify-between rounded-md border border-gray-100 p-4 dark:border-gray-700/50">
                     <div>
                       <Text className="font-medium">Can Issue Refunds</Text>
-                      <Text className="text-sm text-gray-500">
-                        Allow this agent to process refunds
-                      </Text>
+                      <Text className="text-sm text-gray-500">Allow this agent to process refunds</Text>
                     </div>
                     <Switch
                       checked={watch("canIssueRefunds")}
@@ -245,9 +220,7 @@ export default function EditSupportAgentPage({ agentId }: { agentId: string }) {
                   <div className="flex items-center justify-between rounded-md border border-gray-100 p-4 dark:border-gray-700/50">
                     <div>
                       <Text className="font-medium">Can Ban Users</Text>
-                      <Text className="text-sm text-gray-500">
-                        Allow this agent to ban users
-                      </Text>
+                      <Text className="text-sm text-gray-500">Allow this agent to ban users</Text>
                     </div>
                     <Switch
                       checked={watch("canBanUsers")}
@@ -258,9 +231,7 @@ export default function EditSupportAgentPage({ agentId }: { agentId: string }) {
                   <div className="flex items-center justify-between rounded-md border border-gray-100 p-4 dark:border-gray-700/50">
                     <div>
                       <Text className="font-medium">Can View All Tickets</Text>
-                      <Text className="text-sm text-gray-500">
-                        Allow this agent to view all tickets
-                      </Text>
+                      <Text className="text-sm text-gray-500">Allow this agent to view all tickets</Text>
                     </div>
                     <Switch
                       checked={watch("canViewAllTickets")}
@@ -281,11 +252,7 @@ export default function EditSupportAgentPage({ agentId }: { agentId: string }) {
                 >
                   Cancel
                 </Button>
-                <Button
-                  type="submit"
-                  className="flex-1"
-                  isLoading={isSubmitting}
-                >
+                <Button type="submit" className="flex-1" isLoading={isSubmitting}>
                   Update Agent
                 </Button>
               </div>

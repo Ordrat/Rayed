@@ -1,18 +1,18 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { useSession } from "next-auth/react";
 import { Title, Text, Badge, Button, Loader } from "rizzui";
 import { PiPencilBold, PiArrowLeftBold, PiListDashesDuotone } from "react-icons/pi";
-import { Link } from "@/i18n/routing";
+import { Link, useRouter } from "@/i18n/routing";
 import { routes } from "@/config/routes";
 import { getSubCategoryById, deleteSubCategory, getShopCategoryById } from "@/services/shop.service";
 import { getDocumentUrl } from "@/config/constants";
 import { SubCategory, ShopCategory } from "@/types/shop.types";
 import PageHeader from "@/app/shared/page-header";
 import toast from "react-hot-toast";
-import { useRouter } from "@/i18n/routing";
 import DeletePopover from "@/app/shared/delete-popover";
+import Image from "next/image";
 
 interface SubCategoryDetailsPageProps {
   subCategoryId: string;
@@ -36,20 +36,12 @@ export default function SubCategoryDetailsPage({ subCategoryId }: SubCategoryDet
     ],
   };
 
-  useEffect(() => {
-    if (status === "authenticated") {
-      fetchSubCategory();
-    } else if (status === "unauthenticated") {
-      router.push(routes.auth.signIn);
-    }
-  }, [session, status, router, subCategoryId]);
-
-  const fetchSubCategory = async () => {
+  const fetchSubCategory = useCallback(async () => {
     try {
       setIsLoading(true);
       const data = await getSubCategoryById(subCategoryId, session?.accessToken || "");
       setSubCategory(data);
-      
+
       // Fetch parent category
       if (data.shopCategoryId) {
         try {
@@ -64,7 +56,15 @@ export default function SubCategoryDetailsPage({ subCategoryId }: SubCategoryDet
     } finally {
       setIsLoading(false);
     }
-  };
+  }, [subCategoryId, session?.accessToken]);
+
+  useEffect(() => {
+    if (status === "authenticated") {
+      fetchSubCategory();
+    } else if (status === "unauthenticated") {
+      router.push(routes.auth.signIn);
+    }
+  }, [status, fetchSubCategory, router]);
 
   const handleDelete = async () => {
     try {
@@ -122,11 +122,15 @@ export default function SubCategoryDetailsPage({ subCategoryId }: SubCategoryDet
           {/* Icon */}
           <div className="flex-shrink-0">
             {subCategory.iconUrl ? (
-              <img
-                src={getDocumentUrl(subCategory.iconUrl) || ''}
-                alt={subCategory.name}
-                className="h-32 w-32 rounded-xl object-cover shadow-md"
-              />
+              <div className="relative h-32 w-32">
+                <Image
+                  src={getDocumentUrl(subCategory.iconUrl) || ''}
+                  alt={subCategory.name}
+                  fill
+                  className="rounded-xl object-cover shadow-md"
+                  sizes="128px"
+                />
+              </div>
             ) : (
               <div className="flex h-32 w-32 items-center justify-center rounded-xl bg-gray-100 dark:bg-gray-700">
                 <PiListDashesDuotone className="h-16 w-16 text-gray-400" />

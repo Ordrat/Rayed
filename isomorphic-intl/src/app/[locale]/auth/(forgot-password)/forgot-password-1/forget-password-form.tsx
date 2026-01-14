@@ -1,15 +1,14 @@
 "use client";
 
-import { Link } from "@/i18n/routing";
-import { useState, useEffect } from "react";
+import { Link, useRouter } from "@/i18n/routing";
+import { useState } from "react";
 import { Button, Text, Input, Password } from "rizzui";
 import { SubmitHandler } from "react-hook-form";
 import { Form } from "@core/ui/form";
 import { routes } from "@/config/routes";
 import { ResetPasswordSchema, resetPasswordSchema } from "@/validators/reset-password.schema";
 import { useTranslations } from "next-intl";
-import { useSession, signOut } from "next-auth/react";
-import { useRouter } from "@/i18n/routing";
+import { useSession } from "next-auth/react";
 import { resetPassword } from "@/services/auth.service";
 import toast from "react-hot-toast";
 

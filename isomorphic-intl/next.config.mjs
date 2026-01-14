@@ -59,13 +59,6 @@ const nextConfig = {
   },
   reactStrictMode: true,
   transpilePackages: ["core"],
-  webpack: (config) => {
-    config.resolve.alias = {
-      ...config.resolve.alias,
-      "@core": path.resolve(__dirname, "../packages/isomorphic-core/src"),
-    };
-    return config;
-  },
 };
 
 export default withNextIntl(nextConfig);

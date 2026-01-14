@@ -1,10 +1,10 @@
 "use client";
 
-import { useState, useEffect, useMemo } from "react";
+import { useState, useEffect, useMemo, useCallback } from "react";
 import { useSession } from "next-auth/react";
 import { Title, Text, Badge, Button, Loader, Popover, Input, Select } from "rizzui";
 import { PiPlusBold, PiEyeBold, PiCheckCircleBold, PiXCircleBold, PiMagnifyingGlassBold, PiSortAscendingBold } from "react-icons/pi";
-import { Link } from "@/i18n/routing";
+import { Link, useRouter } from "@/i18n/routing";
 import { routes } from "@/config/routes";
 import { getAllSellers, changeSellerAccountStatus } from "@/services/seller.service";
 import {
@@ -14,7 +14,6 @@ import {
 } from "@/types/seller.types";
 import PageHeader from "@/app/shared/page-header";
 import toast from "react-hot-toast";
-import { useRouter } from "@/i18n/routing";
 
 const pageHeader = {
   title: "Sellers Management",
@@ -74,15 +73,7 @@ export default function SellersPage() {
     return result;
   }, [sellers, searchTerm, sortConfig]);
 
-  useEffect(() => {
-    if (status === "authenticated") {
-      fetchSellers();
-    } else if (status === "unauthenticated") {
-      router.push(routes.auth.signIn);
-    }
-  }, [session, status, router]);
-
-  const fetchSellers = async () => {
+  const fetchSellers = useCallback(async () => {
     try {
       setIsLoading(true);
       const data = await getAllSellers(session?.accessToken || "");
@@ -92,7 +83,15 @@ export default function SellersPage() {
     } finally {
       setIsLoading(false);
     }
-  };
+  }, [session?.accessToken]);
+
+  useEffect(() => {
+    if (status === "authenticated") {
+      fetchSellers();
+    } else if (status === "unauthenticated") {
+      router.push(routes.auth.signIn);
+    }
+  }, [status, fetchSellers, router]);
 
   const handleApprove = async (sellerId: string) => {
     setProcessingId(sellerId);

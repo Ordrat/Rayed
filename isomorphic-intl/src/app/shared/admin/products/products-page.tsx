@@ -1,10 +1,10 @@
 "use client";
 
-import { useState, useEffect, useMemo } from "react";
+import { useState, useEffect, useMemo, useCallback } from "react";
 import { useSession } from "next-auth/react";
 import { Title, Text, Badge, Button, Loader, Popover, Input, Select } from "rizzui";
 import { PiEyeBold, PiCheckCircleBold, PiXCircleBold, PiMagnifyingGlassBold, PiSortAscendingBold, PiTrashBold, PiFunnelBold } from "react-icons/pi";
-import { Link } from "@/i18n/routing";
+import { Link, useRouter } from "@/i18n/routing";
 import { routes } from "@/config/routes";
 import { getDocumentUrl } from "@/config/constants";
 import { getAllProducts, approveProduct, rejectProduct, deleteProduct } from "@/services/product.service";
@@ -17,7 +17,6 @@ import {
 import PageHeader from "@/app/shared/page-header";
 import DeletePopover from "@/app/shared/delete-popover";
 import toast from "react-hot-toast";
-import { useRouter } from "@/i18n/routing";
 import { useTranslations } from "next-intl";
 import Image from "next/image";
 
@@ -70,6 +69,18 @@ export default function ProductsPage() {
     return result;
   }, [products, searchTerm, sortConfig]);
 
+  const fetchProducts = useCallback(async (statusValue?: number | null) => {
+    try {
+      setIsLoading(true);
+      const data = await getAllProducts(session?.accessToken || "", statusValue);
+      setProducts(data);
+    } catch (error: any) {
+      toast.error(error.message || t("failed-to-fetch-products"));
+    } finally {
+      setIsLoading(false);
+    }
+  }, [session?.accessToken, t]);
+
   useEffect(() => {
     if (status === "authenticated") {
       // Get all products on initial load (no status filter)
@@ -77,7 +88,7 @@ export default function ProductsPage() {
     } else if (status === "unauthenticated") {
       router.push(routes.auth.signIn);
     }
-  }, [session, status, router]);
+  }, [status, fetchProducts, router]);
 
   // Refetch products when status filter changes
   useEffect(() => {
@@ -85,19 +96,7 @@ export default function ProductsPage() {
       const statusValue = statusFilter?.value === "all" ? null : parseInt(statusFilter?.value);
       fetchProducts(statusValue);
     }
-  }, [statusFilter]);
-
-  const fetchProducts = async (status?: number | null) => {
-    try {
-      setIsLoading(true);
-      const data = await getAllProducts(session?.accessToken || "", status);
-      setProducts(data);
-    } catch (error: any) {
-      toast.error(error.message || t("failed-to-fetch-products"));
-    } finally {
-      setIsLoading(false);
-    }
-  };
+  }, [statusFilter, status, fetchProducts]);
 
   const handleApprove = async (productId: string) => {
     setProcessingId(productId);

@@ -1,10 +1,10 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { useSession } from "next-auth/react";
 import { Title, Text, Badge, Button, Loader } from "rizzui";
 import { PiPlusBold, PiEyeBold, PiPencilBold, PiTrashBold } from "react-icons/pi";
-import { Link } from "@/i18n/routing";
+import { Link, useRouter } from "@/i18n/routing";
 import { routes } from "@/config/routes";
 import { getAllSupport, deleteSupport, isAdmin } from "@/services/support.service";
 import {
@@ -15,7 +15,6 @@ import {
 } from "@/types/support.types";
 import PageHeader from "@/app/shared/page-header";
 import toast from "react-hot-toast";
-import { useRouter } from "@/i18n/routing";
 import DeletePopover from "@/app/shared/delete-popover";
 
 const pageHeader = {
@@ -48,6 +47,18 @@ export default function SupportAgentsPage() {
   const [isLoading, setIsLoading] = useState(true);
   const [deletingId, setDeletingId] = useState<string | null>(null);
 
+  const fetchAgents = useCallback(async () => {
+    try {
+      setIsLoading(true);
+      const data = await getAllSupport(session?.accessToken || "");
+      setAgents(data);
+    } catch (error: any) {
+      toast.error(error.message || "Failed to fetch support agents");
+    } finally {
+      setIsLoading(false);
+    }
+  }, [session?.accessToken]);
+
   useEffect(() => {
     if (status === "authenticated") {
       // TODO: Re-enable permission check when backend permissions are implemented
@@ -60,19 +71,7 @@ export default function SupportAgentsPage() {
     } else if (status === "unauthenticated") {
       router.push(routes.auth.signIn1);
     }
-  }, [session, status, router]);
-
-  const fetchAgents = async () => {
-    try {
-      setIsLoading(true);
-      const data = await getAllSupport(session?.accessToken || "");
-      setAgents(data);
-    } catch (error: any) {
-      toast.error(error.message || "Failed to fetch support agents");
-    } finally {
-      setIsLoading(false);
-    }
-  };
+  }, [status, fetchAgents, router]);
 
   const handleDelete = async (agentId: string) => {
     setDeletingId(agentId);

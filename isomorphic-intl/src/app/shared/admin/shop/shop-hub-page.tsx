@@ -1,10 +1,10 @@
 "use client";
 
-import { useState, useEffect, useMemo } from "react";
+import { useState, useEffect, useMemo, useCallback } from "react";
 import { useSession } from "next-auth/react";
 import { Title, Text, Badge, Button, Loader, Popover, Input, Select } from "rizzui";
 import { PiEyeBold, PiCheckCircleBold, PiXCircleBold, PiMagnifyingGlassBold, PiSortAscendingBold, PiStorefrontDuotone } from "react-icons/pi";
-import { Link } from "@/i18n/routing";
+import { Link, useRouter } from "@/i18n/routing";
 import { routes } from "@/config/routes";
 import { getAllShops, changeShopStatus } from "@/services/shop.service";
 import { getDocumentUrl } from "@/config/constants";
@@ -15,7 +15,7 @@ import {
 } from "@/types/shop.types";
 import PageHeader from "@/app/shared/page-header";
 import toast from "react-hot-toast";
-import { useRouter } from "@/i18n/routing";
+import Image from "next/image";
 
 const pageHeader = {
   title: "Shop Hub",
@@ -74,15 +74,7 @@ export default function ShopHubPage() {
     return result;
   }, [shops, searchTerm, sortConfig]);
 
-  useEffect(() => {
-    if (status === "authenticated") {
-      fetchShops();
-    } else if (status === "unauthenticated") {
-      router.push(routes.auth.signIn);
-    }
-  }, [session, status, router]);
-
-  const fetchShops = async () => {
+  const fetchShops = useCallback(async () => {
     try {
       setIsLoading(true);
       const data = await getAllShops(session?.accessToken || "");
@@ -92,7 +84,15 @@ export default function ShopHubPage() {
     } finally {
       setIsLoading(false);
     }
-  };
+  }, [session?.accessToken]);
+
+  useEffect(() => {
+    if (status === "authenticated") {
+      fetchShops();
+    } else if (status === "unauthenticated") {
+      router.push(routes.auth.signIn);
+    }
+  }, [status, fetchShops, router]);
 
   const handleApprove = async (shopId: string) => {
     setProcessingId(shopId);
@@ -199,11 +199,15 @@ export default function ShopHubPage() {
               <div className="mb-4 flex items-start justify-between">
                 <div className="flex items-center gap-3">
                   {shop.logoUrl ? (
-                    <img
-                      src={getDocumentUrl(shop.logoUrl)}
-                      alt={shop.name}
-                      className="h-12 w-12 rounded-full object-cover"
-                    />
+                    <div className="relative h-12 w-12">
+                      <Image
+                        src={getDocumentUrl(shop.logoUrl)}
+                        alt={shop.name}
+                        fill
+                        className="rounded-full object-cover"
+                        sizes="48px"
+                      />
+                    </div>
                   ) : (
                     <div className="flex h-12 w-12 items-center justify-center rounded-full bg-gray-100 dark:bg-gray-700">
                       <PiStorefrontDuotone className="h-6 w-6 text-gray-500" />

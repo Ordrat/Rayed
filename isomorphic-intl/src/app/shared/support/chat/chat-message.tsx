@@ -1,4 +1,4 @@
-'use client';
+"use client";
 
 /**
  * Chat Message Component
@@ -6,8 +6,9 @@
  */
 
 import cn from "@core/utils/class-names";
-import { ChatMessage as ChatMessageType } from '@/types/firebase-chat.types';
-import { MessageType, SenderType, SenderTypeLabels } from '@/types/firebase.enums';
+import Image from "next/image";
+import { ChatMessage as ChatMessageType } from "@/types/firebase-chat.types";
+import { MessageType, SenderType, SenderTypeLabels } from "@/types/firebase.enums";
 
 interface ChatMessageProps {
   message: ChatMessageType;
@@ -16,19 +17,19 @@ interface ChatMessageProps {
 }
 
 function formatTime(timestamp: string | number): string {
-  if (!timestamp) return '';
+  if (!timestamp) return "";
   const date = new Date(timestamp);
-  if (isNaN(date.getTime())) return '';
-  return date.toLocaleTimeString('en-US', {
-    hour: '2-digit',
-    minute: '2-digit',
+  if (isNaN(date.getTime())) return "";
+  return date.toLocaleTimeString("en-US", {
+    hour: "2-digit",
+    minute: "2-digit",
   });
 }
 
-export function ChatMessageBubble({ message, isOwn, locale = 'en' }: ChatMessageProps) {
+export function ChatMessageBubble({ message, isOwn, locale = "en" }: ChatMessageProps) {
   const isSystem = message.messageType === MessageType.System;
   const isAction = message.messageType === MessageType.Action;
-  
+
   // System messages
   if (isSystem) {
     return (
@@ -48,9 +49,7 @@ export function ChatMessageBubble({ message, isOwn, locale = 'en' }: ChatMessage
           <div className="font-semibold">💰 {message.content}</div>
           {message.actionData && (
             <div className="text-sm mt-1 opacity-80">
-              {typeof message.actionData === 'string'
-                ? message.actionData
-                : JSON.stringify(message.actionData)}
+              {typeof message.actionData === "string" ? message.actionData : JSON.stringify(message.actionData)}
             </div>
           )}
         </div>
@@ -61,52 +60,55 @@ export function ChatMessageBubble({ message, isOwn, locale = 'en' }: ChatMessage
   // Regular text messages
   return (
     <div
-      className={cn('flex mb-4', {
-        'justify-end': isOwn,
-        'justify-start': !isOwn,
+      className={cn("flex mb-4", {
+        "justify-end": isOwn,
+        "justify-start": !isOwn,
       })}
     >
       <div
-        className={cn('max-w-[75%] px-4 py-3 rounded-2xl', {
-          'bg-primary text-primary-foreground rounded-br-md': isOwn,
-          'bg-muted dark:bg-gray-800 rounded-bl-md': !isOwn,
+        className={cn("max-w-[75%] px-4 py-3 rounded-2xl", {
+          "bg-primary text-primary-foreground rounded-br-md": isOwn,
+          "bg-muted dark:bg-gray-800 rounded-bl-md": !isOwn,
         })}
       >
         {/* Sender name for received messages */}
         {!isOwn && message.senderName && (
-          <div className="text-xs font-semibold text-primary mb-1">
-            {message.senderName}
-          </div>
+          <div className="text-xs font-semibold text-primary mb-1">{message.senderName}</div>
         )}
-        
+
         {/* Message content */}
         <div className="break-words">{message.content}</div>
-        
+
         {/* Image if present */}
         {message.imageUrl && (
-          <img
+          <Image
             src={message.imageUrl}
             alt="attachment"
-            className="mt-2 max-w-[250px] rounded-lg cursor-pointer hover:opacity-90"
-            onClick={() => window.open(message.imageUrl, '_blank')}
+            width={250}
+            height={200}
+            className="mt-2 max-w-[250px] rounded-lg cursor-pointer hover:opacity-90 object-contain"
+            onClick={() => window.open(message.imageUrl, "_blank")}
+            unoptimized
           />
         )}
-        
+
         {/* Timestamp and read status */}
         <div
-          className={cn('flex items-center gap-1 text-xs mt-1', {
-            'text-primary-foreground/70 justify-end': isOwn,
-            'text-muted-foreground': !isOwn,
+          className={cn("flex items-center gap-1 text-xs mt-1", {
+            "text-primary-foreground/70 justify-end": isOwn,
+            "text-muted-foreground": !isOwn,
           })}
         >
           <span>{formatTime(message.timestamp)}</span>
           {/* Read status checkmarks for own messages */}
           {isOwn && (
-            <span className={cn('ml-1', {
-              'text-primary-foreground/70': !message.isRead,
-              'text-blue-300': message.isRead,
-            })}>
-              {message.isRead ? '✓✓' : '✓'}
+            <span
+              className={cn("ml-1", {
+                "text-primary-foreground/70": !message.isRead,
+                "text-blue-300": message.isRead,
+              })}
+            >
+              {message.isRead ? "✓✓" : "✓"}
             </span>
           )}
         </div>

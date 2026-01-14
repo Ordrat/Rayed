@@ -1,19 +1,19 @@
 "use client";
 
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useRef, useCallback } from "react";
 import { useSession } from "next-auth/react";
 import { Title, Text, Button, Loader, Input, Switch } from "rizzui";
 import { PiArrowLeftBold, PiFloppyDiskBold, PiImage, PiUploadSimple } from "react-icons/pi";
-import { Link } from "@/i18n/routing";
+import { Link, useRouter } from "@/i18n/routing";
 import { routes } from "@/config/routes";
 import { createShopCategory, updateShopCategory, getShopCategoryById } from "@/services/shop.service";
 import { getDocumentUrl } from "@/config/constants";
 import { ShopCategory } from "@/types/shop.types";
 import PageHeader from "@/app/shared/page-header";
 import toast from "react-hot-toast";
-import { useRouter } from "@/i18n/routing";
 import { useTranslations } from "next-intl";
 import cn from "@core/utils/class-names";
+import Image from "next/image";
 
 interface ShopCategoryFormPageProps {
   categoryId?: string;
@@ -48,18 +48,11 @@ export default function ShopCategoryFormPage({ categoryId, isEdit = false }: Sho
     ],
   };
 
-  useEffect(() => {
-    if (status === "authenticated" && isEdit && categoryId) {
-      fetchCategory();
-    } else if (status === "unauthenticated") {
-      router.push(routes.auth.signIn);
-    }
-  }, [session, status, router, categoryId, isEdit]);
-
-  const fetchCategory = async () => {
+  const fetchCategory = useCallback(async () => {
+    if (!categoryId) return;
     try {
       setIsLoading(true);
-      const data = await getShopCategoryById(categoryId!, session?.accessToken || "");
+      const data = await getShopCategoryById(categoryId, session?.accessToken || "");
       setCategory(data);
       // Populate form fields
       setNameEn(data.name || "");
@@ -74,7 +67,15 @@ export default function ShopCategoryFormPage({ categoryId, isEdit = false }: Sho
     } finally {
       setIsLoading(false);
     }
-  };
+  }, [categoryId, session?.accessToken, t]);
+
+  useEffect(() => {
+    if (status === "authenticated" && isEdit && categoryId) {
+      fetchCategory();
+    } else if (status === "unauthenticated") {
+      router.push(routes.auth.signIn);
+    }
+  }, [status, isEdit, categoryId, fetchCategory, router]);
 
   const handleIconChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
@@ -145,7 +146,7 @@ export default function ShopCategoryFormPage({ categoryId, isEdit = false }: Sho
           <div>
             <Text className="mb-2 font-medium">{t("Category Icon")}</Text>
             <div className="flex flex-col gap-2">
-              <div 
+              <div
                 onClick={handleIconClick}
                 className={cn(
                   "relative flex h-32 w-32 cursor-pointer items-center justify-center overflow-hidden rounded-lg border-2 border-dashed border-gray-300 transition-colors hover:border-[#1f502a] hover:bg-gray-50 dark:border-gray-600 dark:hover:bg-gray-700",
@@ -153,10 +154,12 @@ export default function ShopCategoryFormPage({ categoryId, isEdit = false }: Sho
                 )}
               >
                 {iconPreview ? (
-                  <img
+                  <Image
                     src={iconPreview}
                     alt="Preview"
-                    className="h-full w-full object-cover"
+                    fill
+                    className="object-cover"
+                    sizes="128px"
                   />
                 ) : (
                   <div className="flex flex-col items-center justify-center text-gray-400">

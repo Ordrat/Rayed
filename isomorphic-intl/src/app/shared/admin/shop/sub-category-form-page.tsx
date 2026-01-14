@@ -1,24 +1,24 @@
 "use client";
 
-import { useState, useEffect, useMemo, useRef } from "react";
+import { useState, useEffect, useMemo, useRef, useCallback } from "react";
 import { useSession } from "next-auth/react";
 import { Title, Text, Button, Loader, Input, Switch, Select } from "rizzui";
 import { PiArrowLeftBold, PiFloppyDiskBold, PiUploadSimple } from "react-icons/pi";
-import { Link } from "@/i18n/routing";
+import { Link, useRouter } from "@/i18n/routing";
 import { routes } from "@/config/routes";
-import { 
-  createSubCategory, 
-  updateSubCategory, 
-  getSubCategoryById, 
-  getAllShopCategories 
+import {
+  createSubCategory,
+  updateSubCategory,
+  getSubCategoryById,
+  getAllShopCategories
 } from "@/services/shop.service";
 import { getDocumentUrl } from "@/config/constants";
 import { SubCategory, ShopCategory } from "@/types/shop.types";
 import PageHeader from "@/app/shared/page-header";
 import toast from "react-hot-toast";
-import { useRouter } from "@/i18n/routing";
 import { useTranslations } from "next-intl";
 import cn from "@core/utils/class-names";
+import Image from "next/image";
 
 interface SubCategoryFormPageProps {
   subCategoryId?: string;
@@ -59,22 +59,14 @@ export default function SubCategoryFormPage({ subCategoryId, isEdit = false }: S
     ],
   };
 
-  useEffect(() => {
-    if (status === "authenticated") {
-      fetchData();
-    } else if (status === "unauthenticated") {
-      router.push(routes.auth.signIn);
-    }
-  }, [session, status, router, subCategoryId, isEdit]);
-
-  const fetchData = async () => {
+  const fetchData = useCallback(async () => {
     try {
       setIsLoading(true);
-      
+
       // Fetch categories first
       const catsData = await getAllShopCategories(session?.accessToken || "");
       setCategories(catsData);
-      
+
       // If editing, fetch the subcategory
       if (isEdit && subCategoryId) {
         const data = await getSubCategoryById(subCategoryId, session?.accessToken || "");
@@ -98,7 +90,15 @@ export default function SubCategoryFormPage({ subCategoryId, isEdit = false }: S
     } finally {
       setIsLoading(false);
     }
-  };
+  }, [session?.accessToken, isEdit, subCategoryId, t]);
+
+  useEffect(() => {
+    if (status === "authenticated") {
+      fetchData();
+    } else if (status === "unauthenticated") {
+      router.push(routes.auth.signIn);
+    }
+  }, [status, fetchData, router]);
 
   const handleIconChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
@@ -175,7 +175,7 @@ export default function SubCategoryFormPage({ subCategoryId, isEdit = false }: S
           <div>
             <Text className="mb-2 font-medium">{t("Sub Category Icon")}</Text>
             <div className="flex flex-col gap-2">
-              <div 
+              <div
                 onClick={handleIconClick}
                 className={cn(
                   "relative flex h-32 w-32 cursor-pointer items-center justify-center overflow-hidden rounded-lg border-2 border-dashed border-gray-300 transition-colors hover:border-[#1f502a] hover:bg-gray-50 dark:border-gray-600 dark:hover:bg-gray-700",
@@ -183,10 +183,12 @@ export default function SubCategoryFormPage({ subCategoryId, isEdit = false }: S
                 )}
               >
                 {iconPreview ? (
-                  <img
+                  <Image
                     src={iconPreview}
                     alt="Preview"
-                    className="h-full w-full object-cover"
+                    fill
+                    className="object-cover"
+                    sizes="128px"
                   />
                 ) : (
                   <div className="flex flex-col items-center justify-center text-gray-400">

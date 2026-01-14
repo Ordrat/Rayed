@@ -1,28 +1,28 @@
-'use client';
+"use client";
 
 /**
  * Chat Window Component
  * Main chat container combining all components
  */
 
-import { useRef, useEffect, useCallback } from 'react';
+import { useRef, useEffect, useCallback } from "react";
 import cn from "@core/utils/class-names";
-import { useFirebaseChat } from '@/hooks/use-firebase-chat';
-import { SupportTicket } from '@/types/support-ticket.types';
-import { SenderType } from '@/types/firebase.enums';
-import { ChatMessage } from '@/types/firebase-chat.types';
-import { ChatMessageBubble } from './chat-message';
-import { TypingIndicator } from './typing-indicator';
-import { ChatInput } from './chat-input';
-import { ChatHeader } from './chat-header';
-import { Loader } from 'rizzui';
-import { PiChatCircleTextLight } from 'react-icons/pi';
+import { useFirebaseChat } from "@/hooks/use-firebase-chat";
+import { SupportTicket } from "@/types/support-ticket.types";
+import { SenderType } from "@/types/firebase.enums";
+import { ChatMessage } from "@/types/firebase-chat.types";
+import { ChatMessageBubble } from "./chat-message";
+import { TypingIndicator } from "./typing-indicator";
+import { ChatInput } from "./chat-input";
+import { ChatHeader } from "./chat-header";
+import { Loader } from "rizzui";
+import { PiChatCircleTextLight } from "react-icons/pi";
 
 interface ChatWindowProps {
   ticket: SupportTicket;
   chatId: string;
   token: string;
-  userType: 'customer' | 'support';
+  userType: "customer" | "support";
   customerName?: string;
   locale?: string;
   onClose?: () => void;
@@ -36,17 +36,17 @@ function playNotificationSound() {
     const audioContext = new (window.AudioContext || (window as any).webkitAudioContext)();
     const oscillator = audioContext.createOscillator();
     const gainNode = audioContext.createGain();
-    
+
     oscillator.connect(gainNode);
     gainNode.connect(audioContext.destination);
-    
+
     // Pleasant notification tone
     oscillator.frequency.value = 800;
-    oscillator.type = 'sine';
-    
+    oscillator.type = "sine";
+
     gainNode.gain.setValueAtTime(0.3, audioContext.currentTime);
     gainNode.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + 0.5);
-    
+
     oscillator.start(audioContext.currentTime);
     oscillator.stop(audioContext.currentTime + 0.5);
   } catch (e) {
@@ -60,7 +60,7 @@ export function ChatWindow({
   token,
   userType,
   customerName,
-  locale = 'en',
+  locale = "en",
   onClose,
   className,
   readOnly = false,
@@ -69,56 +69,52 @@ export function ChatWindow({
   const lastMessageCountRef = useRef<number>(0);
 
   // Determine if a message is from current user
-  const isOwnMessage = useCallback((senderType: SenderType): boolean => {
-    if (userType === 'customer') {
-      return senderType === SenderType.Customer;
-    }
-    return senderType === SenderType.Support;
-  }, [userType]);
+  const isOwnMessage = useCallback(
+    (senderType: SenderType): boolean => {
+      if (userType === "customer") {
+        return senderType === SenderType.Customer;
+      }
+      return senderType === SenderType.Support;
+    },
+    [userType]
+  );
 
   // Handle new message notification
-  const handleNewMessage = useCallback((message: ChatMessage) => {
-    // Only play sound for messages from the other party
-    if (!isOwnMessage(message.senderType)) {
-      playNotificationSound();
-    }
-  }, [isOwnMessage]);
+  const handleNewMessage = useCallback(
+    (message: ChatMessage) => {
+      // Only play sound for messages from the other party
+      if (!isOwnMessage(message.senderType)) {
+        playNotificationSound();
+      }
+    },
+    [isOwnMessage]
+  );
 
-  const {
-    messages,
-    isLoading,
-    isConnected,
-    isOtherTyping,
-    error,
-    sendMessage,
-    setTyping,
-    markAsRead,
-  } = useFirebaseChat({
-    chatId,
-    token,
-    userType,
-    onNewMessage: handleNewMessage,
-  });
+  const { messages, isLoading, isConnected, isOtherTyping, error, sendMessage, setTyping, markAsRead } =
+    useFirebaseChat({
+      chatId,
+      token,
+      userType,
+      onNewMessage: handleNewMessage,
+    });
 
   // Scroll to bottom when new messages arrive
   useEffect(() => {
-    messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
+    messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
   }, [messages, isOtherTyping]);
 
   // Mark messages as read once when chat loads
   // The hook handles preventing duplicate calls
+  const hasMessages = messages.length > 0;
   useEffect(() => {
-    if (messages.length > 0) {
+    if (hasMessages) {
       markAsRead();
     }
-  }, [messages.length > 0, markAsRead]); // Only trigger when messages exist
+  }, [hasMessages, markAsRead]); // Only trigger when messages exist
 
   return (
     <div
-      className={cn(
-        'flex flex-col h-full bg-white dark:bg-gray-900 rounded-lg shadow-lg overflow-hidden',
-        className
-      )}
+      className={cn("flex flex-col h-full bg-white dark:bg-gray-900 rounded-lg shadow-lg overflow-hidden", className)}
     >
       {/* Header */}
       <ChatHeader
@@ -136,20 +132,12 @@ export function ChatWindow({
             <Loader size="lg" />
           </div>
         ) : error ? (
-          <div className="flex items-center justify-center h-full text-red-500">
-            {error}
-          </div>
+          <div className="flex items-center justify-center h-full text-red-500">{error}</div>
         ) : messages.length === 0 ? (
           <div className="flex flex-col items-center justify-center h-full text-gray-400">
             <PiChatCircleTextLight className="w-20 h-20 mb-4 opacity-50" />
-            <p className="text-lg">
-              {locale === 'ar' ? 'لا توجد رسائل بعد' : 'No messages yet'}
-            </p>
-            <p className="text-sm">
-              {locale === 'ar'
-                ? 'ابدأ المحادثة مع العميل'
-                : 'Start the conversation'}
-            </p>
+            <p className="text-lg">{locale === "ar" ? "لا توجد رسائل بعد" : "No messages yet"}</p>
+            <p className="text-sm">{locale === "ar" ? "ابدأ المحادثة مع العميل" : "Start the conversation"}</p>
           </div>
         ) : (
           <>
@@ -177,9 +165,7 @@ export function ChatWindow({
           onSend={sendMessage}
           onTyping={setTyping}
           disabled={!isConnected}
-          placeholder={
-            locale === 'ar' ? 'اكتب رسالة...' : 'Type a message...'
-          }
+          placeholder={locale === "ar" ? "اكتب رسالة..." : "Type a message..."}
         />
       )}
     </div>
@@ -187,4 +173,3 @@ export function ChatWindow({
 }
 
 export default ChatWindow;
-

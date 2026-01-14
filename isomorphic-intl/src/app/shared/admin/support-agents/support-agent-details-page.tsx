@@ -1,10 +1,10 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { useSession } from "next-auth/react";
 import { Title, Text, Button, Loader } from "rizzui";
 import { PiPencilBold, PiArrowLeftBold, PiCheckCircleBold, PiCurrencyDollarBold, PiProhibitBold, PiEyeBold } from "react-icons/pi";
-import { Link } from "@/i18n/routing";
+import { Link, useRouter } from "@/i18n/routing";
 import { routes } from "@/config/routes";
 import { getSupportById, isAdmin } from "@/services/support.service";
 import {
@@ -15,7 +15,6 @@ import {
 } from "@/types/support.types";
 import PageHeader from "@/app/shared/page-header";
 import toast from "react-hot-toast";
-import { useRouter } from "@/i18n/routing";
 
 function getStatusDotColor(status: SupportStatus) {
   switch (status) {
@@ -65,6 +64,19 @@ export default function SupportAgentDetailsPage({
     ],
   };
 
+  const fetchAgent = useCallback(async () => {
+    try {
+      setIsLoading(true);
+      const data = await getSupportById(agentId, session?.accessToken || "");
+      setAgent(data);
+    } catch (error: any) {
+      toast.error(error.message || "Failed to fetch agent details");
+      router.push(routes.support.agents);
+    } finally {
+      setIsLoading(false);
+    }
+  }, [agentId, session?.accessToken, router]);
+
   useEffect(() => {
     if (status === "authenticated") {
       // TODO: Re-enable permission check when backend permissions are implemented
@@ -77,20 +89,7 @@ export default function SupportAgentDetailsPage({
     } else if (status === "unauthenticated") {
       router.push(routes.auth.signIn1);
     }
-  }, [session, status, router, agentId]);
-
-  const fetchAgent = async () => {
-    try {
-      setIsLoading(true);
-      const data = await getSupportById(agentId, session?.accessToken || "");
-      setAgent(data);
-    } catch (error: any) {
-      toast.error(error.message || "Failed to fetch agent details");
-      router.push(routes.support.agents);
-    } finally {
-      setIsLoading(false);
-    }
-  };
+  }, [status, fetchAgent, router]);
 
   if (status === "loading" || isLoading) {
     return (

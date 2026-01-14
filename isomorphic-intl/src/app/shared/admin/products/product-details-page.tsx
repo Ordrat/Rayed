@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { useSession } from "next-auth/react";
 import { Title, Text, Badge, Button, Loader, Popover } from "rizzui";
 import {
@@ -12,7 +12,7 @@ import {
   PiShoppingCartBold,
   PiTagBold,
 } from "react-icons/pi";
-import { Link } from "@/i18n/routing";
+import { Link, useRouter } from "@/i18n/routing";
 import { routes } from "@/config/routes";
 import { getDocumentUrl } from "@/config/constants";
 import {
@@ -30,11 +30,8 @@ import {
 import PageHeader from "@/app/shared/page-header";
 import DeletePopover from "@/app/shared/delete-popover";
 import toast from "react-hot-toast";
-import { useRouter } from "@/i18n/routing";
-import { useTranslations } from "next-intl";
+import { useTranslations, useLocale } from "next-intl";
 import Image from "next/image";
-import { useLocale } from "next-intl";
-
 import WidgetCard from "@core/components/cards/widget-card";
 
 interface ProductDetailsPageProps {
@@ -61,15 +58,7 @@ export default function ProductDetailsPage({ productId }: ProductDetailsPageProp
     ],
   };
 
-  useEffect(() => {
-    if (status === "authenticated") {
-      fetchProductDetails();
-    } else if (status === "unauthenticated") {
-      router.push(routes.auth.signIn);
-    }
-  }, [session, status, productId]);
-
-  const fetchProductDetails = async () => {
+  const fetchProductDetails = useCallback(async () => {
     try {
       setIsLoading(true);
       const productData = await getProductById(productId, session?.accessToken || "");
@@ -79,7 +68,15 @@ export default function ProductDetailsPage({ productId }: ProductDetailsPageProp
     } finally {
       setIsLoading(false);
     }
-  };
+  }, [productId, session?.accessToken, t]);
+
+  useEffect(() => {
+    if (status === "authenticated") {
+      fetchProductDetails();
+    } else if (status === "unauthenticated") {
+      router.push(routes.auth.signIn);
+    }
+  }, [status, fetchProductDetails, router]);
 
   const handleApprove = async () => {
     if (!product) return;
