@@ -1,6 +1,6 @@
 import type { Schema } from "zod";
 import { useEffect } from "react";
-import { useForm, SubmitHandler, UseFormReturn, UseFormProps, FieldValues } from "react-hook-form";
+import { useForm, SubmitHandler, UseFormReturn, UseFormProps, FieldValues, Resolver } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 
 type ServerErrors<T> = {
@@ -35,7 +35,7 @@ export const Form = <TFormValues extends Record<string, any> = Record<string, an
   };
 
   if (validationSchema) {
-    formOptions.resolver = zodResolver(validationSchema);
+    formOptions.resolver = zodResolver(validationSchema) as Resolver<TFormValues>;
   }
 
   const methods = useForm<TFormValues>(formOptions);
