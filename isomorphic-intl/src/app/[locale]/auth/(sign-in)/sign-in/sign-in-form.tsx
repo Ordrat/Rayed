@@ -2,7 +2,7 @@
 
 import { Link } from "@/i18n/routing";
 import { useState } from "react";
-import { signIn, useSession } from "next-auth/react";
+import { signIn, getSession } from "next-auth/react";
 import { SubmitHandler } from "react-hook-form";
 import { PiArrowRightBold} from "react-icons/pi";
 import { Checkbox, Password, Button, Input, Text } from "rizzui";
@@ -12,8 +12,7 @@ import { loginSchema, LoginSchema } from "@/validators/login.schema";
 import { useTranslations } from "next-intl";
 import { useRouter } from "@/i18n/routing";
 import toast from "react-hot-toast";
-import { useEffect } from "react";
-import { isSupportAgent, isAdmin, changeSupportStatus } from "@/services/support.service";
+import { changeSupportStatus } from "@/services/support.service";
 import { SupportStatus } from "@/types/support.types";
 
 const initialValues: LoginSchema = {
@@ -31,9 +30,7 @@ const ERROR_CODE_MAP: Record<string, string> = {
 export default function SignInForm() {
   const t = useTranslations("form");
   const router = useRouter();
-  const { data: session, status } = useSession();
   const [isLoading, setIsLoading] = useState(false);
-  const [hasProcessedLogin, setHasProcessedLogin] = useState(false);
 
   // Translate error codes to localized messages
   const getTranslatedError = (error: string): string => {
@@ -44,47 +41,6 @@ export default function SignInForm() {
     // Return original error if no translation found
     return error;
   };
-
-  // Handle post-login redirect logic
-  useEffect(() => {
-    const handlePostLogin = async () => {
-      if (status !== "authenticated" || !session || hasProcessedLogin) return;
-      
-      const userId = session?.user?.id;
-      if (!userId) return;
-
-      setHasProcessedLogin(true);
-
-      // Update status to Online if applicable (for support agents)
-      if (session?.accessToken && session?.user?.id) {
-        const userRoles = session?.user?.roles || [];
-        const isSupportRole = userRoles.some(
-          (role) => role.toLowerCase() === 'support' || role.toLowerCase() === 'supportagent'
-        );
-
-        if (isSupportRole) {
-          try {
-            await changeSupportStatus(
-              {
-                supportId: userId,
-                status: SupportStatus.ONLINE,
-              },
-              session.accessToken
-            );
-            console.log("User status updated to Online");
-          } catch (error) {
-            console.error("Failed to update status:", error);
-            // Don't block login if status update fails
-          }
-        }
-      }
-
-      // Redirect to home/dashboard
-      router.push("/");
-    };
-
-    handlePostLogin();
-  }, [session, status, router, hasProcessedLogin]);
 
   const onSubmit: SubmitHandler<LoginSchema> = async (data) => {
     setIsLoading(true);
@@ -98,9 +54,41 @@ export default function SignInForm() {
       if (result?.error) {
         toast.error(getTranslatedError(result.error));
         setIsLoading(false);
-      } else if (result?.ok) {
+        return;
+      }
+
+      if (result?.ok) {
         toast.success("Login successful!");
-        // The useEffect will handle redirection
+
+        // Fetch the fresh session after successful login
+        const session = await getSession();
+
+        // Update status to Online if applicable (for support agents)
+        if (session?.accessToken && session?.user?.id) {
+          const userRoles = session?.user?.roles || [];
+          const isSupportRole = userRoles.some(
+            (role) => role.toLowerCase() === 'support' || role.toLowerCase() === 'supportagent'
+          );
+
+          if (isSupportRole) {
+            try {
+              await changeSupportStatus(
+                {
+                  supportId: session.user.id,
+                  status: SupportStatus.ONLINE,
+                },
+                session.accessToken
+              );
+            } catch (error) {
+              console.error("Failed to update status:", error);
+              // Don't block login if status update fails
+            }
+          }
+        }
+
+        // Redirect immediately after login
+        router.push("/");
+        router.refresh();
       }
     } catch (error) {
       toast.error("An error occurred during login");
