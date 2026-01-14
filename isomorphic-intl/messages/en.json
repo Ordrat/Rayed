@@ -19,7 +19,6 @@
     "sidebar-menu-logistics": "Logistics",
     "sidebar-menu-ecommerce": "E-Commerce",
     "sidebar-menu-analytics": "Analytics",
-    "sidebar-menu-analytics": "Analytics",
     "sidebar-menu-admin": "Admin",
     "sidebar-menu-support-agents": "Support Agents",
     "sidebar-menu-support": "Support",
@@ -138,7 +137,16 @@
     "sidebar-menu-products": "Products",
     "sidebar-menu-support-tickets": "Support Tickets",
     "sidebar-menu-support-dashboard": "Support Dashboard",
-    "sidebar-menu-my-tickets": "My Tickets"
+    "sidebar-menu-my-tickets": "My Tickets",
+    "overview-welcome-message": "Here's what's happening on your platform today.",
+    "overview-support-agents-desc": "Manage verification and details of support agents.",
+    "overview-support-tickets-desc": "View and manage all support tickets.",
+    "overview-drivers-desc": "Supervise driver registrations and their details.",
+    "overview-sellers-desc": "Manage seller accounts and verification.",
+    "overview-shop-hub-desc": "Central hub for store management.",
+    "overview-products-desc": "Monitor and approve products.",
+    "overview-my-tickets-desc": "View tickets assigned to you.",
+    "overview-profile-desc": "Manage your profile and account preferences."
   },
   "common": {
     "Support Agents": "Support Agents",
