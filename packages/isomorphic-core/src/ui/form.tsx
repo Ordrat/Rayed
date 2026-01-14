@@ -35,7 +35,8 @@ export const Form = <TFormValues extends Record<string, any> = Record<string, an
   };
 
   if (validationSchema) {
-    formOptions.resolver = zodResolver(validationSchema) as unknown as Resolver<TFormValues>;
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    formOptions.resolver = zodResolver(validationSchema as any) as Resolver<TFormValues>;
   }
 
   const methods = useForm<TFormValues>(formOptions);
