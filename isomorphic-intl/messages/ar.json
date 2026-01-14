@@ -1778,7 +1778,21 @@
     "sidebar-menu-file-manager-description": "التنظيم والوصول والمشاركة: قم بتبسيط عالمك الرقمي معنا!",
     "sidebar-menu-support-tickets": "تذاكر الدعم",
     "sidebar-menu-support-dashboard": "لوحة الدعم",
-    "sidebar-menu-my-tickets": "تذاكري"
+    "sidebar-menu-my-tickets": "تذاكري",
+    "sidebar-menu-support-agents": "وكلاء الدعم",
+    "sidebar-menu-drivers": "السائقين",
+    "sidebar-menu-sellers": "التجار",
+    "sidebar-menu-profile": "الملف الشخصي",
+    "sidebar-menu-welcome": "مرحباً",
+    "overview-welcome-message": "إليك ما يحدث في منصتك اليوم.",
+    "overview-support-agents-desc": "إدارة التحقق وتفاصيل وكلاء الدعم.",
+    "overview-support-tickets-desc": "عرض وإدارة جميع تذاكر الدعم.",
+    "overview-drivers-desc": "الإشراف على تسجيلات السائقين وتفاصيلهم.",
+    "overview-sellers-desc": "إدارة حسابات البائعين والتحقق منها.",
+    "overview-shop-hub-desc": "المركز الرئيسي لإدارة المتجر.",
+    "overview-products-desc": "مراقبة واعتماد المنتجات.",
+    "overview-my-tickets-desc": "عرض التذاكر المخصصة لك.",
+    "overview-profile-desc": "إدارة ملفك الشخصي وتفضيلات الحساب."
   },
   "table": {
     "table-text-id": "بطاقة تعريف",

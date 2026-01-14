@@ -15,13 +15,14 @@ import {
   PiChatCircleDots,
   PiUserGear,
   PiArrowRight,
+  PiArrowLeft,
 } from "react-icons/pi";
-import { useTranslations } from "next-intl";
+import { useTranslations, useLocale } from "next-intl";
 
 const overviewItems = [
   {
     title: "sidebar-menu-support-agents",
-    description: "Manage verification and details of support agents.",
+    description: "overview-support-agents-desc",
     icon: PiHeadset,
     href: routes.support.agents,
     gradient: "from-blue-500 to-blue-600",
@@ -30,7 +31,7 @@ const overviewItems = [
   },
   {
     title: "sidebar-menu-support-tickets",
-    description: "View and manage all support tickets.",
+    description: "overview-support-tickets-desc",
     icon: PiTicket,
     href: routes.support.tickets,
     gradient: "from-amber-500 to-orange-500",
@@ -39,7 +40,7 @@ const overviewItems = [
   },
   {
     title: "sidebar-menu-drivers",
-    description: "Oversee driver registrations and details.",
+    description: "overview-drivers-desc",
     icon: PiCar,
     href: routes.drivers.list,
     gradient: "from-emerald-500 to-teal-500",
@@ -48,7 +49,7 @@ const overviewItems = [
   },
   {
     title: "sidebar-menu-sellers",
-    description: "Manage seller accounts and verification.",
+    description: "overview-sellers-desc",
     icon: PiStorefront,
     href: routes.sellers.list,
     gradient: "from-orange-500 to-red-500",
@@ -57,7 +58,7 @@ const overviewItems = [
   },
   {
     title: "sidebar-menu-shop-hub",
-    description: "Central hub for shop management.",
+    description: "overview-shop-hub-desc",
     icon: PiShoppingBag,
     href: routes.shop.hub,
     gradient: "from-pink-500 to-rose-500",
@@ -66,7 +67,7 @@ const overviewItems = [
   },
   {
     title: "sidebar-menu-products",
-    description: "Monitor and approve products.",
+    description: "overview-products-desc",
     icon: PiPackage,
     href: routes.products.list,
     gradient: "from-cyan-500 to-blue-500",
@@ -75,7 +76,7 @@ const overviewItems = [
   },
   {
     title: "sidebar-menu-my-tickets",
-    description: "View tickets assigned to you.",
+    description: "overview-my-tickets-desc",
     icon: PiChatCircleDots,
     href: routes.supportDashboard.tickets,
     gradient: "from-violet-500 to-purple-500",
@@ -84,7 +85,7 @@ const overviewItems = [
   },
   {
     title: "sidebar-menu-profile",
-    description: "Manage your profile and account preferences.",
+    description: "overview-profile-desc",
     icon: PiUserGear,
     href: routes.profile,
     gradient: "from-slate-500 to-gray-600",
@@ -95,6 +96,9 @@ const overviewItems = [
 
 export default function OverviewPage() {
   const t = useTranslations("layout");
+  const locale = useLocale();
+  const isRTL = locale === "ar";
+  const ArrowIcon = isRTL ? PiArrowLeft : PiArrowRight;
   return (
     <div className="@container">
       {/* Header Section */}
@@ -105,9 +109,7 @@ export default function OverviewPage() {
             {t("sidebar-menu-welcome")}, Admin
           </Title>
         </div>
-        <Text className="ms-5 text-gray-500 dark:text-gray-400">
-          Here&apos;s what&apos;s happening with your platform today.
-        </Text>
+        <Text className="ms-5 text-gray-500 dark:text-gray-400">{t("overview-welcome-message")}</Text>
       </div>
 
       {/* Cards Grid */}
@@ -149,7 +151,7 @@ export default function OverviewPage() {
                 </Title>
 
                 {/* Description */}
-                <Text className="mb-6 line-clamp-2 text-sm text-gray-500 dark:text-gray-400">{item.description}</Text>
+                <Text className="mb-6 line-clamp-2 text-sm text-gray-500 dark:text-gray-400">{t(item.description)}</Text>
 
                 {/* Footer with Arrow */}
                 <div className="flex items-center justify-between border-t border-gray-100 dark:border-gray-800 pt-4">
@@ -164,7 +166,10 @@ export default function OverviewPage() {
                       item.gradient
                     )}
                   >
-                    <PiArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-0.5" />
+                    <ArrowIcon className={cn(
+                      "h-4 w-4 transition-transform",
+                      isRTL ? "group-hover:-translate-x-0.5" : "group-hover:translate-x-0.5"
+                    )} />
                   </div>
                 </div>
               </div>
