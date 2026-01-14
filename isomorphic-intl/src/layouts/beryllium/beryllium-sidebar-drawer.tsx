@@ -35,7 +35,7 @@ export default function Sidebar({ className }: { className?: string }) {
             return (
               <Link
                 key={index}
-                href={item?.href!}
+                href={item?.href ?? "#"}
                 className={cn(
                   "group relative mx-3 my-0.5 flex items-center justify-between rounded-full px-3 py-2 font-medium capitalize lg:my-1 2xl:mx-5 2xl:my-2",
                   isActive

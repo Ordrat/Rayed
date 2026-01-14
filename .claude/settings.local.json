@@ -10,7 +10,10 @@
       "Bash(taskkill:*)",
       "Bash(cmd.exe //c \"taskkill //PID 10832 //F\")",
       "Bash(powershell.exe \"Stop-Process -Id 10832 -Force\")",
-      "Bash(npm run dev:*)"
+      "Bash(npm run dev:*)",
+      "Bash(pnpm add:*)",
+      "Bash(git -c user.useConfigOnly=true commit --quiet --allow-empty-message --file -)",
+      "Bash(pnpm lint:*)"
     ]
   }
 }

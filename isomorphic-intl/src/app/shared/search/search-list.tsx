@@ -23,13 +23,13 @@ export default function SearchList({ onClose }: { onClose?: () => void }) {
 
   useEffect(() => {
     if (inputRef?.current) {
-      // @ts-ignore
+      // @ts-expect-error - inputRef type mismatch with focus method
       inputRef.current.focus();
     }
     return () => {
       inputRef.current = null;
     };
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+     
   }, []);
 
   return (

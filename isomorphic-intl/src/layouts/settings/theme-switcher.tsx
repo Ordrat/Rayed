@@ -14,7 +14,7 @@ import DrawerBlock from "@/layouts/settings/drawer-block";
 
 const themeOptions = ["light", "dark"];
 
-export default function ThemeSwitcher({ }: any) {
+export default function ThemeSwitcher() {
   const { theme, setTheme } = useTheme();
   const { colorPresetName } = useColorPresetName();
 

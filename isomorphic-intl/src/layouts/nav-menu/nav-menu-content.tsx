@@ -107,9 +107,9 @@ export function NavMenuContentWrapper({
       >
         {items.map((item, index) => {
           const uiProps = {
-            // @ts-ignore
+            // @ts-expect-error - component props are dynamically accessed
             rounded: item?.component?.props?.rounded || null,
-            // @ts-ignore
+            // @ts-expect-error - component props are dynamically accessed
             shadow: item?.component?.props?.shadow || null,
           };
           return (
@@ -126,12 +126,12 @@ export function NavMenuContentWrapper({
                   }}
                   className={cn(
                     "w-32",
-                    // @ts-ignore
+                    // @ts-expect-error - component props are dynamically accessed
                     item?.component?.props?.children?.props?.className
                   )}
                 >
                   {/* children of <NavMenu.Content></NavMenu.Content>*/}
-                  {/* @ts-ignore */}
+                  {/* @ts-expect-error - component props are dynamically accessed */}
                   {item?.component?.props?.children?.props?.children}
                 </div>
               </Wrapper>

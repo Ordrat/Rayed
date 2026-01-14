@@ -1,3 +1,5 @@
+/* eslint-env serviceworker */
+/* global firebase */
 /**
  * Firebase Cloud Messaging Service Worker
  * Handles background push notifications

@@ -78,7 +78,7 @@ export default function BillingHistoryTable({
       <ControlledTable
         isLoading={isLoading}
         data={tableData}
-        // @ts-ignore
+        // @ts-expect-error - ControlledTable expects specific column type
         columns={visibleColumns}
         scroll={{ x: 1300 }}
         variant="modern"

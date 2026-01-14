@@ -1,5 +1,3 @@
-// @ts-nocheck
-
 "use client";
 import React from "react";
 import cn from "@core/utils/class-names";
@@ -16,10 +14,7 @@ export function NavMenuItem({ children }: NavMenuItemProps) {
   return (
     <>
       {React.Children.map(children, (child) => {
-        if (
-          React.isValidElement(child) &&
-          (child.type === NavMenuTrigger || child.type === NavMenuContent)
-        ) {
+        if (React.isValidElement(child) && (child.type === NavMenuTrigger || child.type === NavMenuContent)) {
           return child;
         }
         return null;
@@ -40,8 +35,7 @@ type NavMenuItemWrapperProps = {
 };
 
 export function NavMenuItemWrapper(props: NavMenuItemWrapperProps) {
-  const { className, menuClassName, menuContentClassName, children, fullscreen, floatingOffset } =
-    props;
+  const { className, menuClassName, menuContentClassName, children, fullscreen, floatingOffset } = props;
   const wrapperRef = React.useRef<HTMLDivElement>(null);
   const { items, set } = useNavMenu();
 
@@ -51,40 +45,35 @@ export function NavMenuItemWrapper(props: NavMenuItemWrapperProps) {
       content: { component: null, props: null },
     };
 
-    if (
-      React.isValidElement(child) &&
-      child.props &&
-      child.props.children &&
-      child.props.children.length
-    ) {
-      child?.props?.children?.map((item: React.ReactNode) => {
+    if (React.isValidElement(child)) {
+      const childProps = child.props as any;
+
+      if (childProps && childProps.children && childProps.children.length) {
+        React.Children.map(childProps.children, (item: React.ReactNode) => {
+          if (React.isValidElement(item)) {
+            if (item.type === NavMenuTrigger) {
+              itemObj.trigger.component = item;
+              itemObj.trigger.props = item.props as any;
+            } else if (item.type === NavMenuContent) {
+              itemObj.content.component = item;
+              itemObj.content.props = item.props as any;
+            }
+          }
+        });
+        items.current[idx] = itemObj;
+      } else if (childProps && childProps.children) {
+        const item = childProps.children;
         if (React.isValidElement(item)) {
           if (item.type === NavMenuTrigger) {
             itemObj.trigger.component = item;
-            itemObj.trigger.props = item.props;
+            itemObj.trigger.props = item.props as any;
           } else if (item.type === NavMenuContent) {
             itemObj.content.component = item;
-            itemObj.content.props = item.props;
+            itemObj.content.props = item.props as any;
           }
         }
-      });
-      items.current[idx] = itemObj;
-    } else if (
-      React.isValidElement(child) &&
-      child.props &&
-      // @ts-ignore
-      child.props.children
-    ) {
-      // @ts-ignore
-      const item = child.props.children;
-      if (item.type === NavMenuTrigger) {
-        itemObj.trigger.component = item;
-        itemObj.trigger.props = item.props;
-      } else if (item.type === NavMenuContent) {
-        itemObj.content.component = item;
-        itemObj.content.props = item.props;
+        items.current[idx] = itemObj;
       }
-      items.current[idx] = itemObj;
     }
   });
 
@@ -94,15 +83,8 @@ export function NavMenuItemWrapper(props: NavMenuItemWrapperProps) {
   // console.log({ triggers, contents });
 
   return (
-    <nav
-      className={cn("relative", className)}
-      ref={wrapperRef}
-      onMouseLeave={() => set({ hovering: null })}
-    >
-      <NavMenuTriggerWrapper
-        menuClassName={menuClassName}
-        items={triggers}
-      />
+    <nav className={cn("relative", className)} ref={wrapperRef} onMouseLeave={() => set({ hovering: null })}>
+      <NavMenuTriggerWrapper menuClassName={menuClassName} items={triggers} />
       <NavMenuContentWrapper
         floatingOffset={floatingOffset}
         fullscreen={fullscreen}

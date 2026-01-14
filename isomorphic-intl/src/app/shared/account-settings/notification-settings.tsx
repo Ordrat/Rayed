@@ -230,7 +230,7 @@ function ButtonGroup({ onChange }: { onChange: (option: string) => void }) {
   const [selected, setSelected] = useState<string>();
   function handleOnClick(option: string) {
     setSelected(option);
-    onChange && onChange(option);
+    onChange?.(option);
   }
 
   return (

@@ -6,7 +6,7 @@ import { Text, Input } from 'rizzui';
 type PriceFieldTypes = {
   label?: string;
   value: string[];
-  onChange: ([]: string[]) => void;
+  onChange: (value: string[]) => void;
 };
 
 export default function PriceField({

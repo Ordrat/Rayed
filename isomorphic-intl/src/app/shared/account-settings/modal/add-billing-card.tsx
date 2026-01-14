@@ -126,7 +126,7 @@ export function BillingForm({ register, control, errors }: any) {
         placeholder={t("form-placeholder-name")}
         labelClassName="text-sm font-medium text-gray-900"
         {...register("cardHolder")}
-        error={errors?.cardHolder?.message!}
+        error={errors?.cardHolder?.message}
       />
       <Controller
         name="cardNumber"
@@ -143,7 +143,7 @@ export function BillingForm({ register, control, errors }: any) {
               label: `${t("form-card-number")}`,
               variant: "outline",
               labelClassName: "text-sm font-medium text-gray-900",
-              error: errors?.cardNumber?.message!,
+              error: errors?.cardNumber?.message,
             }}
           />
         )}
@@ -165,7 +165,7 @@ export function BillingForm({ register, control, errors }: any) {
                 label: `${t("form-expiry-date")}`,
                 variant: "outline",
                 labelClassName: "text-sm font-medium text-gray-900",
-                error: errors?.expiryDate?.message!,
+                error: errors?.expiryDate?.message,
               }}
             />
           )}
@@ -186,7 +186,7 @@ export function BillingForm({ register, control, errors }: any) {
                 label: `${t("form-cvc")}`,
                 variant: "outline",
                 labelClassName: "text-sm font-medium text-gray-900",
-                error: errors?.cvc?.message!,
+                error: errors?.cvc?.message,
               }}
             />
           )}

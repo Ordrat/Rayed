@@ -199,7 +199,7 @@ export function CarbonSidebarMenu() {
                                               <span className="truncate">{subMenuItem?.name}</span>
                                             </span>
                                             {subMenuItem?.badge?.length ? (
-                                              <StatusBadge status={subMenuItem?.badge!} />
+                                              <StatusBadge status={subMenuItem.badge} />
                                             ) : null}
                                           </Link>
                                         </Menu.Item>

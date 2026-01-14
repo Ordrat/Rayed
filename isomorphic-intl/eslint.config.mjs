@@ -20,6 +20,7 @@ export default [
         ...globals.browser,
         ...globals.node,
         ...globals.serviceworker,
+        process: "readonly",
       },
       parserOptions: {
         ecmaFeatures: {
@@ -36,10 +37,11 @@ export default [
       },
     },
     rules: {
+      // Disable no-undef for TypeScript files (TypeScript compiler handles this)
+      "no-undef": "off",
+
       // React rules
-      "no-duplicate-imports": "warn",
       "react/react-in-jsx-scope": "off",
-      "react/no-unknown-property": "error",
       "react/prop-types": "off",
 
       // React Hooks rules
@@ -47,24 +49,18 @@ export default [
       "react-hooks/exhaustive-deps": "off",
 
       // Next.js rules
-      "@next/next/no-html-link-for-pages": "off",
+      "@next/next/no-html-link-for-pages": "error",
       "@next/next/no-img-element": "off",
 
-      // TypeScript / JS rules
+      // TypeScript rules
       "@typescript-eslint/no-unused-vars": "off",
       "@typescript-eslint/no-explicit-any": "off",
       "@typescript-eslint/no-empty-object-type": "off",
       "@typescript-eslint/no-require-imports": "off",
-      "@typescript-eslint/no-unused-expressions": "off",
-      "@typescript-eslint/ban-ts-comment": "off",
-
-      "prefer-const": "off",
-      "no-constant-binary-expression": "off",
-      "no-empty-pattern": "off",
-      "no-undef": "off",
+      "@typescript-eslint/no-non-null-asserted-optional-chain": "off",
     },
   },
   {
-    ignores: ["node_modules/**", "dist/**", "*.config.js", "*.config.mjs"],
+    ignores: [".next/**", "node_modules/**", "out/**", "build/**", "dist/**", "*.config.js", "*.config.mjs"],
   },
 ];

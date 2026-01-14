@@ -13,12 +13,7 @@ export default function AppDirection() {
 
   return (
     <DrawerBlock title="Direction">
-      <RadioGroup
-        value={direction ?? "ltr"}
-        // @ts-ignore
-        setValue={setDirection}
-        className="grid grid-cols-2 gap-4"
-      >
+      <RadioGroup value={direction ?? "ltr"} setValue={setDirection} className="grid grid-cols-2 gap-4">
         {directionOptions.map((item) => (
           <RadioBox
             key={item}

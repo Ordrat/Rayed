@@ -148,7 +148,7 @@ export function MemberForm({ register, control, errors }: any) {
           placeholder={t("form-last-name-placeholder")}
           labelClassName="text-sm font-medium text-gray-900"
           {...register("last_name")}
-          error={errors?.last_name?.message!}
+          error={errors?.last_name?.message}
           className="flex-grow"
         />
       </div>
@@ -168,7 +168,7 @@ export function MemberForm({ register, control, errors }: any) {
             label={t("form-role")}
             inPortal={false}
             labelClassName="text-sm font-medium text-gray-900"
-            // @ts-ignore
+            // @ts-expect-error - Select expects specific placeholder type
             placeholder={role[0].name}
             options={role}
             onChange={onChange}
@@ -187,7 +187,7 @@ export function MemberForm({ register, control, errors }: any) {
             label={t("form-country")}
             inPortal={false}
             labelClassName="text-sm font-medium text-gray-900"
-            // @ts-ignore
+            // @ts-expect-error - Select expects specific placeholder type
             placeholder={countries[0].name}
             options={countries}
             onChange={onChange}

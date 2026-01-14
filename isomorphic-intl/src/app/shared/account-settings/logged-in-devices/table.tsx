@@ -67,7 +67,7 @@ export default function LoggedInDevices({
       <ControlledTable
         isLoading={isLoading}
         data={tableData}
-        // @ts-ignore
+        // @ts-expect-error - ControlledTable expects specific column type
         columns={visibleColumns}
         variant="modern"
         rowKey={(record) => record.id}
