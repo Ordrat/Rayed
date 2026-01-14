@@ -1,14 +1,8 @@
 import { routes } from "@/config/routes";
 import {
-  PiBellSimpleRingingDuotone,
-  PiChartLineUpDuotone,
   PiEnvelopeSimpleOpenDuotone,
-  PiFoldersDuotone,
-  PiSquaresFourDuotone,
   PiUserDuotone,
-  PiUserGearDuotone,
   PiHeadsetDuotone,
-  PiShieldCheckDuotone,
   PiCarDuotone,
   PiStorefrontDuotone,
 } from "react-icons/pi";
@@ -20,12 +14,6 @@ export const menuItems = [
     name: "sidebar-menu-overview",
   },
   // label end
-  {
-    name: "sidebar-menu-file-manager",
-    href: "/",
-    icon: <PiFoldersDuotone />,
-  },
-
   // label start
   {
     name: "sidebar-menu-admin",
@@ -46,40 +34,14 @@ export const menuItems = [
     href: routes.sellers.list,
     icon: <PiStorefrontDuotone />,
   },
-
-  // label start
-  {
-    name: "sidebar-menu-widgets",
-  },
-  // label end
-  {
-    name: "sidebar-menu-cards",
-    href: routes.widgets.cards,
-    icon: <PiSquaresFourDuotone />,
-  },
-  {
-    name: "sidebar-menu-charts",
-    href: routes.widgets.charts,
-    icon: <PiChartLineUpDuotone />,
-  },
   // label start
   {
     name: "sidebar-menu-forms",
   },
   // label end
   {
-    name: "sidebar-menu-account-settings",
-    href: routes.forms.profileSettings,
-    icon: <PiUserGearDuotone />,
-  },
-  {
-    name: "sidebar-menu-notification-preference",
-    href: routes.forms.notificationPreference,
-    icon: <PiBellSimpleRingingDuotone />,
-  },
-  {
-    name: "sidebar-menu-personal-information",
-    href: routes.forms.personalInformation,
+    name: "sidebar-menu-profile",
+    href: routes.profile,
     icon: <PiUserDuotone />,
   },
   {

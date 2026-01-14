@@ -13,8 +13,8 @@ import {
   PiPlusBold,
   PiStackSimple,
 } from "react-icons/pi";
-import BillingHistoryTable from "@/app/shared/account-settings/billing-history/table";
-import AddBillingCardModalView from "@/app/shared/account-settings/modal/add-billing-card";
+import BillingHistoryTable from "@/app/shared/archived/profile-settings/billing-history/table";
+import AddBillingCardModalView from "@/app/shared/archived/profile-settings/modal/add-billing-card";
 import MasterCardIcon from "@core/components/icons/mastercard";
 import VisaIcon from "@core/components/icons/visa";
 import ApplePayIcon from "@core/components/icons/apple-pay";

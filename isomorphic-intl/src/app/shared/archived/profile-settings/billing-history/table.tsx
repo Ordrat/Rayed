@@ -2,7 +2,7 @@
 
 import { useMemo, useState } from "react";
 import { useColumn } from "@core/hooks/use-column";
-import { getColumns } from "@/app/shared/account-settings/billing-history/columns";
+import { getColumns } from "@/app/shared/archived/profile-settings/billing-history/columns";
 import { useTable } from "@core/hooks/use-table";
 import { Button } from "rizzui";
 import TableFooter from "@/app/shared/table-footer";

@@ -1,16 +1,10 @@
 import { routes } from '@/config/routes';
 import { IconType } from 'react-icons/lib';
 import {
-  PiBellSimpleRingingDuotone,
   PiBrowserDuotone,
-  PiChartLineUpDuotone,
   PiEnvelopeSimpleOpenDuotone,
-  PiFoldersDuotone,
   PiNotePencilDuotone,
-  PiPackageDuotone,
-  PiSquaresFourDuotone,
   PiUserCircleDuotone,
-  PiUserGearDuotone,
   PiHeadsetDuotone,
   PiCarDuotone,
   PiStorefrontDuotone,
@@ -47,13 +41,7 @@ export const carbonMenuItems: MenuItemsType[] = [
     name: 'sidebar-menu-dashboard',
     title: 'sidebar-menu-overview',
     icon: PiBrowserDuotone,
-    menuItems: [
-      {
-        name: 'sidebar-menu-file-manager',
-        href: '/',
-        icon: PiFoldersDuotone,
-      },
-    ],
+    menuItems: [],
   },
   {
     id: '2',
@@ -79,43 +67,14 @@ export const carbonMenuItems: MenuItemsType[] = [
     ],
   },
   {
-    id: '4',
-    name: 'sidebar-menu-widgets',
-    title: 'sidebar-menu-widgets',
-    icon: PiPackageDuotone,
-    menuItems: [
-      {
-        name: 'sidebar-menu-cards',
-        href: routes.widgets.cards,
-        icon: PiSquaresFourDuotone,
-      },
-      {
-        name: 'sidebar-menu-charts',
-        href: routes.widgets.charts,
-        icon: PiChartLineUpDuotone,
-      },
-    ],
-  },
-  {
     id: '5',
     name: 'sidebar-menu-forms',
     title: 'sidebar-menu-forms',
     icon: PiNotePencilDuotone,
     menuItems: [
       {
-        name: 'sidebar-menu-account-settings',
-        href: routes.forms.profileSettings,
-        icon: PiUserGearDuotone,
-      },
-      {
-        name: 'sidebar-menu-notification-preference',
-        href: routes.forms.notificationPreference,
-        icon: PiBellSimpleRingingDuotone,
-        badge: '',
-      },
-      {
-        name: 'sidebar-menu-personal-information',
-        href: routes.forms.personalInformation,
+        name: 'sidebar-menu-profile',
+        href: routes.profile,
         icon: PiUserCircleDuotone,
       },
       {

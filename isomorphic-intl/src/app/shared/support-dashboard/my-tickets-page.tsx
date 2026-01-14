@@ -48,7 +48,7 @@ export default function MyTicketsPage() {
     if (status === 'authenticated') {
       fetchMyTickets();
     } else if (status === 'unauthenticated') {
-      router.push(routes.auth.signIn1);
+      router.push(routes.auth.signIn);
     }
   }, [session, status, router]);
 

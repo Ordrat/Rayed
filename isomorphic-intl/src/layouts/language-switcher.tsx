@@ -1,14 +1,11 @@
 "use client";
 
 import SAFlagIcon from "@core/components/icons/language/SAFlag";
-import CNFlagIcon from "@core/components/icons/language/CNFlag";
 import USFlagIcon from "@core/components/icons/language/USFlag";
-import DEFlagIcon from "@core/components/icons/language/DEFlag";
-import ESFlagIcon from "@core/components/icons/language/ESFlag";
 import { Select } from "rizzui";
 import cn from "@core/utils/class-names";
 import { useLocale } from "next-intl";
-import { JSX, useState, useTransition } from "react";
+import { JSX, useEffect, useState, useTransition } from "react";
 import { Locale, usePathname, useRouter } from "@/i18n/routing";
 
 type LocaleOptionsType = {
@@ -17,7 +14,7 @@ type LocaleOptionsType = {
   icon: ({ ...props }: React.SVGProps<SVGSVGElement>) => JSX.Element;
 };
 
-const localeOptions = [
+const localeOptions: LocaleOptionsType[] = [
   {
     label: "English - EN",
     value: "en",
@@ -43,10 +40,16 @@ export default function LanguageSwitcher({
   const locale = useLocale();
   const pathname = usePathname();
   const [_, startTransition] = useTransition();
-  const selectedLocale = localeOptions.filter(
-    (item) => item.value.toLowerCase() === locale.toLowerCase()
-  );
-  const [selected, setSelected] = useState(selectedLocale[0]);
+  const [mounted, setMounted] = useState(false);
+  const [selected, setSelected] = useState<LocaleOptionsType>(localeOptions[0]);
+
+  useEffect(() => {
+    const selectedLocale = localeOptions.find((item) => item.value.toLowerCase() === locale.toLowerCase());
+    if (selectedLocale) {
+      setSelected(selectedLocale);
+    }
+    setMounted(true);
+  }, [locale]);
 
   function handleChange(op: LocaleOptionsType) {
     setSelected(op);
@@ -55,24 +58,36 @@ export default function LanguageSwitcher({
     });
   }
 
+  // Show a placeholder during SSR to avoid hydration mismatch
+  if (!mounted) {
+    return (
+      <div
+        className={cn(
+          "flex items-center justify-center h-[34px] w-[34px] md:h-9 md:w-9 rounded-full shadow backdrop-blur-md dark:bg-gray-100",
+          className
+        )}
+      >
+        <USFlagIcon className="size-5" />
+      </div>
+    );
+  }
+
   return (
     <Select
       size="sm"
       value={selected}
       className={cn("w-auto", className)}
-      placement="bottom-end"
+      placement="bottom"
       onChange={handleChange}
       options={localeOptions}
-      dropdownClassName="w-40"
-      suffixClassName={iconClassName}
+      dropdownClassName="w-44 p-2 !z-[99999] shadow-xl rounded-xl border-gray-100 dark:border-gray-800"
+      suffixClassName={cn("!size-3", iconClassName)}
       selectClassName={cn(
-        "w-auto h-[34px] md:h-9 ring-0 border-none shadow backdrop-blur-md dark:bg-gray-100",
+        "w-auto h-[34px] md:h-9 ring-0 border-none shadow-sm bg-white hover:bg-gray-50 dark:bg-gray-100/50 dark:hover:bg-gray-100 transition-colors",
         selectClassName
       )}
       displayValue={(op: LocaleOptionsType) => renderDisplayValue(op)}
-      getOptionDisplayValue={(op: LocaleOptionsType) =>
-        renderOptionDisplayValue(op)
-      }
+      getOptionDisplayValue={(op: LocaleOptionsType) => renderOptionDisplayValue(op)}
     />
   );
 }

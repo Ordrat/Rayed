@@ -143,7 +143,7 @@ export default function SupportTicketsPage() {
     if (status === "authenticated") {
       fetchData();
     } else if (status === "unauthenticated") {
-      router.push(routes.auth.signIn1);
+      router.push(routes.auth.signIn);
     }
   }, [status, router, fetchData]);
 

@@ -1,12 +1,7 @@
 import { routes } from '@/config/routes';
 import {
-  PiSquaresFour,
-  PiChartLineUp,
-  PiUserGear,
-  PiBellSimpleRinging,
   PiUser,
   PiEnvelopeSimpleOpen,
-  PiFolders,
   PiHeadset,
   PiCar,
   PiStorefront,
@@ -19,12 +14,6 @@ export const menuItems = [
     name: 'sidebar-menu-overview',
   },
   // label end
-  {
-    name: 'sidebar-menu-file-manager',
-    href: '/',
-    icon: <PiFolders />,
-  },
-
   // label start
   {
     name: 'sidebar-menu-admin',
@@ -48,38 +37,12 @@ export const menuItems = [
 
   // label start
   {
-    name: 'sidebar-menu-widgets',
-  },
-  // label end
-  {
-    name: 'sidebar-menu-cards',
-    href: routes.widgets.cards,
-    icon: <PiSquaresFour />,
-  },
-  {
-    name: 'sidebar-menu-charts',
-    href: routes.widgets.charts,
-    icon: <PiChartLineUp />,
-  },
-
-  // label start
-  {
     name: 'sidebar-menu-forms',
   },
   // label end
   {
-    name: 'sidebar-menu-account-settings',
-    href: routes.forms.profileSettings,
-    icon: <PiUserGear />,
-  },
-  {
-    name: 'sidebar-menu-notification-preference',
-    href: routes.forms.notificationPreference,
-    icon: <PiBellSimpleRinging />,
-  },
-  {
-    name: 'sidebar-menu-personal-information',
-    href: routes.forms.personalInformation,
+    name: 'sidebar-menu-profile',
+    href: routes.profile,
     icon: <PiUser />,
   },
   {

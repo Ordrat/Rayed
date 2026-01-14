@@ -87,7 +87,7 @@ export default function SupportAgentDetailsPage({
       // }
       fetchAgent();
     } else if (status === "unauthenticated") {
-      router.push(routes.auth.signIn1);
+      router.push(routes.auth.signIn);
     }
   }, [status, fetchAgent, router]);
 

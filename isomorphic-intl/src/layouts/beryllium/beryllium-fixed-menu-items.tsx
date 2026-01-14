@@ -1,16 +1,10 @@
 import { routes } from '@/config/routes';
 import { IconType } from 'react-icons/lib';
 import {
-  PiBellSimpleRinging,
-  PiChartLineUp,
   PiEnvelopeSimpleOpen,
-  PiFolders,
   PiHouse,
   PiNotePencil,
-  PiPackage,
-  PiSquaresFour,
   PiUser,
-  PiUserGear,
 } from 'react-icons/pi';
 import { atom } from 'jotai';
 
@@ -44,31 +38,7 @@ export const berylliumMenuItems: MenuItemsType[] = [
     name: 'sidebar-menu-home',
     title: 'sidebar-menu-overview',
     icon: PiHouse,
-    menuItems: [
-      {
-        name: 'sidebar-menu-file-manager',
-        href: '/',
-        icon: PiFolders,
-      },
-    ],
-  },
-  {
-    id: '4',
-    name: 'sidebar-menu-widgets',
-    title: 'sidebar-menu-widgets',
-    icon: PiPackage,
-    menuItems: [
-      {
-        name: 'sidebar-menu-cards',
-        href: routes.widgets.cards,
-        icon: PiSquaresFour,
-      },
-      {
-        name: 'sidebar-menu-charts',
-        href: routes.widgets.charts,
-        icon: PiChartLineUp,
-      },
-    ],
+    menuItems: [],
   },
   {
     id: '5',
@@ -77,18 +47,8 @@ export const berylliumMenuItems: MenuItemsType[] = [
     icon: PiNotePencil,
     menuItems: [
       {
-        name: 'sidebar-menu-account-settings',
-        href: routes.forms.profileSettings,
-        icon: PiUserGear,
-      },
-      {
-        name: 'sidebar-menu-notification-preference',
-        href: routes.forms.notificationPreference,
-        icon: PiBellSimpleRinging,
-      },
-      {
-        name: 'sidebar-menu-personal-information',
-        href: routes.forms.personalInformation,
+        name: 'sidebar-menu-profile',
+        href: routes.profile,
         icon: PiUser,
       },
       {

@@ -138,7 +138,7 @@ export default function SignInForm() {
                 disabled={isLoading}
               />
               <Link
-                href={routes.auth.forgotPassword1}
+                href={routes.auth.forgotPassword}
                 className="h-auto p-0 text-sm font-semibold text-[#043ABA] underline transition-colors hover:text-gray-900 hover:no-underline"
               >
                 {t("form-forget-password")}

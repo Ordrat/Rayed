@@ -49,7 +49,7 @@ export default function SupportChatPage() {
     if (status === 'authenticated' && ticketId) {
       fetchTicket();
     } else if (status === 'unauthenticated') {
-      router.push(routes.auth.signIn1);
+      router.push(routes.auth.signIn);
     }
   }, [session, status, ticketId, router]);
 

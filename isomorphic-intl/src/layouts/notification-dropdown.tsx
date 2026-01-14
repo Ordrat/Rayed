@@ -23,15 +23,15 @@ dayjs.extend(relativeTime);
 // Get icon based on notification type
 function getNotificationIcon(notification: FirebaseNotification) {
   const data = notification.data as Record<string, any> | undefined;
-  const type = data?.type || 'default';
-  
+  const type = data?.type || "default";
+
   switch (type) {
-    case 'new_ticket':
-    case 'ticket_assigned':
-    case 'ticket_closed':
-    case 'ticket_resolved':
+    case "new_ticket":
+    case "ticket_assigned":
+    case "ticket_closed":
+    case "ticket_resolved":
       return <PiTicket className="h-5 w-5 text-primary" />;
-    case 'new_message':
+    case "new_message":
       return <PiChatCircleText className="h-5 w-5 text-blue-500" />;
     default:
       return <PiBellSimple className="h-5 w-5 text-gray-500" />;
@@ -42,21 +42,18 @@ function getNotificationIcon(notification: FirebaseNotification) {
 function getNotificationLink(notification: FirebaseNotification): string {
   const data = notification.data as Record<string, any> | undefined;
   const ticketId = data?.ticketId;
-  
+
   if (ticketId) {
     return routes.supportDashboard.chat(ticketId);
   }
-  return '#';
+  return "#";
 }
 
-function NotificationsList({
-  setIsOpen,
-}: {
-  setIsOpen: React.Dispatch<React.SetStateAction<boolean>>;
-}) {
+function NotificationsList({ setIsOpen }: { setIsOpen: React.Dispatch<React.SetStateAction<boolean>> }) {
   const locale = useLocale();
-  const lang = locale === 'ar' ? 'ar' : 'en';
-  const { notifications, isLoading, markAsRead, markAllAsRead, unreadCount, error, refresh, reRegisterFcm } = useFirebaseNotifications();
+  const lang = locale === "ar" ? "ar" : "en";
+  const { notifications, isLoading, markAsRead, markAllAsRead, unreadCount, error, refresh, reRegisterFcm } =
+    useFirebaseNotifications();
   const [isRefreshing, setIsRefreshing] = useState(false);
 
   const handleRefresh = useCallback(async () => {
@@ -74,12 +71,15 @@ function NotificationsList({
     markAllAsRead();
   }, [markAllAsRead]);
 
-  const handleNotificationClick = useCallback((notification: FirebaseNotification) => {
-    if (!notification.isRead) {
-      markAsRead(notification.id);
-    }
-    setIsOpen(false);
-  }, [markAsRead, setIsOpen]);
+  const handleNotificationClick = useCallback(
+    (notification: FirebaseNotification) => {
+      if (!notification.isRead) {
+        markAsRead(notification.id);
+      }
+      setIsOpen(false);
+    },
+    [markAsRead, setIsOpen]
+  );
 
   if (isLoading) {
     return (
@@ -90,10 +90,10 @@ function NotificationsList({
   }
 
   return (
-    <div className="w-[320px] text-left sm:w-[360px] 2xl:w-[420px] rtl:text-right">
-      <div className="mb-3 flex items-center justify-between ps-6">
+    <div className="text-left rtl:text-right">
+      <div className="mb-3 flex items-center justify-between px-4 py-3 border-b border-gray-100 dark:border-gray-800">
         <Title as="h5" fontWeight="semibold">
-          {lang === 'ar' ? 'الإشعارات' : 'Notifications'}
+          {lang === "ar" ? "الإشعارات" : "Notifications"}
           {unreadCount > 0 && (
             <Badge size="sm" color="primary" className="ms-2">
               {unreadCount}
@@ -104,39 +104,36 @@ function NotificationsList({
           <button
             onClick={handleRefresh}
             disabled={isRefreshing}
-            className={`text-sm text-gray-500 hover:text-primary transition-transform ${isRefreshing ? 'animate-spin' : ''}`}
-            title={lang === 'ar' ? 'تحديث' : 'Refresh'}
+            className={`text-sm text-gray-500 hover:text-primary transition-transform ${isRefreshing ? "animate-spin" : ""}`}
+            title={lang === "ar" ? "تحديث" : "Refresh"}
           >
             <PiArrowsClockwiseBold className="h-4 w-4" />
           </button>
           {unreadCount > 0 && (
-            <button
-              onClick={handleMarkAllAsRead}
-              className="text-sm text-primary hover:underline"
-            >
-              {lang === 'ar' ? 'تحديد الكل كمقروء' : 'Mark all as read'}
+            <button onClick={handleMarkAllAsRead} className="text-sm text-primary hover:underline">
+              {lang === "ar" ? "تحديد الكل كمقروء" : "Mark all as read"}
             </button>
           )}
         </div>
       </div>
-      
+
       {error && (
         <div className="mx-4 mb-3 rounded-md bg-red-50 p-2 text-center text-sm text-red-600">
-          {lang === 'ar' ? 'فشل تحميل الإشعارات' : 'Failed to load notifications'}
+          {lang === "ar" ? "فشل تحميل الإشعارات" : "Failed to load notifications"}
           <button onClick={handleRefresh} className="ms-2 underline">
-            {lang === 'ar' ? 'إعادة المحاولة' : 'Retry'}
+            {lang === "ar" ? "إعادة المحاولة" : "Retry"}
           </button>
         </div>
       )}
-      
+
       <div className="custom-scrollbar overflow-y-auto scroll-smooth max-h-[420px]">
         {notifications.length === 0 ? (
           <div className="py-12 text-center text-gray-400">
             <PiBellSimple className="mx-auto h-12 w-12 mb-2 opacity-50" />
-            <Text>{lang === 'ar' ? 'لا توجد إشعارات' : 'No notifications'}</Text>
+            <Text>{lang === "ar" ? "لا توجد إشعارات" : "No notifications"}</Text>
           </div>
         ) : (
-          <div className="grid cursor-pointer grid-cols-1 gap-1 ps-4">
+          <div className="grid cursor-pointer grid-cols-1 gap-1 px-2">
             {notifications.map((item) => (
               <Link
                 key={item.id}
@@ -152,21 +149,14 @@ function NotificationsList({
                     <Text className="mb-0.5 w-11/12 truncate text-sm font-semibold text-gray-900 dark:text-gray-700">
                       {item.title}
                     </Text>
-                    <Text className="text-xs text-gray-500 truncate">
-                      {item.body}
-                    </Text>
+                    <Text className="text-xs text-gray-500 truncate">{item.body}</Text>
                     <Text className="ms-auto whitespace-nowrap text-xs text-gray-400 mt-1">
                       {dayjs(item.createdAt).fromNow(true)}
                     </Text>
                   </div>
                   <div className="ms-auto flex-shrink-0">
                     {!item.isRead ? (
-                      <Badge
-                        renderAsDot
-                        size="lg"
-                        color="primary"
-                        className="scale-90"
-                      />
+                      <Badge renderAsDot size="lg" color="primary" className="scale-90" />
                     ) : (
                       <span className="inline-block rounded-full bg-gray-100 p-0.5 dark:bg-gray-50">
                         <PiCheck className="h-auto w-[9px]" />
@@ -185,30 +175,21 @@ function NotificationsList({
           onClick={() => setIsOpen(false)}
           className="-me-6 block px-6 pb-0.5 pt-3 text-center hover:underline"
         >
-          {lang === 'ar' ? 'عرض كل النشاط' : 'View All Activity'}
+          {lang === "ar" ? "عرض كل النشاط" : "View All Activity"}
         </Link>
       )}
     </div>
   );
 }
 
-export default function NotificationDropdown({
-  children,
-}: {
-  children: ReactElement & { ref?: RefObject<any> };
-}) {
+export default function NotificationDropdown({ children }: { children: ReactElement & { ref?: RefObject<any> } }) {
   const isMobile = useMedia("(max-width: 480px)", false);
   const [isOpen, setIsOpen] = useState(false);
-  
+
   return (
-    <Popover
-      isOpen={isOpen}
-      setIsOpen={setIsOpen}
-      shadow="sm"
-      placement={isMobile ? "bottom" : "bottom-end"}
-    >
+    <Popover isOpen={isOpen} setIsOpen={setIsOpen} shadow="sm" placement="bottom" gap={8}>
       <Popover.Trigger>{children}</Popover.Trigger>
-      <Popover.Content className="z-[9999] px-0 pb-4 pe-6 pt-5 dark:bg-gray-100 [&>svg]:hidden [&>svg]:dark:fill-gray-100 sm:[&>svg]:inline-flex">
+      <Popover.Content className="z-[99999] w-[320px] sm:w-[360px] 2xl:w-[420px] p-0 dark:bg-gray-100 border border-gray-200 dark:border-gray-800 shadow-xl rounded-xl sm:[&>svg]:inline-flex">
         <NotificationsList setIsOpen={setIsOpen} />
       </Popover.Content>
     </Popover>

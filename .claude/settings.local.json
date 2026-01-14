@@ -13,7 +13,17 @@
       "Bash(npm run dev:*)",
       "Bash(pnpm add:*)",
       "Bash(git -c user.useConfigOnly=true commit --quiet --allow-empty-message --file -)",
-      "Bash(pnpm lint:*)"
+      "Bash(pnpm lint:*)",
+      "Bash(find:*)",
+      "Bash(ls:*)",
+      "Bash(git show:*)",
+      "Bash(cat:*)",
+      "Bash(move notification-settings.tsx \"..\\\\archived\\\\profile-settings\"\" && move billing-settings.tsx \"..archivedprofile-settings\"\")",
+      "Bash(move integration-settings.tsx \"..\\\\archived\\\\profile-settings\"\" && move team-settings.tsx \"..archivedprofile-settings\"\")",
+      "Bash(move billing-history \"..\\\\archived\\\\profile-settings\"\" && move logged-in-devices \"..archivedprofile-settings\"\")",
+      "Bash(move modal \"..\\\\archived\\\\profile-settings\"\")",
+      "Bash(git mv:*)",
+      "Bash(powershell:*)"
     ]
   }
 }

@@ -73,7 +73,7 @@ export default function CreateSupportAgentPage() {
       //   router.push("/");
       // }
     } else if (status === "unauthenticated") {
-      router.push(routes.auth.signIn1);
+      router.push(routes.auth.signIn);
     }
   }, [session, status, router]);
 

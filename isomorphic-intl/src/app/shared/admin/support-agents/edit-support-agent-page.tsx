@@ -62,7 +62,7 @@ export default function EditSupportAgentPage({ agentId }: { agentId: string }) {
       // }
       fetchAgent();
     } else if (status === "unauthenticated") {
-      router.push(routes.auth.signIn1);
+      router.push(routes.auth.signIn);
     }
   }, [status, router, fetchAgent]);
 

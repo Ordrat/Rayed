@@ -18,7 +18,7 @@ const pageHeader = {
   title: "text-newsletter",
   breadcrumb: [
     {
-      href: routes.eCommerce.dashboard,
+      href: "/",
       name: "text-home",
     },
     {

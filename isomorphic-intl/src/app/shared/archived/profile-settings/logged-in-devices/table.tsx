@@ -1,7 +1,7 @@
 "use client";
 
 import { useMemo, useState } from "react";
-import { getColumns } from "@/app/shared/account-settings/logged-in-devices/columns";
+import { getColumns } from "@/app/shared/archived/profile-settings/logged-in-devices/columns";
 import { useTable } from "@core/hooks/use-table";
 import { useColumn } from "@core/hooks/use-column";
 import ControlledTable from "@/app/shared/controlled-table";

@@ -16,37 +16,12 @@ const menuItems = [
     label: "text-my-details",
     value: "/forms/profile-settings",
   },
-  {
-    label: "text-profile",
-    value: "/forms/profile-settings/profile",
-  },
-  {
-    label: "text-password",
-    value: "/forms/profile-settings/password",
-  },
-  {
-    label: "text-team",
-    value: "/forms/profile-settings/team",
-  },
-  {
-    label: "text-billing",
-    value: "/forms/profile-settings/billing",
-  },
-  {
-    label: "text-notifications",
-    value: "/forms/profile-settings/notification",
-  },
-  {
-    label: "text-integrations",
-    value: "/forms/profile-settings/integration",
-  },
 ];
 
 export default function ProfileSettingsNav() {
   const pathname = usePathname();
   const { layout } = useLayout();
-  const { sliderEl, sliderPrevBtn, sliderNextBtn, scrollToTheRight, scrollToTheLeft } =
-    useScrollableSlider();
+  const { sliderEl, sliderPrevBtn, sliderNextBtn, scrollToTheRight, scrollToTheLeft } = useScrollableSlider();
   const { expandedLeft } = useBerylliumSidebars();
   const t = useTranslations("common");
 
@@ -59,9 +34,7 @@ export default function ProfileSettingsNav() {
           : layout === LAYOUT_OPTIONS.BERYLLIUM
             ? "top-[62px] sm:top-[72px] 2xl:top-[72px]"
             : "top-[62px] md:top-[71px]",
-        layout === LAYOUT_OPTIONS.BERYLLIUM &&
-          expandedLeft &&
-          "xl:-ms-1 xl:px-0 3xl:-ms-2 3xl:ps-0 4xl:-ms-2"
+        layout === LAYOUT_OPTIONS.BERYLLIUM && expandedLeft && "xl:-ms-1 xl:px-0 3xl:-ms-2 3xl:ps-0 4xl:-ms-2"
       )}
     >
       <div className="relative flex items-center overflow-hidden">
@@ -75,10 +48,7 @@ export default function ProfileSettingsNav() {
           <PiCaretLeftBold className="w-5" />
         </Button>
         <div className="flex h-[52px] items-start overflow-hidden">
-          <div
-            className="-mb-7 flex w-full gap-3 overflow-x-auto scroll-smooth pb-7 md:gap-5 lg:gap-8"
-            ref={sliderEl}
-          >
+          <div className="-mb-7 flex w-full gap-3 overflow-x-auto scroll-smooth pb-7 md:gap-5 lg:gap-8" ref={sliderEl}>
             {menuItems.map((menu, index) => (
               <Link
                 href={`${menu.value}`}

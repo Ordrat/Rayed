@@ -1,10 +1,10 @@
-import FileDashboard from "@/app/shared/file/dashboard";
+import OverviewPage from "@/app/shared/admin/overview";
 import { metaObject } from "@/config/site.config";
 
 export const metadata = {
-  ...metaObject(),
+  ...metaObject("Overview"),
 };
 
 export default function FileDashboardPage() {
-  return <FileDashboard />;
+  return <OverviewPage />;
 }

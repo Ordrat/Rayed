@@ -86,7 +86,7 @@ export default function TicketDetailsPage() {
     if (status === "authenticated" && ticketId) {
       fetchData();
     } else if (status === "unauthenticated") {
-      router.push(routes.auth.signIn1);
+      router.push(routes.auth.signIn);
     }
   }, [status, ticketId, router, fetchData]);
 

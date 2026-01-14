@@ -2,12 +2,12 @@
 
 import { Link } from "@/i18n/routing";
 import { Button, Title } from "rizzui";
-import LoggedInDevices from "@/app/shared/account-settings/logged-in-devices/table";
+import LoggedInDevices from "@/app/shared/archived/profile-settings/logged-in-devices/table";
 import HorizontalFormBlockWrapper from "@/app/shared/account-settings/horiozontal-block";
 import GithubIcon from "@core/components/icons/github";
 import TeamsIcon from "@core/components/icons/teams";
 import FigmaIcon from "@core/components/icons/figma";
-import AddTeamMemberModalView from "@/app/shared/account-settings/modal/add-team-member";
+import AddTeamMemberModalView from "@/app/shared/archived/profile-settings/modal/add-team-member";
 import { useModal } from "@/app/shared/modal-views/use-modal";
 import { loggedInDeviceData } from "@/data/logged-in-device";
 import { PiPlusBold } from "react-icons/pi";

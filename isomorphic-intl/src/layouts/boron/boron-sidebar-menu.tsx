@@ -62,7 +62,7 @@ export function BoronSidebarMenu() {
                       </span>
                     )}
                     <span className="truncate">{t(item.name)}</span>
-                    {!!item.shortcut && (
+                    {"shortcut" in item && item.shortcut && (item as any).shortcut?.key && (
                       <span
                         className={cn(
                           "ms-auto hidden items-center gap-1 rounded px-1 duration-200 xl:inline-flex",
@@ -77,7 +77,7 @@ export function BoronSidebarMenu() {
                             className="h-[15px] w-[15px]"
                           />
                         </kbd>
-                        <kbd>{item.shortcut?.key}</kbd>
+                        <kbd>{(item as any).shortcut.key}</kbd>
                       </span>
                     )}
                   </div>

@@ -26,13 +26,7 @@ export const lithiumMenuItems: LithiumMenuItem = {
   overview: {
     name: 'sidebar-menu-overview',
     type: 'link',
-    dropdownItems: [
-      {
-        name: 'sidebar-menu-file-manager',
-        href: '/',
-        icon: 'FilesIcon',
-      },
-    ],
+    dropdownItems: [],
   },
   admin: {
     name: 'sidebar-menu-admin',
@@ -55,40 +49,14 @@ export const lithiumMenuItems: LithiumMenuItem = {
       },
     ],
   },
-  widgets: {
-    name: 'sidebar-menu-widgets',
-    type: 'link',
-    dropdownItems: [
-      {
-        name: 'sidebar-menu-cards',
-        href: routes.widgets.cards,
-        icon: 'DicesIcon',
-      },
-      {
-        name: 'sidebar-menu-charts',
-        href: routes.widgets.charts,
-        icon: 'PieChartCurrencyIcon',
-      },
-    ],
-  },
   forms: {
     name: 'sidebar-menu-forms',
     type: 'link',
     dropdownItems: [
       {
-        name: 'sidebar-menu-account-settings',
-        href: routes.forms.profileSettings,
+        name: 'sidebar-menu-profile',
+        href: routes.profile,
         icon: 'UserSettingsIcon',
-      },
-      {
-        name: 'sidebar-menu-notification-preference',
-        href: routes.forms.notificationPreference,
-        icon: 'NotificationSettingsIcon',
-      },
-      {
-        name: 'sidebar-menu-personal-information',
-        href: routes.forms.personalInformation,
-        icon: 'UserInfoIcon',
       },
       {
         name: 'sidebar-menu-newsletter',

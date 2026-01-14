@@ -26,7 +26,7 @@ export default function SupportDashboard() {
     if (status === "authenticated") {
       // Check if user needs to reset password
       if (session?.user?.needsPasswordReset) {
-        router.push(routes.forms.profileSettings + "/password");
+        router.push(routes.profile);
         return;
       }
       
@@ -36,7 +36,7 @@ export default function SupportDashboard() {
         router.push("/");
       }
     } else if (status === "unauthenticated") {
-      router.push(routes.auth.signIn1);
+      router.push(routes.auth.signIn);
     }
   }, [session, status, router]);
 

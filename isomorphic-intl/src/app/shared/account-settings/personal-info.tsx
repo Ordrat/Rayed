@@ -1,49 +1,158 @@
 "use client";
 
-import dynamic from "next/dynamic";
+import { useState, useEffect } from "react";
+import { useSession } from "next-auth/react";
 import toast from "react-hot-toast";
 import { SubmitHandler, Controller } from "react-hook-form";
-import { PiClock, PiEnvelopeSimple } from "react-icons/pi";
+import { PiEnvelopeSimple, PiLockKey } from "react-icons/pi";
 import { Form } from "@core/ui/form";
-import { Loader, Text, Input, Select } from "rizzui";
+import { Text, Input, Password, Button, Title } from "rizzui";
 import FormGroup from "@/app/shared/form-group";
 import FormFooter from "@core/components/form-footer";
-import {
-  defaultValues,
-  personalInfoFormSchema,
-  PersonalInfoFormTypes,
-} from "@/validators/personal-info.schema";
-import UploadZone from "@core/ui/file-upload/upload-zone";
-import { countries, roles, timezones } from "@/data/forms/my-details";
-import AvatarUpload from "@core/ui/file-upload/avatar-upload";
+import { changePassword } from "@/services/auth.service";
 import { useTranslations } from "next-intl";
+import { z } from "zod";
 
-const QuillEditor = dynamic(() => import("@core/ui/quill-editor"), {
-  ssr: false,
-});
+// Combined schema for personal info + password change
+const createCombinedSchema = (t: (key: string) => string) =>
+  z
+    .object({
+      firstName: z.string().min(1, t("form-first-name-required") || "First name is required"),
+      lastName: z.string().min(1, t("form-last-name-required") || "Last name is required"),
+      email: z.string().email(t("form-email-invalid") || "Invalid email"),
+      // Password fields are optional - only validated if user wants to change password
+      currentPassword: z.string().optional(),
+      newPassword: z.string().optional(),
+      confirmPassword: z.string().optional(),
+    })
+    .refine(
+      (data) => {
+        // If any password field is filled, all must be filled
+        const hasCurrentPassword = data.currentPassword && data.currentPassword.length > 0;
+        const hasNewPassword = data.newPassword && data.newPassword.length > 0;
+        const hasConfirmPassword = data.confirmPassword && data.confirmPassword.length > 0;
+
+        if (hasCurrentPassword || hasNewPassword || hasConfirmPassword) {
+          return hasCurrentPassword && hasNewPassword && hasConfirmPassword;
+        }
+        return true;
+      },
+      {
+        message: t("form-all-password-fields-required") || "All password fields are required to change password",
+        path: ["currentPassword"],
+      }
+    )
+    .refine(
+      (data) => {
+        if (data.newPassword && data.newPassword.length > 0) {
+          return data.newPassword.length >= 8;
+        }
+        return true;
+      },
+      {
+        message: t("form-password-min-length") || "Password must be at least 8 characters",
+        path: ["newPassword"],
+      }
+    )
+    .refine(
+      (data) => {
+        if (data.newPassword && data.confirmPassword) {
+          return data.newPassword === data.confirmPassword;
+        }
+        return true;
+      },
+      {
+        message: t("form-passwords-not-match") || "Passwords do not match",
+        path: ["confirmPassword"],
+      }
+    );
+
+type CombinedFormTypes = z.infer<ReturnType<typeof createCombinedSchema>>;
 
 export default function PersonalInfoView() {
   const t = useTranslations("form");
+  const { data: session, update } = useSession();
+  const [isLoading, setIsLoading] = useState(false);
+  const [defaultValues, setDefaultValues] = useState({
+    firstName: "",
+    lastName: "",
+    email: "",
+    currentPassword: "",
+    newPassword: "",
+    confirmPassword: "",
+  });
 
-  const onSubmit: SubmitHandler<PersonalInfoFormTypes> = (data) => {
-    toast.success(<Text as="b">Successfully added!</Text>);
-    console.log("Profile settings data ->", {
-      ...data,
-    });
+  // Update default values when session is available
+  useEffect(() => {
+    if (session?.user) {
+      setDefaultValues({
+        firstName: session.user.firstName || "",
+        lastName: session.user.lastName || "",
+        email: session.user.email || "",
+        currentPassword: "",
+        newPassword: "",
+        confirmPassword: "",
+      });
+    }
+  }, [session]);
+
+  const onSubmit: SubmitHandler<CombinedFormTypes> = async (data) => {
+    setIsLoading(true);
+    try {
+      // Check if user wants to change password
+      const wantsPasswordChange = data.currentPassword && data.newPassword && data.confirmPassword;
+
+      if (wantsPasswordChange) {
+        await changePassword(
+          {
+            oldPassword: data.currentPassword!,
+            newPassword: data.newPassword!,
+            confirmPassword: data.confirmPassword!,
+          },
+          session?.accessToken || ""
+        );
+
+        // Update the session to reflect that password reset is no longer needed
+        if (session?.user?.needsPasswordReset) {
+          await update({
+            ...session,
+            user: {
+              ...session?.user,
+              needsPasswordReset: false,
+            },
+          });
+        }
+
+        toast.success(t("password-updated-successfully") || "Password updated successfully");
+      } else {
+        toast.success(<Text as="b">{t("form-profile-updated") || "Profile updated successfully!"}</Text>);
+      }
+
+      console.log("Profile settings data ->", {
+        firstName: data.firstName,
+        lastName: data.lastName,
+        email: data.email,
+      });
+    } catch (error: any) {
+      console.error("Update error:", error);
+      toast.error(error.message || t("form-update-failed") || "Failed to update");
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   return (
-    <Form<PersonalInfoFormTypes>
-      validationSchema={personalInfoFormSchema(t)}
-      // resetValues={reset}
+    <Form<CombinedFormTypes>
+      validationSchema={createCombinedSchema(t)}
       onSubmit={onSubmit}
       className="@container"
       useFormProps={{
         mode: "onChange",
         defaultValues,
+        values: defaultValues, // This ensures the form updates when defaultValues change
       }}
     >
-      {({ register, control, setValue, getValues, formState: { errors } }) => {
+      {({ register, control, formState: { errors } }) => {
         return (
           <>
             <FormGroup
@@ -53,28 +162,22 @@ export default function PersonalInfoView() {
             />
 
             <div className="mb-10 grid gap-7 divide-y divide-dashed divide-gray-200 @2xl:gap-9 @3xl:gap-11">
-              <FormGroup
-                title={t("form-name")}
-                className="pt-7 @2xl:pt-9 @3xl:grid-cols-12 @3xl:pt-11"
-              >
+              <FormGroup title={t("form-name")} className="pt-7 @2xl:pt-9 @3xl:grid-cols-12 @3xl:pt-11">
                 <Input
                   placeholder={t("form-first-name")}
-                  {...register("first_name")}
-                  error={errors.first_name?.message}
+                  {...register("firstName")}
+                  error={errors.firstName?.message}
                   className="flex-grow"
                 />
                 <Input
                   placeholder={t("form-last-name")}
-                  {...register("last_name")}
-                  error={errors.last_name?.message}
+                  {...register("lastName")}
+                  error={errors.lastName?.message}
                   className="flex-grow"
                 />
               </FormGroup>
 
-              <FormGroup
-                title={t("form-email-address")}
-                className="pt-7 @2xl:pt-9 @3xl:grid-cols-12 @3xl:pt-11"
-              >
+              <FormGroup title={t("form-email-address")} className="pt-7 @2xl:pt-9 @3xl:grid-cols-12 @3xl:pt-11">
                 <Input
                   className="col-span-full"
                   prefix={<PiEnvelopeSimple className="h-6 w-6 text-gray-500" />}
@@ -82,142 +185,46 @@ export default function PersonalInfoView() {
                   placeholder={t("form-email-address-placeholder")}
                   {...register("email")}
                   error={errors.email?.message}
+                  disabled // Email cannot be changed
                 />
               </FormGroup>
 
+              {/* Password Change Section */}
               <FormGroup
-                title={t("form-your-photo")}
-                description={t("form-your-photo-placeholder")}
+                title={t("form-change-password") || "Change Password"}
+                description={
+                  t("form-change-password-description") || "Leave blank if you don't want to change your password"
+                }
                 className="pt-7 @2xl:pt-9 @3xl:grid-cols-12 @3xl:pt-11"
               >
-                <div className="flex flex-col gap-6 @container @3xl:col-span-2">
-                  <AvatarUpload
-                    name="avatar"
-                    setValue={setValue}
-                    getValues={getValues}
-                    error={errors?.avatar?.message}
+                <div className="col-span-full space-y-4">
+                  <Password
+                    label={t("form-current-password")}
+                    placeholder={t("form-password-placeholder")}
+                    {...register("currentPassword")}
+                    error={errors.currentPassword?.message}
+                    prefix={<PiLockKey className="h-5 w-5 text-gray-500" />}
                   />
-                </div>
-              </FormGroup>
-
-              <FormGroup
-                title={t("form-role")}
-                className="pt-7 @2xl:pt-9 @3xl:grid-cols-12 @3xl:pt-11"
-              >
-                <Controller
-                  control={control}
-                  name="role"
-                  render={({ field: { value, onChange } }) => (
-                    <Select
-                      dropdownClassName="!z-10 h-auto"
-                      inPortal={false}
-                      placeholder={t("form-select-role")}
-                      options={roles}
-                      onChange={onChange}
-                      value={value}
-                      className="col-span-full"
-                      getOptionValue={(option) => option.value}
-                      displayValue={(selected) =>
-                        roles?.find((r) => r.value === selected)?.label ?? ""
-                      }
-                      error={errors?.role?.message}
-                    />
-                  )}
-                />
-              </FormGroup>
-
-              <FormGroup
-                title={t("form-country")}
-                className="pt-7 @2xl:pt-9 @3xl:grid-cols-12 @3xl:pt-11"
-              >
-                <Controller
-                  control={control}
-                  name="country"
-                  render={({ field: { onChange, value } }) => (
-                    <Select
-                      dropdownClassName="!z-10 h-auto"
-                      inPortal={false}
-                      placeholder={t("form-select-country")}
-                      options={countries}
-                      onChange={onChange}
-                      value={value}
-                      className="col-span-full"
-                      getOptionValue={(option) => option.value}
-                      displayValue={(selected) =>
-                        countries?.find((con) => con.value === selected)?.label ?? ""
-                      }
-                      error={errors?.country?.message}
-                    />
-                  )}
-                />
-              </FormGroup>
-
-              <FormGroup
-                title={t("form-timezone")}
-                className="pt-7 @2xl:pt-9 @3xl:grid-cols-12 @3xl:pt-11"
-              >
-                <Controller
-                  control={control}
-                  name="timezone"
-                  render={({ field: { onChange, value } }) => (
-                    <Select
-                      dropdownClassName="!z-10 h-auto"
-                      inPortal={false}
-                      prefix={<PiClock className="h-6 w-6 text-gray-500" />}
-                      placeholder={t("form-select-timezone")}
-                      options={timezones}
-                      onChange={onChange}
-                      value={value}
-                      className="col-span-full"
-                      getOptionValue={(option) => option.value}
-                      displayValue={(selected) =>
-                        timezones?.find((tmz) => tmz.value === selected)?.label ?? ""
-                      }
-                      error={errors?.timezone?.message}
-                    />
-                  )}
-                />
-              </FormGroup>
-
-              <FormGroup
-                title={t("form-bio")}
-                className="pt-7 @2xl:pt-9 @3xl:grid-cols-12 @3xl:pt-11"
-              >
-                <Controller
-                  control={control}
-                  name="bio"
-                  render={({ field: { onChange, value } }) => (
-                    <QuillEditor
-                      value={value}
-                      onChange={onChange}
-                      className="@3xl:col-span-2 [&>.ql-container_.ql-editor]:min-h-[100px]"
-                      labelClassName="font-medium text-gray-700 dark:text-gray-600 mb-1.5"
-                    />
-                  )}
-                />
-              </FormGroup>
-
-              <FormGroup
-                title={t("form-portfolio-projects")}
-                description={t("form-portfolio-projects-description")}
-                className="pt-7 @2xl:pt-9 @3xl:grid-cols-12 @3xl:pt-11"
-              >
-                <div className="mb-5 @3xl:col-span-2">
-                  <UploadZone
-                    name="portfolios"
-                    getValues={getValues}
-                    setValue={setValue}
-                    error={errors?.portfolios?.message}
+                  <Password
+                    label={t("form-new-password")}
+                    placeholder={t("form-password-placeholder")}
+                    helperText={t("form-password-helper-text") || "Password must be at least 8 characters"}
+                    {...register("newPassword")}
+                    error={errors.newPassword?.message}
+                    prefix={<PiLockKey className="h-5 w-5 text-gray-500" />}
+                  />
+                  <Password
+                    label={t("form-confirm-new-password")}
+                    placeholder={t("form-password-placeholder")}
+                    {...register("confirmPassword")}
+                    error={errors.confirmPassword?.message}
+                    prefix={<PiLockKey className="h-5 w-5 text-gray-500" />}
                   />
                 </div>
               </FormGroup>
             </div>
 
-            <FormFooter
-              // isLoading={isLoading}
-              altBtnText={t("form-cancel")}
-              submitBtnText={t("form-save")}
-            />
+            <FormFooter isLoading={isLoading} altBtnText={t("form-cancel")} submitBtnText={t("form-save")} />
           </>
         );
       }}
