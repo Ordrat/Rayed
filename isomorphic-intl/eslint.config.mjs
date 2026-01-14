@@ -26,6 +26,7 @@ export default [
         ecmaFeatures: {
           jsx: true,
         },
+        tsconfigRootDir: import.meta.dirname,
       },
     },
     linterOptions: {

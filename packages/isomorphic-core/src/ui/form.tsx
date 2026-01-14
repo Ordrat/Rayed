@@ -1,13 +1,7 @@
-import type { Schema } from 'zod';
-import { useEffect } from 'react';
-import {
-  useForm,
-  SubmitHandler,
-  UseFormReturn,
-  UseFormProps,
-  FieldValues,
-} from 'react-hook-form';
-import { zodResolver } from '@hookform/resolvers/zod';
+import type { Schema } from "zod";
+import { useEffect } from "react";
+import { useForm, SubmitHandler, UseFormReturn, UseFormProps, FieldValues } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
 
 type ServerErrors<T> = {
   [Property in keyof T]: string;
@@ -25,9 +19,7 @@ type FormProps<TFormValues extends FieldValues> = {
   className?: string;
 };
 
-export const Form = <
-  TFormValues extends Record<string, any> = Record<string, any>,
->({
+export const Form = <TFormValues extends Record<string, any> = Record<string, any>>({
   onSubmit,
   children,
   useFormProps,
@@ -38,10 +30,15 @@ export const Form = <
   className,
   ...formProps
 }: FormProps<TFormValues>) => {
-  const methods = useForm<TFormValues>({
+  const formOptions: UseFormProps<TFormValues> = {
     ...useFormProps,
-    ...(validationSchema && { resolver: zodResolver(validationSchema) }),
-  });
+  };
+
+  if (validationSchema) {
+    formOptions.resolver = zodResolver(validationSchema);
+  }
+
+  const methods = useForm<TFormValues>(formOptions);
 
   useEffect(() => {
     if (resetValues) {
@@ -50,12 +47,7 @@ export const Form = <
   }, [resetValues, methods]);
 
   return (
-    <form
-      noValidate
-      onSubmit={methods.handleSubmit(onSubmit)}
-      {...formProps}
-      className={className}
-    >
+    <form noValidate onSubmit={methods.handleSubmit(onSubmit)} {...formProps} className={className}>
       {children(methods)}
     </form>
   );
