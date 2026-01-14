@@ -18,7 +18,9 @@
       "Bash(git reset:*)",
       "Bash(git commit:*)",
       "Bash(git push:*)",
-      "Bash(npx tsc:*)"
+      "Bash(npx tsc:*)",
+      "WebSearch",
+      "Bash(dir:*)"
     ]
   }
 }
