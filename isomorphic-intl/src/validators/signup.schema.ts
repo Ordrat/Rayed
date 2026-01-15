@@ -8,6 +8,7 @@ export const signUpSchema = (t: (arg: string) => string) =>
     firstName: z.string().min(1, { message: messages.firstNameRequired }),
     lastName: z.string().optional(),
     email: validateEmail(t),
+    phoneNumber: z.string().min(1, { message: t("form-phone-number-is-required") || "Phone number is required" }),
     password: validatePassword(t),
     confirmPassword: validateConfirmPassword(t),
     isAgreed: z.boolean(),

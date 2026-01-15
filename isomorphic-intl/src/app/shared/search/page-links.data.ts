@@ -1,16 +1,15 @@
 import { routes } from "@/config/routes";
-import { DUMMY_ID } from "@/config/constants";
 
 // Note: do not add href in the label object, it is rendering as label
 export const pageLinks = [
   // label start
   {
-    name: "Home",
+    name: "Overview",
   },
   // label end
   {
-    name: "Support",
-    href: routes.support.dashboard,
+    name: "Dashboard",
+    href: "/",
   },
   // label start
   {
@@ -30,21 +29,22 @@ export const pageLinks = [
     href: routes.drivers.list,
   },
   {
-    name: "Create Driver",
-    href: routes.drivers.create,
-  },
-  {
     name: "Sellers",
     href: routes.sellers.list,
   },
   {
-    name: "Create Seller",
-    href: routes.sellers.create,
+    name: "Branches",
+    href: routes.branches.list,
   },
   {
     name: "Products",
     href: routes.products.list,
   },
+  // label start
+  {
+    name: "Shop",
+  },
+  // label end
   {
     name: "Shop Hub",
     href: routes.shop.hub,
@@ -54,16 +54,8 @@ export const pageLinks = [
     href: routes.shop.categories,
   },
   {
-    name: "Create Category",
-    href: routes.shop.createCategory,
-  },
-  {
     name: "Sub Categories",
     href: routes.shop.subCategories,
-  },
-  {
-    name: "Create Sub Category",
-    href: routes.shop.createSubCategory,
   },
   // label start
   {
@@ -76,53 +68,11 @@ export const pageLinks = [
   },
   // label start
   {
-    name: "Widgets",
-  },
-  // label end
-  {
-    name: "Cards",
-    href: routes.widgets.cards,
-  },
-  {
-    name: "Charts",
-    href: routes.widgets.charts,
-  },
-  // label start
-  {
-    name: "Forms",
+    name: "Settings",
   },
   // label end
   {
     name: "Profile",
     href: routes.profile,
-  },
-  {
-    name: "Newsletter",
-    href: routes.forms.newsletter,
-  },
-  // label start
-  {
-    name: "Authentication",
-  },
-  // label end
-  {
-    name: "Sign Up",
-    href: routes.auth.signUp,
-  },
-  {
-    name: "Sign In",
-    href: routes.auth.signIn,
-  },
-  {
-    name: "Forgot Password",
-    href: routes.auth.forgotPassword,
-  },
-  {
-    name: "OTP Page",
-    href: routes.auth.otp,
-  },
-  {
-    name: "Set Password",
-    href: routes.auth.setPassword,
   },
 ];

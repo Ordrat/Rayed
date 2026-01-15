@@ -11,8 +11,8 @@ const intlMiddleware = createMiddleware({
 const publicRoutes = [
   "/auth/sign-in",
   "/auth/sign-up",
-  "/auth/forgot-password-1",
-  "/auth/otp-1",
+  "/auth/forgot-password",
+  "/auth/verify-account",
   "/auth/set-password",
   "/auth/driver-signup",
   "/auth/seller-signup",
@@ -31,17 +31,15 @@ function middleware(req: NextRequest) {
   }
 
   // Get session token FIRST before any routing decisions
-  const sessionToken = req.cookies.get("next-auth.session-token")?.value ||
-                       req.cookies.get("__Secure-next-auth.session-token")?.value;
+  const sessionToken =
+    req.cookies.get("next-auth.session-token")?.value || req.cookies.get("__Secure-next-auth.session-token")?.value;
 
   // Extract language from pathname
-  const localeMatch = routing.locales.find(
-    (locale) => pathname.startsWith(`/${locale}/`) || pathname === `/${locale}`
-  );
+  const localeMatch = routing.locales.find((locale) => pathname.startsWith(`/${locale}/`) || pathname === `/${locale}`);
   const lang = localeMatch || routing.defaultLocale;
 
   // Check if route is a public route (EXACT match only with language prefix)
-  const isPublicRoute = publicRoutes.some(route => {
+  const isPublicRoute = publicRoutes.some((route) => {
     const localizedRoute = `/${lang}${route}`;
     return pathname === localizedRoute;
   });
@@ -55,8 +53,8 @@ function middleware(req: NextRequest) {
     const signinUrl = new URL(`/${lang}/auth/sign-in`, req.url);
 
     // Set callback URL for protected routes
-    if (!pathname.includes('/sign-in') && !isRootPath) {
-      signinUrl.searchParams.set('callbackUrl', pathname);
+    if (!pathname.includes("/sign-in") && !isRootPath) {
+      signinUrl.searchParams.set("callbackUrl", pathname);
     }
 
     return NextResponse.redirect(signinUrl);
@@ -69,9 +67,7 @@ function middleware(req: NextRequest) {
   }
 
   // Redirect URLs without language prefix
-  const hasLanguagePrefix = routing.locales.some(
-    (l) => pathname.startsWith(`/${l}/`) || pathname === `/${l}`
-  );
+  const hasLanguagePrefix = routing.locales.some((l) => pathname.startsWith(`/${l}/`) || pathname === `/${l}`);
 
   if (!hasLanguagePrefix && pathname !== "/" && !pathname.startsWith("/_next")) {
     const redirectUrl = new URL(`/${lang}${pathname}`, req.url);

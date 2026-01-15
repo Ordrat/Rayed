@@ -47,6 +47,11 @@ export const routes = {
     list: "/admin/products",
     details: (id: string) => `/admin/products/${id}`,
   },
+  // Branch management (admin)
+  branches: {
+    list: "/admin/branches",
+    details: (id: string) => `/admin/branches/${id}`,
+  },
   // Shop management (admin)
   shop: {
     hub: "/admin/shop/hub",
@@ -73,8 +78,8 @@ export const routes = {
   auth: {
     signUp: "/auth/sign-up",
     signIn: "/auth/sign-in",
-    forgotPassword: "/auth/forgot-password-1",
-    otp: "/auth/otp-1",
+    forgotPassword: "/auth/forgot-password",
+    verifyAccount: "/auth/verify-account",
     setPassword: "/auth/set-password",
   },
   signIn: "/auth/signin",

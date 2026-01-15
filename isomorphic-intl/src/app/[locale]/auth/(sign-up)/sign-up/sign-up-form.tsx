@@ -1,6 +1,6 @@
 "use client";
 
-import { Link } from "@/i18n/routing";
+import { Link, useRouter } from "@/i18n/routing";
 import { useState } from "react";
 import { SubmitHandler } from "react-hook-form";
 import { PiArrowRightBold } from "react-icons/pi";
@@ -9,11 +9,14 @@ import { Form } from "@core/ui/form";
 import { routes } from "@/config/routes";
 import { SignUpSchema, signUpSchema } from "@/validators/signup.schema";
 import { useTranslations } from "next-intl";
+import toast from "react-hot-toast";
+import { registerSeller, resendVerificationCode } from "@/services/auth.service";
 
 const initialValues = {
   firstName: "",
   lastName: "",
   email: "",
+  phoneNumber: "",
   password: "",
   confirmPassword: "",
   isAgreed: false,
@@ -23,9 +26,44 @@ export default function SignUpForm() {
   const t = useTranslations("form");
   const [reset, setReset] = useState({});
 
-  const onSubmit: SubmitHandler<SignUpSchema> = (data) => {
-    console.log(data);
-    setReset({ ...initialValues, isAgreed: false });
+  const router = useRouter();
+  const [isLoading, setIsLoading] = useState(false);
+
+  const onSubmit: SubmitHandler<SignUpSchema> = async (data) => {
+    setIsLoading(true);
+    try {
+      // Step 1: Register the seller
+      await registerSeller({
+        firstName: data.firstName,
+        lastName: data.lastName,
+        email: data.email,
+        password: data.password,
+        phoneNumber: data.phoneNumber,
+      });
+
+      // Step 2: Explicitly send verification code to ensure user receives it
+      try {
+        await resendVerificationCode({
+          email: data.email,
+          phoneNumber: undefined,
+        });
+      } catch (codeError: any) {
+        // If backend already sent code on registration, this might fail - that's okay
+        console.log("Verification code send note:", codeError.message);
+      }
+
+      toast.success(t("form-signup-success") || "Account created successfully! Please verify your email.");
+
+      // Redirect to verification page
+      router.push(`${routes.auth.verifyAccount}?email=${encodeURIComponent(data.email)}`);
+
+      setReset({ ...initialValues, isAgreed: false });
+    } catch (error: any) {
+      console.error("Signup Error:", error);
+      toast.error(error.message || "Failed to create account");
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   return (
@@ -67,6 +105,15 @@ export default function SignUpForm() {
               {...register("email")}
               error={errors.email?.message}
             />
+            <Input
+              type="tel"
+              label={t("form-phone")}
+              className="col-span-2 [&>label>span]:font-medium"
+              inputClassName="text-sm"
+              placeholder={t("form-phone-placeholder")}
+              {...register("phoneNumber")}
+              error={errors.phoneNumber?.message}
+            />
             <Password
               label={t("form-password")}
               placeholder={t("form-password-placeholder")}
@@ -89,19 +136,13 @@ export default function SignUpForm() {
                 className="[&>label>span]:font-medium [&>label]:items-start"
                 label={
                   <>
-                    {t("form-signup-agreement")}{" "}
-                    <span className="font-medium text-gray-700">
-                      {t("form-terms")}
-                    </span>{" "}
-                    &{" "}
-                    <span className="font-medium text-gray-700">
-                      {t("form-privacy-policy")}
-                    </span>
+                    {t("form-signup-agreement")} <span className="font-medium text-gray-700">{t("form-terms")}</span> &{" "}
+                    <span className="font-medium text-gray-700">{t("form-privacy-policy")}</span>
                   </>
                 }
               />
             </div>
-            <Button type="submit" className="col-span-2 mt-2">
+            <Button type="submit" className="col-span-2 mt-2" isLoading={isLoading}>
               <span>{t("form-get-started")}</span> <PiArrowRightBold className="ms-2 mt-0.5 h-5 w-5 rtl:rotate-180" />
             </Button>
           </div>

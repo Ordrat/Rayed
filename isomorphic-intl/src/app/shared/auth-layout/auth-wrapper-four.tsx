@@ -57,24 +57,13 @@ export default function AuthWrapperFour({
 
   return (
     <div className="relative flex min-h-screen w-full flex-col justify-between">
-      <Image
-        src="/auth/sign_in_wave.png"
-        alt="Sign In Wave"
-        fill
-        className="z-0 object-cover"
-        priority
-      />
+      <Image src="/auth/sign_in_wave.png" alt="Sign In Wave" fill className="z-0 object-cover" priority />
       <div className="relative z-10 flex min-h-screen flex-col justify-between">
         <AuthHeader />
 
         <div className="flex w-full flex-col justify-center px-5">
-          <div
-            className={cn(
-              "mx-auto w-full max-w-md py-12 md:max-w-lg lg:max-w-xl 2xl:pb-8 2xl:pt-2",
-              className
-            )}
-          >
-            <div className="rounded-xl bg-white/80 p-6 shadow-md md:p-10">
+          <div className={cn("mx-auto w-full max-w-md py-12 md:max-w-lg lg:max-w-xl 2xl:pb-8 2xl:pt-2", className)}>
+            <div className="rounded-xl bg-white p-6 shadow-md md:p-10">
               <div className="flex flex-col items-center">
                 <div className="mb-7 inline-block max-w-[280px] lg:mb-9">
                   <Image src={siteConfig.logo} alt={siteConfig.title} />
@@ -104,12 +93,7 @@ function AuthHeader() {
   return (
     <header className="flex items-center justify-between p-4 lg:px-16 lg:py-6 2xl:px-24">
       <div>
-        <Image
-          src={siteConfig.icon}
-          alt={siteConfig.title}
-          className="dark:invert max-w-[64px]"
-          priority
-        />
+        <Image src={siteConfig.icon} alt={siteConfig.title} className="dark:invert max-w-[64px]" priority />
       </div>
       <div className="flex items-center space-x-2 md:space-x-4">
         <LanguageSwitcher />
@@ -133,10 +117,7 @@ function AuthFooter() {
     <footer className="flex flex-col-reverse items-center justify-between px-4 py-5 lg:flex-row lg:px-16 lg:py-6 2xl:px-24 2xl:py-10">
       <div className="text-center leading-relaxed text-gray-500 lg:text-start">
         {t("auth-copyright")}{" "}
-        <Link
-          href={routes.auth.signIn}
-          className="font-medium transition-colors hover:text-primary"
-        >
+        <Link href={routes.auth.signIn} className="font-medium transition-colors hover:text-primary">
           {t("auth-redq")}
         </Link>
         , {t("auth-all-rights-reserved")}

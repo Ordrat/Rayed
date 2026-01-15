@@ -1,0 +1,151 @@
+Branch
+
+PUT
+/api/Branch/{id}
+
+Parameters
+Try it out
+Name	Description
+id *
+string($uuid)
+(path)
+id
+X-Api-Version
+string
+(header)
+X-Api-Version
+Accept-Language
+string
+(header)
+Language of the request
+
+Accept-Language
+api-version
+string
+(query)
+api-version
+Request body
+
+application/json
+Example Value
+Schema
+{
+  "nameEn": "string",
+  "nameAr": "string",
+  "phoneNumber": "string",
+  "fullAddress": "string",
+  "buildingNumber": "string",
+  "street": "string",
+  "district": "string",
+  "city": "string",
+  "governorate": "string",
+  "latitude": 0,
+  "longitude": 0,
+  "isActive": true,
+  "isOpen": true,
+  "displayOrder": 0
+}
+Responses
+Code	Description	Links
+200	
+Success
+
+No links
+
+DELETE
+/api/Branch/{id}
+
+Parameters
+Try it out
+Name	Description
+id *
+string($uuid)
+(path)
+id
+X-Api-Version
+string
+(header)
+X-Api-Version
+Accept-Language
+string
+(header)
+Language of the request
+
+Accept-Language
+api-version
+string
+(query)
+api-version
+Responses
+Code	Description	Links
+200	
+Success
+
+No links
+
+GET
+/api/Branch/{id}
+
+Parameters
+Try it out
+Name	Description
+id *
+string($uuid)
+(path)
+id
+X-Api-Version
+string
+(header)
+X-Api-Version
+Accept-Language
+string
+(header)
+Language of the request
+
+Accept-Language
+api-version
+string
+(query)
+api-version
+Responses
+Code	Description	Links
+200	
+Success
+
+No links
+
+POST
+/api/Branch/change-status
+
+Parameters
+Try it out
+Name	Description
+X-Api-Version
+string
+(header)
+X-Api-Version
+Accept-Language
+string
+(header)
+Language of the request
+
+Accept-Language
+api-version
+string
+(query)
+api-version
+Request body
+
+application/json
+Example Value
+Schema
+{
+  "id": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
+  "status": 0
+}
+Responses
+Code	Description	Links
+200	
+Success
+
+No links

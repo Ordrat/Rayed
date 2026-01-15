@@ -13,9 +13,9 @@ import {
   PiShoppingBag,
   PiPackage,
   PiChatCircleDots,
-  PiUserGear,
   PiArrowRight,
   PiArrowLeft,
+  PiBuildings,
 } from "react-icons/pi";
 import { useTranslations, useLocale } from "next-intl";
 
@@ -57,6 +57,15 @@ const overviewItems = [
     iconBg: "bg-orange-500",
   },
   {
+    title: "sidebar-menu-branches",
+    description: "overview-branches-desc",
+    icon: PiBuildings,
+    href: routes.branches.list,
+    gradient: "from-indigo-500 to-purple-500",
+    bgLight: "bg-indigo-50",
+    iconBg: "bg-indigo-500",
+  },
+  {
     title: "sidebar-menu-shop-hub",
     description: "overview-shop-hub-desc",
     icon: PiShoppingBag,
@@ -82,15 +91,6 @@ const overviewItems = [
     gradient: "from-violet-500 to-purple-500",
     bgLight: "bg-violet-50",
     iconBg: "bg-violet-500",
-  },
-  {
-    title: "sidebar-menu-profile",
-    description: "overview-profile-desc",
-    icon: PiUserGear,
-    href: routes.profile,
-    gradient: "from-slate-500 to-gray-600",
-    bgLight: "bg-slate-50",
-    iconBg: "bg-slate-500",
   },
 ];
 

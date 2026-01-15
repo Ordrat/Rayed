@@ -126,9 +126,42 @@ const auth: AuthOptions = {
           label: "Password",
           type: "password"
         },
+        // Token-based auth (for OTP verification flow)
+        accessToken: { label: "Access Token", type: "text" },
+        refreshToken: { label: "Refresh Token", type: "text" },
+        accessTokenExpiration: { label: "Access Token Expiration", type: "text" },
+        refreshTokenExpiration: { label: "Refresh Token Expiration", type: "text" },
+        email: { label: "Email", type: "text" },
+        firstName: { label: "First Name", type: "text" },
+        lastName: { label: "Last Name", type: "text" },
+        phoneNumber: { label: "Phone Number", type: "text" },
+        roles: { label: "Roles", type: "text" },
+        id: { label: "ID", type: "text" },
       },
       async authorize(credentials) {
         try {
+          // Token-based authentication (OTP verification flow)
+          if (credentials?.accessToken) {
+            return {
+              id: credentials.id!,
+              email: credentials.email!,
+              firstName: credentials.firstName!,
+              lastName: credentials.lastName!,
+              phoneNumber: credentials.phoneNumber!,
+              emailConfirmed: true,
+              isActive: true,
+              roles: JSON.parse(credentials.roles || "[]"),
+              shopId: "",
+              accessToken: credentials.accessToken,
+              accessTokenExpirationDate: credentials.accessTokenExpiration!,
+              refreshToken: credentials.refreshToken!,
+              refreshTokenExpirationDate: credentials.refreshTokenExpiration!,
+              needsPasswordReset: false,
+              sellerStatus: SellerStatus.ACTIVE,
+            } as User;
+          }
+
+          // Password-based authentication (normal login flow)
           if (!credentials?.emailOrPhone || !credentials?.password) {
             throw new Error("Email/Phone and password are required");
           }

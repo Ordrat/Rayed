@@ -72,3 +72,63 @@ export enum SellerStatus {
   ACTIVE = 1,
   SUSPENDED = 2,
 }
+
+// ============ OTP Verification Types ============
+
+export interface VerifyAccountRequest {
+  phoneNumberOrEmail: string;
+  verificationCode: string;
+}
+
+export interface VerifyAccountResponse {
+  id: string;
+  email: string;
+  firstName: string;
+  lastName: string;
+  phoneNumber: string;
+  emailConfirmed: boolean;
+  isActive: boolean;
+  roles: string[];
+  accessToken: string;
+  accessTokenExpirationDate: string;
+  refreshToken: string;
+  refreshTokenExpirationDate: string;
+}
+
+export interface ResendVerificationCodeRequest {
+  email?: string;
+  phoneNumber?: string;
+}
+
+// ============ Forgot Password Types ============
+
+export interface ForgotPasswordRequest {
+  email?: string;
+  phoneNumber?: string;
+}
+
+export interface VerifyResetCodeRequest {
+  phoneNumberOrEmail: string;
+  resetCode: string;
+}
+
+export interface RegisterSellerRequest {
+  firstName: string;
+  lastName?: string;
+  phoneNumber: string;
+  email: string;
+  password: string;
+  bankAccountNumber?: string;
+  bankName?: string;
+}
+
+export interface RegisterSellerResponse {
+  id: string;
+  firstName: string;
+  lastName: string;
+  email: string;
+  phoneNumber: string;
+  accountStatus: number;
+  verifiedAt?: string;
+  createdAt: string;
+}

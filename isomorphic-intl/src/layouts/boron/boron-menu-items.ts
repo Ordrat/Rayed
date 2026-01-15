@@ -10,6 +10,7 @@ import {
   PiPackageDuotone,
   PiTicketDuotone,
   PiChatCircleDotsDuotone,
+  PiBuildingsDuotone,
 } from "react-icons/pi";
 import { routes } from "@/config/routes";
 
@@ -48,6 +49,11 @@ export const menuItems = [
     name: "sidebar-menu-sellers",
     href: routes.sellers.list,
     icon: PiStorefrontDuotone,
+  },
+  {
+    name: "sidebar-menu-branches",
+    href: routes.branches.list,
+    icon: PiBuildingsDuotone,
   },
   {
     name: "sidebar-menu-shop",
