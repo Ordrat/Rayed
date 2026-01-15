@@ -7,7 +7,7 @@ import { signOut, useSession } from "next-auth/react";
 import { Link } from "@/i18n/routing";
 import { usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
-import { useTranslations } from "next-intl";
+import { useTranslations, useLocale } from "next-intl";
 import { logout } from "@/services/auth.service";
 import { changeSupportStatus } from "@/services/support.service";
 import { SupportStatus } from "@/types/support.types";
@@ -59,18 +59,22 @@ export default function ProfileMenu({
 
 function ProfileMenuPopover({ children }: React.PropsWithChildren<{}>) {
   const pathname = usePathname();
+  const locale = useLocale();
   const [isOpen, setIsOpen] = useState(false);
 
   useEffect(() => {
     setIsOpen(false);
   }, [pathname]);
 
+  // Use different placement based on locale direction
+  const placement = locale === "ar" ? "bottom-start" : "bottom-end";
+
   return (
     <Popover
       isOpen={isOpen}
       setIsOpen={setIsOpen}
       shadow="sm"
-      placement="bottom-end"
+      placement={placement}
     >
       {children}
     </Popover>
@@ -81,14 +85,6 @@ const menuItems = [
   {
     name: "text-my-profile",
     href: routes.profile,
-  },
-  {
-    name: "text-account-settings",
-    href: routes.profile,
-  },
-  {
-    name: "text-activity-log",
-    href: "#",
   },
 ];
 

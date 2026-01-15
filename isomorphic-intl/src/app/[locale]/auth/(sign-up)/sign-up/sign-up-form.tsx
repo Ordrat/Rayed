@@ -39,10 +39,9 @@ export default function SignUpForm() {
         }}
       >
         {({ register, formState: { errors } }) => (
-          <div className="flex flex-col gap-x-4 gap-y-5 md:grid md:grid-cols-2 lg:gap-5">
+          <div className="flex flex-col gap-x-4 gap-y-4 md:grid md:grid-cols-2">
             <Input
               type="text"
-              size="lg"
               label={t("form-first-name")}
               placeholder={t("form-first-name-placeholder")}
               className="[&>label>span]:font-medium"
@@ -52,7 +51,6 @@ export default function SignUpForm() {
             />
             <Input
               type="text"
-              size="lg"
               label={t("form-last-name")}
               placeholder={t("form-last-name-placeholder")}
               className="[&>label>span]:font-medium"
@@ -62,7 +60,6 @@ export default function SignUpForm() {
             />
             <Input
               type="email"
-              size="lg"
               label={t("form-email")}
               className="col-span-2 [&>label>span]:font-medium"
               inputClassName="text-sm"
@@ -73,7 +70,6 @@ export default function SignUpForm() {
             <Password
               label={t("form-password")}
               placeholder={t("form-password-placeholder")}
-              size="lg"
               className="[&>label>span]:font-medium"
               inputClassName="text-sm"
               {...register("password")}
@@ -82,31 +78,30 @@ export default function SignUpForm() {
             <Password
               label={t("form-confirm-password")}
               placeholder={t("form-confirm-password-placeholder")}
-              size="lg"
               className="[&>label>span]:font-medium"
               inputClassName="text-sm"
               {...register("confirmPassword")}
               error={errors.confirmPassword?.message}
             />
-            <div className="col-span-2 flex items-start ">
+            <div className="col-span-2 flex items-start">
               <Checkbox
                 {...register("isAgreed")}
                 className="[&>label>span]:font-medium [&>label]:items-start"
                 label={
                   <>
                     {t("form-signup-agreement")}{" "}
-                    <Link href="/" className="font-medium text-blue transition-colors hover:underline">
+                    <span className="font-medium text-gray-700">
                       {t("form-terms")}
-                    </Link>{" "}
+                    </span>{" "}
                     &{" "}
-                    <Link href="/" className="font-medium text-blue transition-colors hover:underline">
+                    <span className="font-medium text-gray-700">
                       {t("form-privacy-policy")}
-                    </Link>
+                    </span>
                   </>
                 }
               />
             </div>
-            <Button size="lg" type="submit" className="col-span-2 mt-2">
+            <Button type="submit" className="col-span-2 mt-2">
               <span>{t("form-get-started")}</span> <PiArrowRightBold className="ms-2 mt-0.5 h-5 w-5 rtl:rotate-180" />
             </Button>
           </div>

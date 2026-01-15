@@ -23,7 +23,8 @@
       "Bash(move billing-history \"..\\\\archived\\\\profile-settings\"\" && move logged-in-devices \"..archivedprofile-settings\"\")",
       "Bash(move modal \"..\\\\archived\\\\profile-settings\"\")",
       "Bash(git mv:*)",
-      "Bash(powershell:*)"
+      "Bash(powershell:*)",
+      "Bash(cd:*)"
     ]
   }
 }

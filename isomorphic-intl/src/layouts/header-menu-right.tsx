@@ -13,7 +13,7 @@ export default function HeaderMenuRight() {
   const { unreadCount } = useFirebaseNotifications();
 
   return (
-    <div className="ms-auto flex shrink-0 items-center gap-2 xs:gap-3 xl:gap-4" dir="ltr">
+    <div className="ms-auto flex shrink-0 items-center gap-2 xs:gap-3 xl:gap-4">
       <LanguageSwitcher />
 
       <div className="flex items-center gap-2 text-gray-700 xs:gap-3 xl:gap-4">

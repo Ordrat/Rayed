@@ -172,7 +172,6 @@
   /* base style */
   html {
     @apply h-full antialiased;
-    zoom: 0.9; /* Apply 90% zoom globally to match preferred viewing scale */
   }
 
   #player {

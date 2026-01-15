@@ -72,12 +72,15 @@ export default function LanguageSwitcher({
     );
   }
 
+  // Use different placement based on locale direction
+  const placement = locale === "ar" ? "bottom-start" : "bottom-end";
+
   return (
     <Select
       size="sm"
       value={selected}
       className={cn("w-auto", className)}
-      placement="bottom"
+      placement={placement}
       onChange={handleChange}
       options={localeOptions}
       dropdownClassName="w-44 p-2 !z-[99999] shadow-xl rounded-xl border-gray-100 dark:border-gray-800"

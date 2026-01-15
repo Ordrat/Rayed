@@ -183,11 +183,18 @@ function NotificationsList({ setIsOpen }: { setIsOpen: React.Dispatch<React.SetS
 }
 
 export default function NotificationDropdown({ children }: { children: ReactElement & { ref?: RefObject<any> } }) {
+  const locale = useLocale();
   const isMobile = useMedia("(max-width: 480px)", false);
   const [isOpen, setIsOpen] = useState(false);
 
+  // Use different placement based on locale direction
+  const getPlacement = () => {
+    if (isMobile) return "bottom";
+    return locale === "ar" ? "bottom-start" : "bottom-end";
+  };
+
   return (
-    <Popover isOpen={isOpen} setIsOpen={setIsOpen} shadow="sm" placement="bottom" gap={8}>
+    <Popover isOpen={isOpen} setIsOpen={setIsOpen} shadow="sm" placement={getPlacement()} gap={8}>
       <Popover.Trigger>{children}</Popover.Trigger>
       <Popover.Content className="z-[99999] w-[320px] sm:w-[360px] 2xl:w-[420px] p-0 dark:bg-gray-100 border border-gray-200 dark:border-gray-800 shadow-xl rounded-xl sm:[&>svg]:inline-flex">
         <NotificationsList setIsOpen={setIsOpen} />
