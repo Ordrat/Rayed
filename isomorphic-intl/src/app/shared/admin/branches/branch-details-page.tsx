@@ -50,10 +50,10 @@ export default function BranchDetailsPage({ branchId }: BranchDetailsPageProps) 
   const pageHeader = {
     title: t("branch-details"),
     breadcrumb: [
-      { name: t("sidebar-menu-overview"), href: "/" },
-      { name: t("sidebar-menu-admin"), href: "#" },
-      { name: t("sidebar-menu-branches"), href: routes.branches.list },
-      { name: t("branch-details") },
+      { name: t("sidebar-menu-overview"), href: "/", isStatic: true },
+      { name: t("sidebar-menu-admin"), href: "#", isStatic: true },
+      { name: t("sidebar-menu-branches"), href: routes.branches.list, isStatic: true },
+      { name: t("branch-details"), isStatic: true },
     ],
   };
 
@@ -81,10 +81,7 @@ export default function BranchDetailsPage({ branchId }: BranchDetailsPageProps) 
     if (!branch) return;
     setIsProcessing(true);
     try {
-      await changeBranchStatus(
-        { id: branch.id, status: BranchStatus.APPROVED },
-        session?.accessToken || ""
-      );
+      await changeBranchStatus({ id: branch.id, status: BranchStatus.APPROVED }, session?.accessToken || "");
       setBranch({ ...branch, status: BranchStatus.APPROVED });
       toast.success(t("branch-approved"));
     } catch (error: any) {
@@ -98,10 +95,7 @@ export default function BranchDetailsPage({ branchId }: BranchDetailsPageProps) 
     if (!branch) return;
     setIsProcessing(true);
     try {
-      await changeBranchStatus(
-        { id: branch.id, status: BranchStatus.REJECTED },
-        session?.accessToken || ""
-      );
+      await changeBranchStatus({ id: branch.id, status: BranchStatus.REJECTED }, session?.accessToken || "");
       setBranch({ ...branch, status: BranchStatus.REJECTED });
       toast.success(t("branch-rejected"));
     } catch (error: any) {
@@ -135,7 +129,7 @@ export default function BranchDetailsPage({ branchId }: BranchDetailsPageProps) 
 
   return (
     <>
-      <PageHeader title={pageHeader.title} breadcrumb={pageHeader.breadcrumb}>
+      <PageHeader title={pageHeader.title} breadcrumb={pageHeader.breadcrumb} isStaticTitle={true}>
         <Link href={routes.branches.list}>
           <Button variant="outline" className="mt-4 sm:mt-0">
             <PiArrowLeftBold className="me-1.5 h-4 w-4 rtl:rotate-180" />
@@ -144,146 +138,142 @@ export default function BranchDetailsPage({ branchId }: BranchDetailsPageProps) 
         </Link>
       </PageHeader>
 
-      <div className="mx-auto max-w-4xl space-y-6">
-        {/* Branch Header Card */}
+      <div className="w-full space-y-6">
+        {/* General Overview Card */}
         <div className="rounded-lg border border-gray-200 bg-white p-6 dark:border-gray-700 dark:bg-gray-800">
-          <div className="flex items-start justify-between">
-            <div className="flex items-center gap-4">
-              <div className="flex h-16 w-16 items-center justify-center rounded-xl bg-green-100">
-                <PiStorefrontBold className="h-8 w-8 text-green-600" />
+          <div className="flex flex-col gap-6 md:flex-row md:items-start md:justify-between">
+            <div className="flex items-center gap-5">
+              <div className="flex h-20 w-20 shrink-0 items-center justify-center rounded-2xl bg-gray-100 dark:bg-gray-700">
+                <PiStorefrontBold className="h-10 w-10 text-gray-500 dark:text-gray-400" />
               </div>
-              <div>
-                <Title as="h3" className="text-xl font-bold">
-                  {getBranchName(branch, locale)}
-                </Title>
-                <Text className="text-gray-500">
-                  {locale === "ar" ? branch.nameEn : branch.nameAr}
-                </Text>
+              <div className="space-y-1">
+                <div className="flex items-center gap-3">
+                  <Title as="h3" className="text-xl font-bold">
+                    {getBranchName(branch, locale)}
+                  </Title>
+                  <Badge variant="flat" color={getStatusBadgeColor(branch.status)} className="capitalize">
+                    {getBranchStatusLabel(branch.status)}
+                  </Badge>
+                </div>
+                <Text className="text-base text-gray-500">{locale === "ar" ? branch.nameEn : branch.nameAr}</Text>
               </div>
             </div>
-            <Badge
-              variant="flat"
-              color={getStatusBadgeColor(branch.status)}
-              className="capitalize"
-            >
-              {getBranchStatusLabel(branch.status)}
-            </Badge>
+
+            {/* Approve/Reject Actions for Pending Branches */}
+            {branch.status === BranchStatus.PENDING && (
+              <div className="flex w-full flex-shrink-0 gap-3 md:w-auto">
+                <Popover placement="bottom-end">
+                  <Popover.Trigger>
+                    <Button
+                      className="flex-1 bg-green-600 text-white hover:bg-green-700 active:bg-green-700 md:flex-none border-transparent"
+                      disabled={isProcessing}
+                      isLoading={isProcessing}
+                    >
+                      <PiCheckCircleBold className="me-1.5 h-4 w-4" />
+                      {t("approve")}
+                    </Button>
+                  </Popover.Trigger>
+                  <Popover.Content className="z-[9999] shadow-xl">
+                    {({ setOpen }) => (
+                      <div className="w-56 p-3">
+                        <Title as="h6" className="mb-2 text-base font-semibold">
+                          {t("approve-branch-title")}
+                        </Title>
+                        <Text className="mb-4 text-sm text-gray-500">{t("approve-branch-confirm")}</Text>
+                        <div className="flex items-center justify-end">
+                          <Button
+                            size="sm"
+                            className="me-1.5 h-7 bg-green-600 text-white hover:bg-green-700 active:bg-green-700"
+                            onClick={() => {
+                              handleApprove();
+                              setOpen(false);
+                            }}
+                          >
+                            {t("yes")}
+                          </Button>
+                          <Button size="sm" variant="outline" className="h-7" onClick={() => setOpen(false)}>
+                            {t("no")}
+                          </Button>
+                        </div>
+                      </div>
+                    )}
+                  </Popover.Content>
+                </Popover>
+
+                <Popover placement="bottom-end">
+                  <Popover.Trigger>
+                    <Button
+                      className="flex-1 bg-red-600 text-white hover:bg-red-700 active:bg-red-700 md:flex-none border-transparent"
+                      disabled={isProcessing}
+                      isLoading={isProcessing}
+                    >
+                      <PiXCircleBold className="me-1.5 h-4 w-4" />
+                      {t("reject")}
+                    </Button>
+                  </Popover.Trigger>
+                  <Popover.Content className="z-[9999] shadow-xl">
+                    {({ setOpen }) => (
+                      <div className="w-56 p-3">
+                        <Title as="h6" className="mb-2 text-base font-semibold">
+                          {t("reject-branch-title")}
+                        </Title>
+                        <Text className="mb-4 text-sm text-gray-500">{t("reject-branch-confirm")}</Text>
+                        <div className="flex items-center justify-end">
+                          <Button
+                            size="sm"
+                            className="me-1.5 h-7 bg-red-600 text-white hover:bg-red-700 active:bg-red-700"
+                            onClick={() => {
+                              handleReject();
+                              setOpen(false);
+                            }}
+                          >
+                            {t("yes")}
+                          </Button>
+                          <Button size="sm" variant="outline" className="h-7" onClick={() => setOpen(false)}>
+                            {t("no")}
+                          </Button>
+                        </div>
+                      </div>
+                    )}
+                  </Popover.Content>
+                </Popover>
+              </div>
+            )}
           </div>
 
-          {/* Approve/Reject Actions for Pending Branches */}
-          {branch.status === BranchStatus.PENDING && (
-            <div className="mt-6 flex gap-3 border-t border-gray-100 pt-4 dark:border-gray-700">
-              <Popover placement="top">
-                <Popover.Trigger>
-                  <Button
-                    className="flex-1 bg-green-600 text-white hover:bg-black hover:text-white hover:border-black active:bg-green-700 border-transparent"
-                    disabled={isProcessing}
-                    isLoading={isProcessing}
-                  >
-                    <PiCheckCircleBold className="me-1.5 h-4 w-4" />
-                    {t("approve")}
-                  </Button>
-                </Popover.Trigger>
-                <Popover.Content className="z-[9999] shadow-xl">
-                  {({ setOpen }) => (
-                    <div className="w-56 p-3">
-                      <Title as="h6" className="mb-2 text-base font-semibold">
-                        {t("approve-branch-title")}
-                      </Title>
-                      <Text className="mb-4 text-sm text-gray-500">
-                        {t("approve-branch-confirm")}
-                      </Text>
-                      <div className="flex items-center justify-end">
-                        <Button
-                          size="sm"
-                          className="me-1.5 h-7 bg-green-600 text-white hover:bg-black hover:text-white active:bg-green-700"
-                          onClick={() => {
-                            handleApprove();
-                            setOpen(false);
-                          }}
-                        >
-                          {t("yes")}
-                        </Button>
-                        <Button
-                          size="sm"
-                          variant="outline"
-                          className="h-7"
-                          onClick={() => setOpen(false)}
-                        >
-                          {t("no")}
-                        </Button>
-                      </div>
-                    </div>
-                  )}
-                </Popover.Content>
-              </Popover>
+          <div className="my-8 border-t border-dashed border-gray-200 dark:border-gray-700" />
 
-              <Popover placement="top">
-                <Popover.Trigger>
-                  <Button
-                    className="flex-1 bg-red-600 text-white hover:bg-black hover:text-white hover:border-black active:bg-red-700 border-transparent"
-                    disabled={isProcessing}
-                    isLoading={isProcessing}
-                  >
-                    <PiXCircleBold className="me-1.5 h-4 w-4" />
-                    {t("reject")}
-                  </Button>
-                </Popover.Trigger>
-                <Popover.Content className="z-[9999] shadow-xl">
-                  {({ setOpen }) => (
-                    <div className="w-56 p-3">
-                      <Title as="h6" className="mb-2 text-base font-semibold">
-                        {t("reject-branch-title")}
-                      </Title>
-                      <Text className="mb-4 text-sm text-gray-500">
-                        {t("reject-branch-confirm")}
-                      </Text>
-                      <div className="flex items-center justify-end">
-                        <Button
-                          size="sm"
-                          className="me-1.5 h-7 bg-red-600 text-white hover:bg-black hover:text-white active:bg-red-700"
-                          onClick={() => {
-                            handleReject();
-                            setOpen(false);
-                          }}
-                        >
-                          {t("yes")}
-                        </Button>
-                        <Button
-                          size="sm"
-                          variant="outline"
-                          className="h-7"
-                          onClick={() => setOpen(false)}
-                        >
-                          {t("no")}
-                        </Button>
-                      </div>
-                    </div>
-                  )}
-                </Popover.Content>
-              </Popover>
-            </div>
-          )}
-        </div>
-
-        {/* Contact Info */}
-        <div className="rounded-lg border border-gray-200 bg-white p-6 dark:border-gray-700 dark:bg-gray-800">
-          <Title as="h4" className="mb-4 font-semibold">
-            {t("contact-info")}
-          </Title>
-          <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
-            <div className="flex items-center gap-3 rounded-lg bg-gray-50 p-4 dark:bg-gray-700">
-              <PiPhoneBold className="h-5 w-5 text-gray-400" />
-              <div>
-                <Text className="text-sm text-gray-500">{t("phone-number")}</Text>
-                <Text className="font-medium">{branch.phoneNumber}</Text>
+          <div>
+            <Title as="h4" className="mb-6 text-lg font-semibold text-gray-900 dark:text-white">
+              {t("contact-info")}
+            </Title>
+            <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
+              <div className="group rounded-xl border border-gray-200 bg-gray-50/50 p-4 transition-all hover:bg-gray-50 dark:border-gray-700 dark:bg-gray-800/50 dark:hover:bg-gray-800">
+                <div className="flex items-center gap-4">
+                  <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-white shadow-sm dark:bg-gray-700">
+                    <PiPhoneBold className="h-5 w-5 text-gray-500 dark:text-gray-400" />
+                  </div>
+                  <div>
+                    <Text className="mb-1 text-xs font-medium uppercase tracking-wider text-gray-500">
+                      {t("phone-number")}
+                    </Text>
+                    <Text className="text-base font-semibold text-gray-900 dark:text-white">{branch.phoneNumber}</Text>
+                  </div>
+                </div>
               </div>
-            </div>
-            <div className="flex items-center gap-3 rounded-lg bg-gray-50 p-4 dark:bg-gray-700">
-              <PiHashBold className="h-5 w-5 text-gray-400" />
-              <div>
-                <Text className="text-sm text-gray-500">{t("display-order")}</Text>
-                <Text className="font-medium">{branch.displayOrder}</Text>
+
+              <div className="group rounded-xl border border-gray-200 bg-gray-50/50 p-4 transition-all hover:bg-gray-50 dark:border-gray-700 dark:bg-gray-800/50 dark:hover:bg-gray-800">
+                <div className="flex items-center gap-4">
+                  <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-white shadow-sm dark:bg-gray-700">
+                    <PiHashBold className="h-5 w-5 text-gray-500 dark:text-gray-400" />
+                  </div>
+                  <div>
+                    <Text className="mb-1 text-xs font-medium uppercase tracking-wider text-gray-500">
+                      {t("display-order")}
+                    </Text>
+                    <Text className="text-base font-semibold text-gray-900 dark:text-white">{branch.displayOrder}</Text>
+                  </div>
+                </div>
               </div>
             </div>
           </div>

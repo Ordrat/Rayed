@@ -15,7 +15,7 @@ import {
 } from "react-icons/pi";
 import { Link, useRouter } from "@/i18n/routing";
 import { routes } from "@/config/routes";
-import { getBranchesByShop, changeBranchStatus } from "@/services/branch.service";
+import { getAllBranches, changeBranchStatus } from "@/services/branch.service";
 import { Branch, BranchStatus, getBranchName, getBranchStatusLabel } from "@/types/branch.types";
 import PageHeader from "@/app/shared/page-header";
 import toast from "react-hot-toast";
@@ -44,59 +44,87 @@ export default function BranchesPage() {
   const [processingId, setProcessingId] = useState<string | null>(null);
   const [searchTerm, setSearchTerm] = useState("");
   const [sortConfig, setSortConfig] = useState<any>({ value: "newest", label: t("sort-newest") });
+  const [statusFilter, setStatusFilter] = useState<any>(null);
 
   const pageHeader = {
     title: t("sidebar-menu-branches"),
     breadcrumb: [
-      { name: t("sidebar-menu-overview"), href: "/" },
-      { name: t("sidebar-menu-admin"), href: "#" },
-      { name: t("sidebar-menu-branches") },
+      { name: t("sidebar-menu-overview"), href: "/", isStatic: true },
+      { name: t("sidebar-menu-admin"), href: "#", isStatic: true },
+      { name: t("sidebar-menu-branches"), isStatic: true },
     ],
   };
 
   const filteredBranches = useMemo(() => {
+    // Defensive check: ensure branches is an array
+    if (!Array.isArray(branches)) {
+      console.error('Branches is not an array:', branches);
+      return [];
+    }
+
     let result = [...branches];
+
+    // Status filter
+    if (statusFilter && statusFilter.value !== "all") {
+      result = result.filter((b) => b.status === parseInt(statusFilter.value));
+    }
+
+    // Search filter
     if (searchTerm) {
       const term = searchTerm.toLowerCase();
       result = result.filter(
         (b) =>
-          b.nameEn.toLowerCase().includes(term) ||
-          b.nameAr.toLowerCase().includes(term) ||
-          b.city.toLowerCase().includes(term) ||
-          b.district.toLowerCase().includes(term) ||
-          b.phoneNumber.includes(term)
+          b.nameEn?.toLowerCase().includes(term) ||
+          b.nameAr?.toLowerCase().includes(term) ||
+          b.city?.toLowerCase().includes(term) ||
+          b.district?.toLowerCase().includes(term) ||
+          b.phoneNumber?.includes(term)
       );
     }
 
+    // Sorting
     if (sortConfig) {
       const sortValue = sortConfig.value || sortConfig;
       result.sort((a, b) => {
         if (sortValue === "newest") return (b.displayOrder || 0) - (a.displayOrder || 0);
         if (sortValue === "oldest") return (a.displayOrder || 0) - (b.displayOrder || 0);
-        if (sortValue === "name_asc") return a.nameEn.localeCompare(b.nameEn);
-        if (sortValue === "name_desc") return b.nameEn.localeCompare(a.nameEn);
+        if (sortValue === "name_asc") return (a.nameEn || "").localeCompare(b.nameEn || "");
+        if (sortValue === "name_desc") return (b.nameEn || "").localeCompare(a.nameEn || "");
         return 0;
       });
     }
     return result;
-  }, [branches, searchTerm, sortConfig]);
+  }, [branches, searchTerm, sortConfig, statusFilter]);
 
   const fetchBranches = useCallback(async () => {
     try {
       setIsLoading(true);
-      const shopId = session?.user?.shopId;
-      if (!shopId) {
-        toast.error("Shop ID not found");
-        return;
+      // For admin, fetch all branches (no shopId filter)
+      // For regular users, you can pass { shopId: session?.user?.shopId } to filter
+      const data = await getAllBranches(
+        {
+          pageNumber: 1,
+          pageSize: 100, // Adjust as needed
+        },
+        session?.accessToken || ""
+      );
+
+      // Ensure data is always an array
+      if (Array.isArray(data)) {
+        setBranches(data);
+      } else {
+        console.error('API returned non-array data:', data);
+        setBranches([]);
+        toast.error(t("error-fetch-branches") || "Failed to fetch branches - invalid response format");
       }
-      const data = await getBranchesByShop(shopId, session?.accessToken || "");
-      setBranches(data);
     } catch (error: any) {
+      console.error('Fetch branches error:', error);
+      setBranches([]);
       toast.error(error.message || t("error-fetch-branches"));
     } finally {
       setIsLoading(false);
     }
-  }, [session?.accessToken, session?.user?.shopId, t]);
+  }, [session?.accessToken, t]);
 
   useEffect(() => {
     if (status === "authenticated") {
@@ -156,7 +184,7 @@ export default function BranchesPage() {
 
   return (
     <>
-      <PageHeader title={pageHeader.title} breadcrumb={pageHeader.breadcrumb} />
+      <PageHeader title={pageHeader.title} breadcrumb={pageHeader.breadcrumb} isStaticTitle={true} />
 
       {branches.length > 0 && (
         <div className="mb-6 flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
@@ -169,18 +197,32 @@ export default function BranchesPage() {
             clearable
             onClear={() => setSearchTerm("")}
           />
-          <Select
-            options={[
-              { label: t("sort-newest"), value: "newest" },
-              { label: t("sort-oldest"), value: "oldest" },
-              { label: t("sort-name-az"), value: "name_asc" },
-              { label: t("sort-name-za"), value: "name_desc" },
-            ]}
-            value={sortConfig}
-            onChange={setSortConfig}
-            className="w-full md:w-48"
-            prefix={<PiSortAscendingBold className="h-4 w-4" />}
-          />
+          <div className="flex gap-3 w-full md:w-auto">
+            <Select
+              options={[
+                { label: t("filter-all-status") || "All Status", value: "all" },
+                { label: t("filter-pending") || "Pending", value: String(BranchStatus.PENDING) },
+                { label: t("filter-approved") || "Approved", value: String(BranchStatus.APPROVED) },
+                { label: t("filter-rejected") || "Rejected", value: String(BranchStatus.REJECTED) },
+              ]}
+              value={statusFilter || { label: t("filter-all-status") || "All Status", value: "all" }}
+              onChange={setStatusFilter}
+              className="w-full md:w-48"
+              placeholder={t("filter-by-status") || "Filter by status"}
+            />
+            <Select
+              options={[
+                { label: t("sort-newest"), value: "newest" },
+                { label: t("sort-oldest"), value: "oldest" },
+                { label: t("sort-name-az"), value: "name_asc" },
+                { label: t("sort-name-za"), value: "name_desc" },
+              ]}
+              value={sortConfig}
+              onChange={setSortConfig}
+              className="w-full md:w-48"
+              prefix={<PiSortAscendingBold className="h-4 w-4" />}
+            />
+          </div>
         </div>
       )}
 

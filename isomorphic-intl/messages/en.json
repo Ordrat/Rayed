@@ -225,7 +225,12 @@
     "error-fetch-branches": "Failed to fetch branches",
     "error-fetch-branch": "Failed to fetch branch details",
     "error-approve-branch": "Failed to approve branch",
-    "error-reject-branch": "Failed to reject branch"
+    "error-reject-branch": "Failed to reject branch",
+    "filter-all-status": "All Status",
+    "filter-pending": "Pending",
+    "filter-approved": "Approved",
+    "filter-rejected": "Rejected",
+    "filter-by-status": "Filter by status"
   },
   "auth": {
     "auth-sign-in": "Sign In",

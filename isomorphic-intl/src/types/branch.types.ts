@@ -28,6 +28,16 @@ export interface ChangeBranchStatusRequest {
   status: BranchStatus;
 }
 
+export interface GetBranchesParams {
+  shopId?: string;
+  cityId?: string;
+  status?: BranchStatus;
+  isActive?: boolean;
+  isOpen?: boolean;
+  pageNumber?: number;
+  pageSize?: number;
+}
+
 // Enums
 export enum BranchStatus {
   PENDING = 0,

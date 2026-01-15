@@ -1895,7 +1895,12 @@
     "error-fetch-branches": "فشل في جلب الفروع",
     "error-fetch-branch": "فشل في جلب تفاصيل الفرع",
     "error-approve-branch": "فشل في الموافقة على الفرع",
-    "error-reject-branch": "فشل في رفض الفرع"
+    "error-reject-branch": "فشل في رفض الفرع",
+    "filter-all-status": "جميع الحالات",
+    "filter-pending": "قيد الانتظار",
+    "filter-approved": "تمت الموافقة",
+    "filter-rejected": "مرفوض",
+    "filter-by-status": "التصفية حسب الحالة"
   },
   "table": {
     "table-text-id": "بطاقة تعريف",
