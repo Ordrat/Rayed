@@ -26,27 +26,13 @@ export default function BoronHeader() {
         <Link
           href={"/"}
           aria-label="Site Logo"
-          className="me-4 w-9 shrink-0 text-gray-900 hover:text-gray-800 lg:me-5 xl:hidden"
+          className="me-2 shrink-0 text-gray-900 hover:text-gray-800 lg:me-5 xl:hidden"
         >
-          <Image
-            src={siteConfig.logo}
-            alt={siteConfig.title}
-            className="h-8 w-auto"
-            priority
-          />
+          <Image src={siteConfig.logo} alt={siteConfig.title} className="h-5 w-auto" priority />
         </Link>
         <div className="hidden w-[270px] xl:inline-block 2xl:w-72">
-          <Link
-            href={"/"}
-            aria-label="Site Logo"
-            className="w-[155px] text-gray-900 hover:text-gray-800"
-          >
-            <Image
-              src={siteConfig.logo}
-              alt={siteConfig.title}
-              className="max-w-[155px] h-auto"
-              priority
-            />
+          <Link href={"/"} aria-label="Site Logo" className="w-[155px] text-gray-900 hover:text-gray-800">
+            <Image src={siteConfig.logo} alt={siteConfig.title} className="max-w-[155px] h-auto" priority />
           </Link>
         </div>
 

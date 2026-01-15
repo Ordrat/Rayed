@@ -76,12 +76,9 @@ export default function AuthWrapperFour({
           >
             <div className="rounded-xl bg-white/80 p-6 shadow-md md:p-10">
               <div className="flex flex-col items-center">
-                <Link
-                  href={"/"}
-                  className="mb-7 inline-block max-w-[280px] lg:mb-9"
-                >
+                <div className="mb-7 inline-block max-w-[280px] lg:mb-9">
                   <Image src={siteConfig.logo} alt={siteConfig.title} />
-                </Link>
+                </div>
                 <Title
                   as="h2"
                   className="mb-7 text-center text-[28px] font-bold leading-snug md:text-3xl md:!leading-normal lg:mb-10 lg:text-4xl"
@@ -106,14 +103,14 @@ function AuthHeader() {
   const t = useTranslations("auth");
   return (
     <header className="flex items-center justify-between p-4 lg:px-16 lg:py-6 2xl:px-24">
-      <Link href={"/"}>
+      <div>
         <Image
           src={siteConfig.icon}
           alt={siteConfig.title}
           className="dark:invert max-w-[64px]"
           priority
         />
-      </Link>
+      </div>
       <div className="flex items-center space-x-2 md:space-x-4">
         <LanguageSwitcher />
         <AuthNavLink href={routes.auth.signIn}>
@@ -129,13 +126,6 @@ function AuthHeader() {
   );
 }
 
-const footerMenu = [
-  {
-    name: "home",
-    href: "/",
-  },
-];
-
 function AuthFooter() {
   const t = useTranslations("auth");
 
@@ -150,17 +140,6 @@ function AuthFooter() {
           {t("auth-redq")}
         </Link>
         , {t("auth-all-rights-reserved")}
-      </div>
-      <div className="-mx-2.5 flex items-center justify-end pb-3 font-medium text-gray-700 lg:w-1/2 lg:pb-0">
-        {footerMenu.map((item) => (
-          <Link
-            key={item.name}
-            href={item.href}
-            className="px-2.5 py-1.5 transition-colors hover:text-primary"
-          >
-            {t(item.name)}
-          </Link>
-        ))}
       </div>
     </footer>
   );

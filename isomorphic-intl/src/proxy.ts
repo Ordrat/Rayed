@@ -12,6 +12,8 @@ const publicRoutes = [
   "/auth/sign-in",
   "/auth/sign-up",
   "/auth/forgot-password-1",
+  "/auth/otp-1",
+  "/auth/set-password",
   "/auth/driver-signup",
   "/auth/seller-signup",
 ];
@@ -28,11 +30,43 @@ function middleware(req: NextRequest) {
     return NextResponse.next();
   }
 
+  // Get session token FIRST before any routing decisions
+  const sessionToken = req.cookies.get("next-auth.session-token")?.value ||
+                       req.cookies.get("__Secure-next-auth.session-token")?.value;
+
   // Extract language from pathname
   const localeMatch = routing.locales.find(
     (locale) => pathname.startsWith(`/${locale}/`) || pathname === `/${locale}`
   );
   const lang = localeMatch || routing.defaultLocale;
+
+  // Check if route is a public route (EXACT match only with language prefix)
+  const isPublicRoute = publicRoutes.some(route => {
+    const localizedRoute = `/${lang}${route}`;
+    return pathname === localizedRoute;
+  });
+
+  // Check if this is a root path (/, /en, /ar, etc.)
+  const isRootPath = pathname === "/" || pathname === `/${lang}` || pathname === `/${lang}/`;
+
+  // If user is trying to access ANY route without authentication (except public routes)
+  if (!sessionToken && !isPublicRoute) {
+    console.log(`🔒 No session token, redirecting to signin. Path: ${pathname}`);
+    const signinUrl = new URL(`/${lang}/auth/sign-in`, req.url);
+
+    // Set callback URL for protected routes
+    if (!pathname.includes('/sign-in') && !isRootPath) {
+      signinUrl.searchParams.set('callbackUrl', pathname);
+    }
+
+    return NextResponse.redirect(signinUrl);
+  }
+
+  // If it's a public route, allow access
+  if (isPublicRoute) {
+    console.log(`✅ Public route allowed: ${pathname}`);
+    return intlMiddleware(req);
+  }
 
   // Redirect URLs without language prefix
   const hasLanguagePrefix = routing.locales.some(
@@ -45,38 +79,8 @@ function middleware(req: NextRequest) {
     return NextResponse.redirect(redirectUrl);
   }
 
-  // Get refresh token from cookie (NextAuth stores it in the session token)
-  const sessionToken = req.cookies.get("next-auth.session-token")?.value ||
-                       req.cookies.get("__Secure-next-auth.session-token")?.value;
-
-  // Check if route is a public route (EXACT match only with language prefix)
-  const isPublicRoute = publicRoutes.some(route => {
-    const localizedRoute = `/${lang}${route}`;
-    return pathname === localizedRoute;
-  });
-
-  // Also check for root path without locale
-  const isRootPath = pathname === "/" || pathname === `/${lang}` || pathname === `/${lang}/`;
-
-  if (isPublicRoute || isRootPath) {
-    console.log(`✅ Public route allowed: ${pathname}`);
-    return intlMiddleware(req);
-  }
-
-  // Auth check - redirect to signin if no session token
-  if (!sessionToken) {
-    console.log(`🔒 No session token, redirecting to signin. Path: ${pathname}`);
-    const signinUrl = new URL(`/${lang}/auth/sign-in`, req.url);
-
-    // Only set callbackUrl if it's a valid protected route (not a malformed URL)
-    if (!pathname.includes('/sign-in/') && pathname !== `/${lang}/auth/sign-in`) {
-      signinUrl.searchParams.set('callbackUrl', pathname);
-    }
-
-    return NextResponse.redirect(signinUrl);
-  }
-
   // User is authenticated, proceed with intl middleware
+  console.log(`✅ Authenticated user accessing: ${pathname}`);
   return intlMiddleware(req);
 }
 
@@ -84,5 +88,13 @@ function middleware(req: NextRequest) {
 export default middleware;
 
 export const config = {
-  matcher: ["/((?!api|_next|.*\\..*).*)"],
+  // Match all paths except static files, images, and Next.js internals
+  matcher: [
+    /*
+     * Match all request paths except for:
+     * - _next (Next.js internals)
+     * - Static files (images, fonts, etc.)
+     */
+    "/((?!_next/static|_next/image|favicon.ico|.*\\.(?:svg|png|jpg|jpeg|gif|webp|ico|woff|woff2|ttf|eot)$).*)",
+  ],
 };
