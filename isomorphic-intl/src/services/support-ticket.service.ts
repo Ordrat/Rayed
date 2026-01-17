@@ -1,8 +1,9 @@
 /**
  * Support Ticket Service
  * Handles all support ticket API operations
- * 
+ *
  * API Endpoints:
+ * - POST /api/SupportTicket/CreateSupportTicket - Create new ticket (auto-assigns to agent)
  * - GET /api/SupportTicket/GetAllSupportTickets/all - Get all tickets (Admin)
  * - GET /api/SupportTicket/GetSupportTickets/support - Get tickets (Support Agent)
  * - GET /api/SupportTicket/GetUserSupportTickets/user - Get tickets for current user
@@ -17,6 +18,7 @@
 import { apiRequest } from '@/lib/api-client';
 import {
   SupportTicket,
+  CreateTicketRequest,
   UpdateTicketRequest,
   CloseTicketRequest,
   TicketAction,
@@ -35,6 +37,35 @@ export interface TicketFilters {
   priority?: number; // 1-4
   pageNumber?: number;
   pageSize?: number;
+}
+
+/**
+ * Create a new support ticket
+ * The backend will automatically assign it to an available agent
+ * Uses: POST /api/SupportTicket/CreateSupportTicket
+ */
+export async function createSupportTicket(
+  data: CreateTicketRequest,
+  token: string
+): Promise<SupportTicket> {
+  console.log('[Support] Creating ticket:', data);
+  try {
+    const result = await apiRequest<SupportTicket>(`${BASE_URL}/CreateSupportTicket`, {
+      method: 'POST',
+      body: JSON.stringify(data),
+      token,
+    });
+    console.log('[Support] Ticket created successfully:', {
+      id: result.id,
+      ticketNumber: result.ticketNumber,
+      assignedToSupportId: result.assignedToSupportId,
+      status: result.status
+    });
+    return result;
+  } catch (error: any) {
+    console.error('[Support] Failed to create ticket:', error?.message || error);
+    throw error;
+  }
 }
 
 /**
@@ -207,11 +238,24 @@ export async function closeSupportTicket(
   data: CloseTicketRequest,
   token: string
 ): Promise<SupportTicket> {
-  return apiRequest<SupportTicket>(`${BASE_URL}/CloseSupportTicket/${ticketId}/close`, {
-    method: 'POST',
-    body: JSON.stringify(data),
-    token,
-  });
+  console.log('[Support] Closing ticket:', { ticketId, data });
+  try {
+    const result = await apiRequest<SupportTicket>(`${BASE_URL}/CloseSupportTicket/${ticketId}/close`, {
+      method: 'POST',
+      body: JSON.stringify(data),
+      token,
+    });
+    console.log('[Support] Ticket closed successfully:', result.id);
+    return result;
+  } catch (error: any) {
+    console.error('[Support] Failed to close ticket:', {
+      ticketId,
+      error: error?.message || error,
+      data: error?.data,
+      status: error?.status
+    });
+    throw error;
+  }
 }
 
 /**

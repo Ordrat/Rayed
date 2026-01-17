@@ -25,8 +25,6 @@ const messaging = firebase.messaging();
 
 // Handle background messages
 messaging.onBackgroundMessage((payload) => {
-  console.log('[FCM SW] Received background message:', payload);
-
   const notificationTitle = payload.notification?.title || 'New Notification';
   const notificationOptions = {
     body: payload.notification?.body || '',
@@ -67,8 +65,6 @@ messaging.onBackgroundMessage((payload) => {
 
 // Handle notification click
 self.addEventListener('notificationclick', (event) => {
-  console.log('[FCM SW] Notification clicked:', event);
-  
   event.notification.close();
 
   const action = event.action;
@@ -79,7 +75,7 @@ self.addEventListener('notificationclick', (event) => {
   }
 
   // Focus on existing window or open new one
-  const urlToOpen = data?.ticketId 
+  const urlToOpen = data?.ticketId
     ? `/en/support-dashboard/chat/${data.ticketId}`
     : '/en/support-dashboard';
 
@@ -106,12 +102,10 @@ self.addEventListener('notificationclick', (event) => {
 
 // Handle service worker installation
 self.addEventListener('install', (event) => {
-  console.log('[FCM SW] Service Worker installing...');
   self.skipWaiting();
 });
 
 // Handle service worker activation
 self.addEventListener('activate', (event) => {
-  console.log('[FCM SW] Service Worker activated');
   event.waitUntil(clients.claim());
 });

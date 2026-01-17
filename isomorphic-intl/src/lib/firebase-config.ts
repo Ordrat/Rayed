@@ -64,7 +64,6 @@ export async function getFirebaseMessaging(): Promise<Messaging | null> {
   try {
     const supported = await isSupported();
     if (!supported) {
-      console.warn('[Firebase] Messaging is not supported in this browser');
       return null;
     }
 
@@ -77,14 +76,13 @@ export async function getFirebaseMessaging(): Promise<Messaging | null> {
         });
         await navigator.serviceWorker.ready;
       } catch (err) {
-        console.error('[Firebase] SW registration failed:', err);
+        // Service worker registration failed
       }
     }
 
     messaging = getMessaging(getFirebaseApp());
     return messaging;
   } catch (error) {
-    console.error('[Firebase] Error initializing Firebase Messaging:', error);
     return null;
   }
 }
@@ -104,14 +102,12 @@ export async function getFirebaseAnalytics(): Promise<Analytics | null> {
   try {
     const supported = await isAnalyticsSupported();
     if (!supported) {
-      console.warn('Firebase Analytics is not supported in this browser');
       return null;
     }
 
     analytics = getAnalytics(getFirebaseApp());
     return analytics;
   } catch (error) {
-    console.error('Error initializing Firebase Analytics:', error);
     return null;
   }
 }

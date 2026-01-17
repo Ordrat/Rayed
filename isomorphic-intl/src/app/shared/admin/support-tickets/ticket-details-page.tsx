@@ -105,13 +105,19 @@ export default function TicketDetailsPage() {
     try {
       const updated = await closeSupportTicket(
         ticketId,
-        { archiveMessages: true, deleteFirebaseChat: false },
+        {
+          archiveMessages: true,
+          deleteFirebaseChat: false,
+          closureNotes: 'Ticket closed by admin',
+        },
         session?.accessToken || ""
       );
       setTicket(updated);
       toast.success(lang === "ar" ? "تم إغلاق التذكرة" : "Ticket closed successfully");
     } catch (error: any) {
-      toast.error(error.message || "Failed to close ticket");
+      console.error('[Admin] Close ticket error:', error);
+      const errorMessage = error?.message || error?.data?.error || "Failed to close ticket";
+      toast.error(errorMessage);
     } finally {
       setIsClosing(false);
     }

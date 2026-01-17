@@ -9,12 +9,41 @@ const withNextIntl = createNextIntlPlugin();
 
 /** @type {import('next').NextConfig} */
 const nextConfig = {
+  experimental: {
+    // Enable Turbopack filesystem caching for faster dev server
+    turbopackFileSystemCacheForDev: true,
+    // Optimize barrel file imports for heavy packages
+    optimizePackageImports: [
+      "react-icons",
+      "react-icons/fa",
+      "react-icons/fa6",
+      "react-icons/pi",
+      "react-icons/bi",
+      "react-icons/tb",
+      "react-icons/ri",
+      "react-icons/io",
+      "react-icons/io5",
+      "react-icons/hi",
+      "react-icons/hi2",
+      "react-icons/md",
+      "react-icons/bs",
+      "react-icons/lu",
+      "lodash",
+      "recharts",
+      "rizzui",
+      "@headlessui/react",
+      "@tanstack/react-table",
+      "motion",
+      "dayjs",
+      "date-fns",
+    ],
+  },
   async rewrites() {
     return {
       beforeFiles: [
         {
-          source: '/firebase-messaging-sw.js',
-          destination: '/firebase-messaging-sw.js',
+          source: "/firebase-messaging-sw.js",
+          destination: "/firebase-messaging-sw.js",
           locale: false,
         },
       ],
@@ -23,19 +52,19 @@ const nextConfig = {
   async headers() {
     return [
       {
-        source: '/firebase-messaging-sw.js',
+        source: "/firebase-messaging-sw.js",
         headers: [
           {
-            key: 'Service-Worker-Allowed',
-            value: '/',
+            key: "Service-Worker-Allowed",
+            value: "/",
           },
           {
-            key: 'Content-Type',
-            value: 'application/javascript; charset=utf-8',
+            key: "Content-Type",
+            value: "application/javascript; charset=utf-8",
           },
           {
-            key: 'Cache-Control',
-            value: 'no-cache, no-store, must-revalidate',
+            key: "Cache-Control",
+            value: "no-cache, no-store, must-revalidate",
           },
         ],
       },

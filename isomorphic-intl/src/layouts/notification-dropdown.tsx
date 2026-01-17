@@ -10,7 +10,7 @@ import { Link } from "@/i18n/routing";
 import { useMedia } from "@core/hooks/use-media";
 import dayjs from "dayjs";
 import relativeTime from "dayjs/plugin/relativeTime";
-import { ReactElement, RefObject, useState, useCallback } from "react";
+import { ReactElement, RefObject, useState, useCallback, useEffect } from "react";
 import { PiArrowsClockwiseBold, PiCheck, PiBellSimple, PiChatCircleText, PiTicket, PiUserCircle } from "react-icons/pi";
 import { Badge, Checkbox, Popover, Text, Title, Loader } from "rizzui";
 import { useFirebaseNotifications } from "@/hooks/use-firebase-notifications";
@@ -52,24 +52,45 @@ function getNotificationLink(notification: FirebaseNotification): string {
 function NotificationsList({ setIsOpen }: { setIsOpen: React.Dispatch<React.SetStateAction<boolean>> }) {
   const locale = useLocale();
   const lang = locale === "ar" ? "ar" : "en";
-  const { notifications, isLoading, markAsRead, markAllAsRead, unreadCount, error, refresh, reRegisterFcm } =
+  const { notifications, markAsRead, markAllAsRead, unreadCount, clearNotifications, reRegisterFcm, fcmRegistered } =
     useFirebaseNotifications();
   const [isRefreshing, setIsRefreshing] = useState(false);
 
-  // Log notifications whenever they change
-  console.log('[NotificationDropdown] Current notifications:', notifications.length, 'Unread:', unreadCount);
-  console.log('[NotificationDropdown] Notifications list:', notifications);
+  // Debug log on mount
+  useEffect(() => {
+    console.log(
+      "%c[Notification Dropdown]",
+      "background: #9C27B0; color: white; padding: 2px 4px; border-radius: 2px;",
+      "Mounted with:",
+      {
+        fcmRegistered,
+        notificationCount: notifications.length,
+        unreadCount,
+      },
+    );
+  }, [fcmRegistered, notifications.length, unreadCount]);
 
   const handleRefresh = useCallback(async () => {
+    console.log(
+      "%c[Notification Dropdown]",
+      "background: #9C27B0; color: white; padding: 2px 4px; border-radius: 2px;",
+      "Refreshing FCM...",
+    );
     setIsRefreshing(true);
     try {
-      // Also re-register FCM token on manual refresh to ensure backend has it
-      await reRegisterFcm();
-      await refresh();
+      // Re-register FCM token to ensure backend has latest token
+      const result = await reRegisterFcm();
+      console.log(
+        "%c[Notification Dropdown]",
+        "background: #9C27B0; color: white; padding: 2px 4px; border-radius: 2px;",
+        "FCM refresh result:",
+        result,
+      );
+      clearNotifications();
     } finally {
       setIsRefreshing(false);
     }
-  }, [reRegisterFcm, refresh]);
+  }, [reRegisterFcm, clearNotifications]);
 
   const handleMarkAllAsRead = useCallback(() => {
     markAllAsRead();
@@ -77,43 +98,38 @@ function NotificationsList({ setIsOpen }: { setIsOpen: React.Dispatch<React.SetS
 
   const handleNotificationClick = useCallback(
     (notification: FirebaseNotification) => {
-      console.log('[NotificationDropdown] Notification clicked:', notification.id, 'isRead:', notification.isRead);
       if (!notification.isRead) {
-        console.log('[NotificationDropdown] Calling markAsRead...');
         markAsRead(notification.id);
-      } else {
-        console.log('[NotificationDropdown] Notification already read, skipping');
       }
       setIsOpen(false);
     },
-    [markAsRead, setIsOpen]
+    [markAsRead, setIsOpen],
   );
-
-  if (isLoading) {
-    return (
-      <div className="w-[320px] sm:w-[360px] 2xl:w-[420px] flex items-center justify-center py-12">
-        <Loader size="lg" />
-      </div>
-    );
-  }
 
   return (
     <div className="text-left rtl:text-right">
       <div className="mb-3 flex items-center justify-between px-4 py-3 border-b border-gray-100 dark:border-gray-800">
-        <Title as="h5" fontWeight="semibold">
-          {lang === "ar" ? "الإشعارات" : "Notifications"}
-          {unreadCount > 0 && (
-            <Badge size="sm" color="primary" className="ms-2">
-              {unreadCount}
-            </Badge>
-          )}
-        </Title>
+        <div className="flex items-center gap-2">
+          <Title as="h5" fontWeight="semibold">
+            {lang === "ar" ? "الإشعارات" : "Notifications"}
+            {unreadCount > 0 && (
+              <Badge size="sm" color="primary" className="ms-2">
+                {unreadCount}
+              </Badge>
+            )}
+          </Title>
+          {/* FCM Status Indicator */}
+          <div
+            className={`w-2 h-2 rounded-full ${fcmRegistered ? "bg-green-500" : "bg-red-500"}`}
+            title={fcmRegistered ? "FCM Connected" : "FCM Not Connected - Click refresh"}
+          />
+        </div>
         <div className="flex items-center gap-2">
           <button
             onClick={handleRefresh}
             disabled={isRefreshing}
             className={`text-sm text-gray-500 hover:text-primary transition-transform ${isRefreshing ? "animate-spin" : ""}`}
-            title={lang === "ar" ? "تحديث" : "Refresh"}
+            title={lang === "ar" ? "تحديث الاتصال" : "Refresh FCM Connection"}
           >
             <PiArrowsClockwiseBold className="h-4 w-4" />
           </button>
@@ -125,12 +141,14 @@ function NotificationsList({ setIsOpen }: { setIsOpen: React.Dispatch<React.SetS
         </div>
       </div>
 
-      {error && (
-        <div className="mx-4 mb-3 rounded-md bg-red-50 p-2 text-center text-sm text-red-600">
-          {lang === "ar" ? "فشل تحميل الإشعارات" : "Failed to load notifications"}
-          <button onClick={handleRefresh} className="ms-2 underline">
-            {lang === "ar" ? "إعادة المحاولة" : "Retry"}
-          </button>
+      {/* Debug info strip - only visible in development */}
+      {process.env.NODE_ENV === "development" && (
+        <div className="px-4 py-1 bg-gray-50 dark:bg-gray-800 text-xs text-gray-400 flex items-center gap-2 border-b border-gray-100 dark:border-gray-700">
+          <span className={fcmRegistered ? "text-green-500" : "text-red-500"}>FCM: {fcmRegistered ? "✓" : "✗"}</span>
+          <span>|</span>
+          <span>Count: {notifications.length}</span>
+          <span>|</span>
+          <span>Unread: {unreadCount}</span>
         </div>
       )}
 
@@ -139,6 +157,11 @@ function NotificationsList({ setIsOpen }: { setIsOpen: React.Dispatch<React.SetS
           <div className="py-12 text-center text-gray-400">
             <PiBellSimple className="mx-auto h-12 w-12 mb-2 opacity-50" />
             <Text>{lang === "ar" ? "لا توجد إشعارات" : "No notifications"}</Text>
+            {!fcmRegistered && (
+              <Text className="text-xs mt-2 text-red-400">
+                {lang === "ar" ? "FCM غير متصل - انقر على زر التحديث" : "FCM not connected - Click refresh button"}
+              </Text>
+            )}
           </div>
         ) : (
           <div className="grid cursor-pointer grid-cols-1 gap-1 px-2">
