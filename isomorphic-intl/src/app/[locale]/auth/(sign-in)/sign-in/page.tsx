@@ -1,14 +1,14 @@
 import SignInForm from "./sign-in-form";
 import AuthWrapperFour from "@/app/shared/auth-layout/auth-wrapper-four";
 import { metaObject } from "@/config/site.config";
-import { useTranslations } from "next-intl";
+import { getTranslations } from "next-intl/server";
 
 export const metadata = {
   ...metaObject("Sign In"),
 };
 
-export default function SignIn() {
-  const t = useTranslations("auth");
+export default async function SignIn() {
+  const t = await getTranslations("auth");
   return (
     <AuthWrapperFour
       title={

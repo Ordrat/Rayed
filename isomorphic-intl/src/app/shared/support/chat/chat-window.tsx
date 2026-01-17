@@ -17,6 +17,7 @@ import { ChatInput } from "./chat-input";
 import { ChatHeader } from "./chat-header";
 import { Loader } from "rizzui";
 import { PiChatCircleTextLight } from "react-icons/pi";
+import notificationAudio from "@/lib/audio-context";
 
 interface ChatWindowProps {
   ticket: SupportTicket;
@@ -28,30 +29,6 @@ interface ChatWindowProps {
   onClose?: () => void;
   className?: string;
   readOnly?: boolean;
-}
-
-// Play notification sound using Web Audio API
-function playNotificationSound() {
-  try {
-    const audioContext = new (window.AudioContext || (window as any).webkitAudioContext)();
-    const oscillator = audioContext.createOscillator();
-    const gainNode = audioContext.createGain();
-
-    oscillator.connect(gainNode);
-    gainNode.connect(audioContext.destination);
-
-    // Pleasant notification tone
-    oscillator.frequency.value = 800;
-    oscillator.type = "sine";
-
-    gainNode.gain.setValueAtTime(0.3, audioContext.currentTime);
-    gainNode.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + 0.5);
-
-    oscillator.start(audioContext.currentTime);
-    oscillator.stop(audioContext.currentTime + 0.5);
-  } catch (e) {
-    // Audio not available or blocked - silently ignore
-  }
 }
 
 export function ChatWindow({
@@ -84,7 +61,7 @@ export function ChatWindow({
     (message: ChatMessage) => {
       // Only play sound for messages from the other party
       if (!isOwnMessage(message.senderType)) {
-        playNotificationSound();
+        notificationAudio.playNotificationSound();
       }
     },
     [isOwnMessage]
@@ -103,14 +80,25 @@ export function ChatWindow({
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
   }, [messages, isOtherTyping]);
 
-  // Mark messages as read once when chat loads
-  // The hook handles preventing duplicate calls
-  const hasMessages = messages.length > 0;
+  // Auto mark messages as read when new messages arrive
   useEffect(() => {
-    if (hasMessages) {
+    const messageCount = messages.length;
+
+    // Skip if no messages or if this is the initial load
+    if (messageCount === 0) {
+      console.log('[ChatWindow] No messages to mark as read');
+      return;
+    }
+
+    // Mark as read when:
+    // 1. Initial load (lastMessageCountRef is 0)
+    // 2. New messages arrive (count increases)
+    if (lastMessageCountRef.current === 0 || messageCount > lastMessageCountRef.current) {
+      console.log('[ChatWindow] New messages detected, marking as read. Previous:', lastMessageCountRef.current, 'Current:', messageCount);
+      lastMessageCountRef.current = messageCount;
       markAsRead();
     }
-  }, [hasMessages, markAsRead]); // Only trigger when messages exist
+  }, [messages, markAsRead]);
 
   return (
     <div

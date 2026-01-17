@@ -774,6 +774,9 @@
                     });
 
                     scrollToBottom();
+
+                    // Auto-mark messages from the other party as read
+                    window.autoMarkAsRead();
                 } else {
                     console.log('📭 No messages found');
                 }
@@ -1191,75 +1194,74 @@
 
         async function markAsRead() {
             const chatId = window.currentChatId;
+            const apiUrl = document.getElementById('apiUrl').value;
+            const token = document.getElementById('authToken').value;
 
-            if (!chatId || !window.firebaseDb) {
+            if (!chatId) {
                 console.log('Cannot mark as read - not connected');
                 return;
             }
 
+            if (!token) {
+                console.log('Cannot mark as read - no auth token');
+                return;
+            }
+
             try {
-                console.log(`📖 Marking messages as read directly in Firebase...`);
+                console.log(`📖 Marking messages as read via API...`);
 
-                // Get all messages
-                const messagesRef = ref(window.firebaseDb, `support_chats/${chatId}/messages`);
-                const snapshot = await get(messagesRef);
-
-                if (!snapshot.exists()) {
-                    console.log('No messages to mark as read');
-                    return;
-                }
-
-                const messages = snapshot.val();
-                const updates = {};
-                let count = 0;
-
-                // Find unread messages from support (if we're customer) or from customer (if we're support)
-                Object.entries(messages).forEach(([msgId, msg]) => {
-                    const isRead = msg.IsRead ?? msg.isRead ?? false;
-                    const senderType = msg.SenderType ?? msg.senderType ?? 0;
-
-                    // Mark messages from the other party as read
-                    if (!isRead) {
-                        if (window.currentUserType === 'customer' && senderType === 1) {
-                            // Customer marking support messages as read
-                            updates[`support_chats/${chatId}/messages/${msgId}/IsRead`] = true;
-                            count++;
-                        } else if (window.currentUserType === 'support' && senderType === 0) {
-                            // Support marking customer messages as read
-                            updates[`support_chats/${chatId}/messages/${msgId}/IsRead`] = true;
-                            count++;
-                        }
+                // Use the backend API to mark messages as read
+                // The API will update Firebase with proper permissions
+                const response = await fetch(`${apiUrl}/FirebaseChat/messages/read?chatId=${encodeURIComponent(chatId)}`, {
+                    method: 'PUT',
+                    headers: {
+                        'Authorization': `Bearer ${token}`,
+                        'Content-Type': 'application/json'
                     }
                 });
 
-                if (count === 0) {
-                    console.log('No unread messages to mark');
-                    return;
+                if (!response.ok) {
+                    throw new Error(`HTTP ${response.status}`);
                 }
 
-                // Update Firebase directly
-                await update(ref(window.firebaseDb), updates);
-                console.log(`✅ Marked ${count} messages as read in Firebase`);
+                console.log(`✅ Messages marked as read via API`);
 
-                // Update UI
+                // Update UI immediately for better UX
+                // The Firebase listener will also update, but this is faster
                 document.querySelectorAll('.read-indicator.sent').forEach(el => {
                     el.textContent = '✓✓';
                     el.className = 'read-indicator read';
                 });
 
             } catch (error) {
-                console.error('❌ Error marking as read in Firebase:', error);
+                console.error('❌ Error marking as read via API:', error);
             }
         }
 
         // Auto mark messages as read when they are displayed
         window.autoMarkAsRead = function () {
-            if (window.currentChatId && window.firebaseDb) {
+            if (window.currentChatId) {
                 // Debounce to avoid too many calls
                 clearTimeout(window.markAsReadTimeout);
                 window.markAsReadTimeout = setTimeout(() => markAsRead(), 500);
             }
         };
+
+        // Mark messages as read when page becomes visible
+        document.addEventListener('visibilitychange', function () {
+            if (!document.hidden && window.currentChatId) {
+                console.log('📖 Page visible, marking messages as read...');
+                window.autoMarkAsRead();
+            }
+        });
+
+        // Also mark as read when window gains focus
+        window.addEventListener('focus', function () {
+            if (window.currentChatId) {
+                console.log('📖 Window focused, marking messages as read...');
+                window.autoMarkAsRead();
+            }
+        });
 
         function handleTyping() {
             updateTyping(true);

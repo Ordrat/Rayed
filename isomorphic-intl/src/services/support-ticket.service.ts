@@ -54,35 +54,28 @@ export async function getAllTickets(
   params.append('pageSize', (filters?.pageSize || 100).toString());
   
   const endpoint = `${BASE_URL}/GetAllSupportTickets/all?${params}`;
-  console.log('[SupportTicket] Admin fetching all tickets from:', endpoint);
-  
+
   const result = await apiRequest<SupportTicket[] | { items?: SupportTicket[]; tickets?: SupportTicket[] }>(endpoint, {
     method: 'GET',
     token,
   });
-  
-  console.log('[SupportTicket] Admin API Response:', result);
-  
-  // Handle different response formats: direct array, { items: [...] }, or { tickets: [...] }
+
+  // Handle different response formats
   let tickets: SupportTicket[];
   if (Array.isArray(result)) {
     tickets = result;
   } else if (result && typeof result === 'object') {
-    // Check for 'items' or 'tickets' property
     if ('items' in result && Array.isArray(result.items)) {
       tickets = result.items;
     } else if ('tickets' in result && Array.isArray(result.tickets)) {
       tickets = result.tickets;
     } else {
-      console.warn('[SupportTicket] Unexpected response format:', result);
       tickets = [];
     }
   } else {
-    console.warn('[SupportTicket] Unexpected response format:', result);
     tickets = [];
   }
-  
-  console.log('[SupportTicket] Tickets count:', tickets.length);
+
   return tickets;
 }
 
@@ -103,35 +96,28 @@ export async function getSupportAgentTickets(
   params.append('pageSize', (filters?.pageSize || 100).toString());
   
   const endpoint = `${BASE_URL}/GetSupportTickets/support?${params}`;
-  console.log('[SupportTicket] Support agent fetching tickets from:', endpoint);
-  
+
   const result = await apiRequest<SupportTicket[] | { items?: SupportTicket[]; tickets?: SupportTicket[] }>(endpoint, {
     method: 'GET',
     token,
   });
-  
-  console.log('[SupportTicket] Support agent API Response:', result);
-  
-  // Handle different response formats: direct array, { items: [...] }, or { tickets: [...] }
+
+  // Handle different response formats
   let tickets: SupportTicket[];
   if (Array.isArray(result)) {
     tickets = result;
   } else if (result && typeof result === 'object') {
-    // Check for 'items' or 'tickets' property
     if ('items' in result && Array.isArray(result.items)) {
       tickets = result.items;
     } else if ('tickets' in result && Array.isArray(result.tickets)) {
       tickets = result.tickets;
     } else {
-      console.warn('[SupportTicket] Unexpected response format:', result);
       tickets = [];
     }
   } else {
-    console.warn('[SupportTicket] Unexpected response format:', result);
     tickets = [];
   }
-  
-  console.log('[SupportTicket] Tickets count:', tickets.length);
+
   return tickets;
 }
 
@@ -150,35 +136,28 @@ export async function getUserSupportTickets(
   });
   
   const endpoint = `${BASE_URL}/GetUserSupportTickets/user?${params}`;
-  console.log('[SupportTicket] Fetching user tickets from:', endpoint);
-  
+
   const result = await apiRequest<SupportTicket[] | { items?: SupportTicket[]; tickets?: SupportTicket[] }>(endpoint, {
     method: 'GET',
     token,
   });
-  
-  console.log('[SupportTicket] API Response:', result);
-  
-  // Handle different response formats: direct array, { items: [...] }, or { tickets: [...] }
+
+  // Handle different response formats
   let tickets: SupportTicket[];
   if (Array.isArray(result)) {
     tickets = result;
   } else if (result && typeof result === 'object') {
-    // Check for 'items' or 'tickets' property
     if ('items' in result && Array.isArray(result.items)) {
       tickets = result.items;
     } else if ('tickets' in result && Array.isArray(result.tickets)) {
       tickets = result.tickets;
     } else {
-      console.warn('[SupportTicket] Unexpected response format:', result);
       tickets = [];
     }
   } else {
-    console.warn('[SupportTicket] Unexpected response format:', result);
     tickets = [];
   }
-  
-  console.log('[SupportTicket] Tickets count:', tickets.length);
+
   return tickets;
 }
 
@@ -293,9 +272,17 @@ export async function assignTicketToAgent(
   supportAgentId: string,
   token: string
 ): Promise<SupportTicket> {
-  return updateSupportTicket(
-    ticketId,
-    { assignedToSupportId: supportAgentId },
-    token
-  );
+  console.log('[Support] Assigning ticket:', { ticketId, supportAgentId });
+  try {
+    const result = await updateSupportTicket(
+      ticketId,
+      { assignedToSupportId: supportAgentId },
+      token
+    );
+    console.log('[Support] Ticket assigned successfully');
+    return result;
+  } catch (error: any) {
+    console.error('[Support] Failed to assign ticket:', error?.message || error);
+    throw error;
+  }
 }

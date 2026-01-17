@@ -56,6 +56,10 @@ function NotificationsList({ setIsOpen }: { setIsOpen: React.Dispatch<React.SetS
     useFirebaseNotifications();
   const [isRefreshing, setIsRefreshing] = useState(false);
 
+  // Log notifications whenever they change
+  console.log('[NotificationDropdown] Current notifications:', notifications.length, 'Unread:', unreadCount);
+  console.log('[NotificationDropdown] Notifications list:', notifications);
+
   const handleRefresh = useCallback(async () => {
     setIsRefreshing(true);
     try {
@@ -73,8 +77,12 @@ function NotificationsList({ setIsOpen }: { setIsOpen: React.Dispatch<React.SetS
 
   const handleNotificationClick = useCallback(
     (notification: FirebaseNotification) => {
+      console.log('[NotificationDropdown] Notification clicked:', notification.id, 'isRead:', notification.isRead);
       if (!notification.isRead) {
+        console.log('[NotificationDropdown] Calling markAsRead...');
         markAsRead(notification.id);
+      } else {
+        console.log('[NotificationDropdown] Notification already read, skipping');
       }
       setIsOpen(false);
     },

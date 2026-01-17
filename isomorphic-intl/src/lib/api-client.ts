@@ -69,16 +69,16 @@ export async function apiRequest<T>(
 
     if (!response.ok) {
       // Log detailed error information for debugging
-      // console.error('API Error Details:', {
-      //   url,
-      //   status: response.status,
-      //   statusText: response.statusText,
-      //   data,
-      // });
+      console.error('API Error Details:', {
+        url,
+        status: response.status,
+        statusText: response.statusText,
+        data,
+      });
 
-      const errorMessage = 
-        data?.detail || 
-        data?.title || 
+      const errorMessage =
+        data?.detail ||
+        data?.title ||
         data?.message ||
         data?.error ||
         `HTTP ${response.status}: ${response.statusText}` ||

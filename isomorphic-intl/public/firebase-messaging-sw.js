@@ -17,7 +17,7 @@ firebase.initializeApp({
   projectId: "rayed-586e3",
   storageBucket: "rayed-586e3.firebasestorage.app",
   messagingSenderId: "716889335600",
-  appId: "1:716889335600:web:e180a50322962a3d2ccaf5",
+  appId: "1:716889335600:web:0ebd920e7a446d072ccaf5",
 });
 
 // Retrieve an instance of Firebase Messaging
@@ -47,6 +47,20 @@ messaging.onBackgroundMessage((payload) => {
       },
     ],
   };
+
+  // Send message to all clients to update their notification state
+  self.clients.matchAll({ type: 'window', includeUncontrolled: true }).then((clients) => {
+    clients.forEach((client) => {
+      client.postMessage({
+        type: 'FCM_NOTIFICATION_RECEIVED',
+        notification: {
+          title: notificationTitle,
+          body: notificationOptions.body,
+          data: payload.data,
+        },
+      });
+    });
+  });
 
   return self.registration.showNotification(notificationTitle, notificationOptions);
 });

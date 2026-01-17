@@ -12,6 +12,7 @@ import {
 } from '@/types/firebase-chat.types';
 import { getToken, onMessage, Messaging } from 'firebase/messaging';
 import { getFirebaseMessaging } from '@/lib/firebase-config';
+import notificationAudio from '@/lib/audio-context';
 
 const BASE_URL = '/api/FirebaseNotification';
 
@@ -25,11 +26,19 @@ export async function updateFcmToken(
   data: UpdateFcmTokenRequest,
   token: string
 ): Promise<void> {
-  return apiRequest<void>(`${BASE_URL}/update-token`, {
-    method: 'POST',
-    body: JSON.stringify(data),
-    token,
-  });
+  console.log('[FCM] Updating token for user:', data.userId, 'Token length:', data.fcmToken.length);
+  try {
+    const result = await apiRequest<void>(`${BASE_URL}/update-token`, {
+      method: 'POST',
+      body: JSON.stringify(data),
+      token,
+    });
+    console.log('[FCM] Token update successful');
+    return result;
+  } catch (error: any) {
+    console.error('[FCM] Token update failed:', error?.message || error);
+    throw error;
+  }
 }
 
 /**
@@ -52,41 +61,31 @@ export async function validateFcmToken(
 export async function getUserNotifications(
   token: string
 ): Promise<FirebaseNotification[]> {
-  console.log('[Notifications] Fetching notifications from API...');
-
   try {
     const result = await apiRequest<FirebaseNotification[] | { notifications?: FirebaseNotification[]; items?: FirebaseNotification[]; data?: FirebaseNotification[] }>(`${BASE_URL}/user`, {
       method: 'GET',
       token,
     });
 
-    console.log('[Notifications] API response:', result);
-
     // Handle different response formats
     if (Array.isArray(result)) {
-      console.log('[Notifications] Got array with', result.length, 'notifications');
       return result;
     } else if (result && typeof result === 'object') {
       if ('notifications' in result && Array.isArray(result.notifications)) {
-        console.log('[Notifications] Got notifications property with', result.notifications.length, 'items');
         return result.notifications;
       }
       if ('items' in result && Array.isArray(result.items)) {
-        console.log('[Notifications] Got items property with', result.items.length, 'items');
         return result.items;
       }
       if ('data' in result && Array.isArray(result.data)) {
-        console.log('[Notifications] Got data property with', result.data.length, 'items');
         return result.data;
       }
     }
 
-    console.warn('[Notifications] Unexpected response format:', typeof result, result);
     return [];
   } catch (error: any) {
-    console.error('[Notifications] Failed to fetch notifications:', error?.message || error);
-    console.error('[Notifications] Full error:', error);
-    throw error; // Re-throw so the caller can handle it
+    console.error('[Notifications] Failed to fetch:', error?.message || error);
+    throw error;
   }
 }
 
@@ -97,11 +96,19 @@ export async function markNotificationAsRead(
   data: MarkNotificationReadRequest,
   token: string
 ): Promise<void> {
-  return apiRequest<void>(`${BASE_URL}/mark-read`, {
-    method: 'POST',
-    body: JSON.stringify(data),
-    token,
-  });
+  console.log('[Notifications] Marking as read:', data);
+  try {
+    const result = await apiRequest<void>(`${BASE_URL}/mark-read`, {
+      method: 'POST',
+      body: JSON.stringify(data),
+      token,
+    });
+    console.log('[Notifications] Mark as read successful');
+    return result;
+  } catch (error: any) {
+    console.error('[Notifications] Mark as read failed:', error?.message || error);
+    throw error;
+  }
 }
 
 /**
@@ -109,53 +116,69 @@ export async function markNotificationAsRead(
  * This is a client-side only function
  */
 export async function requestNotificationPermission(): Promise<string | null> {
-  console.log('[FCM] requestNotificationPermission called');
-
   if (typeof window === 'undefined') {
-    console.warn('[FCM] Cannot request notification permission on server');
     return null;
   }
 
   if (!('Notification' in window)) {
-    console.warn('[FCM] Notifications not supported in this browser');
+    console.warn('[FCM] Notifications not supported');
     return null;
   }
-
-  console.log('[FCM] Current notification permission:', Notification.permission);
 
   try {
     // Request permission
     const permission = await Notification.requestPermission();
-    console.log('[FCM] Permission after request:', permission);
-
     if (permission !== 'granted') {
-      console.warn('[FCM] Notification permission denied:', permission);
+      console.warn('[FCM] Permission denied:', permission);
       return null;
     }
 
-    // Get Firebase Messaging instance
-    console.log('[FCM] Getting Firebase Messaging instance...');
+    // Get Firebase Messaging instance (this also registers the service worker)
     const messaging = await getFirebaseMessaging();
     if (!messaging) {
-      console.warn('[FCM] Firebase Messaging not available');
+      console.warn('[FCM] Messaging not available');
       return null;
     }
-    console.log('[FCM] Firebase Messaging instance obtained');
 
-    // Get FCM token
-    console.log('[FCM] VAPID_KEY configured:', !!VAPID_KEY);
+    // Check VAPID key
     if (!VAPID_KEY) {
-      console.warn('[FCM] VAPID key not configured - FCM token cannot be obtained');
-      console.warn('[FCM] Expected env var: NEXT_PUBLIC_FIREBASE_VAPID_KEY');
+      console.error('[FCM] VAPID key not configured (NEXT_PUBLIC_FIREBASE_VAPID_KEY)');
       return null;
     }
 
-    console.log('[FCM] Requesting FCM token with VAPID key...');
-    const fcmToken = await getToken(messaging, { vapidKey: VAPID_KEY });
-    console.log('[FCM] Token obtained successfully, length:', fcmToken?.length);
-    return fcmToken;
-  } catch (error) {
-    console.error('[FCM] Error requesting notification permission:', error);
+    // Wait for service worker to be ready
+    if ('serviceWorker' in navigator) {
+      try {
+        // Wait for service worker with 30 second timeout
+        const swReadyPromise = navigator.serviceWorker.ready;
+        const timeoutPromise = new Promise<ServiceWorkerRegistration>((_, reject) =>
+          setTimeout(() => reject(new Error('Service worker timeout after 30s')), 30000)
+        );
+
+        const registration = await Promise.race([swReadyPromise, timeoutPromise]);
+
+        // Get FCM token using the ready service worker
+        const fcmToken = await getToken(messaging, {
+          vapidKey: VAPID_KEY,
+          serviceWorkerRegistration: registration
+        });
+
+        if (fcmToken) {
+          console.log('[FCM] Token obtained, length:', fcmToken.length);
+          return fcmToken;
+        } else {
+          console.error('[FCM] getToken returned empty - check VAPID key and Firebase config');
+          return null;
+        }
+      } catch (error: any) {
+        console.error('[FCM] Token error:', error?.message || error);
+        return null;
+      }
+    }
+
+    return null;
+  } catch (error: any) {
+    console.error('[FCM] Error:', error?.message || error);
     return null;
   }
 }
@@ -170,43 +193,27 @@ export async function registerFcmToken(
   forceRefresh: boolean = false
 ): Promise<boolean> {
   try {
-    console.log('[FCM] registerFcmToken called for user:', userId);
-
     const fcmToken = await requestNotificationPermission();
     if (!fcmToken) {
-      console.warn('[FCM] Could not obtain FCM token');
+      console.warn('[FCM] Could not obtain token');
       return false;
     }
 
-    console.log('[FCM] FCM token obtained, length:', fcmToken.length);
-    console.log('[FCM] Sending token to backend...');
-
-    // ALWAYS register with backend - the backend should handle deduplication
-    // This ensures the token is always registered even if localStorage was cleared
+    // Send token to backend
     await updateFcmToken({ userId, fcmToken }, authToken);
 
-    // Store locally for reference (not for caching/skipping)
+    // Store locally for reference
     localStorage.setItem('fcm_token', fcmToken);
     localStorage.setItem('fcm_user_id', userId);
     localStorage.setItem('fcm_registered_at', new Date().toISOString());
 
-    console.log('[FCM] Token registered with backend successfully');
+    console.log('[FCM] Token registered successfully');
     return true;
   } catch (error: any) {
     const errorMessage = error?.message || 'Unknown error';
+    console.error('[FCM] Registration error:', errorMessage);
 
-    console.error('[FCM] Error registering token:', errorMessage);
-    console.error('[FCM] Full error:', error);
-
-    // Check if this is a backend configuration error
-    if (errorMessage.includes('ServiceAccountKeyPath') ||
-        errorMessage.includes('not configured')) {
-      console.warn('[FCM] Backend Firebase not configured:', errorMessage);
-      console.warn('[FCM] The backend needs to configure Firebase:ServiceAccountKeyPath');
-      return false;
-    }
-
-    // Clear stored token on failures so next attempt will try again
+    // Clear stored token on failures
     localStorage.removeItem('fcm_token');
     localStorage.removeItem('fcm_user_id');
     localStorage.removeItem('fcm_registered_at');
@@ -221,7 +228,6 @@ export async function forceRegisterFcmToken(
   userId: string,
   authToken: string
 ): Promise<boolean> {
-  console.log('[FCM] Force re-registering token...');
   localStorage.removeItem('fcm_token');
   localStorage.removeItem('fcm_user_id');
   return registerFcmToken(userId, authToken, true);
@@ -236,28 +242,24 @@ export async function setupForegroundMessageListener(
   try {
     const messaging = await getFirebaseMessaging();
     if (!messaging) {
-      console.warn('Firebase Messaging not available for foreground listener');
       return null;
     }
 
     const { onMessage: onFcmMessage } = await import('firebase/messaging');
-    
+
     const unsubscribe = onFcmMessage(messaging, (payload) => {
-      console.log('[FCM] Foreground message received:', payload);
-      
       const notification = {
         title: payload.notification?.title,
         body: payload.notification?.body,
         data: payload.data,
       };
-      
+
       onMessage(notification);
     });
 
-    console.log('[FCM] Foreground message listener set up');
     return unsubscribe;
   } catch (error) {
-    console.error('[FCM] Error setting up foreground listener:', error);
+    console.error('[FCM] Foreground listener error:', error);
     return null;
   }
 }
@@ -287,53 +289,8 @@ export function showLocalNotification(
 
 /**
  * Play notification sound using Web Audio API
- * Generates a pleasant notification tone programmatically
+ * Uses shared AudioContext to avoid browser security restrictions
  */
 export function playNotificationSound(): void {
-  if (typeof window === 'undefined') return;
-
-  try {
-    const audioContext = new (window.AudioContext || (window as any).webkitAudioContext)();
-    
-    // Create oscillator for main tone
-    const oscillator = audioContext.createOscillator();
-    const gainNode = audioContext.createGain();
-    
-    oscillator.connect(gainNode);
-    gainNode.connect(audioContext.destination);
-    
-    // Use a pleasant frequency (like a notification chime)
-    oscillator.frequency.setValueAtTime(880, audioContext.currentTime); // A5
-    oscillator.type = 'sine';
-    
-    // Quick fade in and out for a nice notification sound
-    gainNode.gain.setValueAtTime(0, audioContext.currentTime);
-    gainNode.gain.linearRampToValueAtTime(0.3, audioContext.currentTime + 0.1);
-    gainNode.gain.linearRampToValueAtTime(0, audioContext.currentTime + 0.4);
-    
-    oscillator.start(audioContext.currentTime);
-    oscillator.stop(audioContext.currentTime + 0.4);
-    
-    // Play a second tone for a more pleasing effect
-    setTimeout(() => {
-      const oscillator2 = audioContext.createOscillator();
-      const gainNode2 = audioContext.createGain();
-      
-      oscillator2.connect(gainNode2);
-      gainNode2.connect(audioContext.destination);
-      
-      oscillator2.frequency.setValueAtTime(1174.66, audioContext.currentTime); // D6
-      oscillator2.type = 'sine';
-      
-      gainNode2.gain.setValueAtTime(0, audioContext.currentTime);
-      gainNode2.gain.linearRampToValueAtTime(0.3, audioContext.currentTime + 0.1);
-      gainNode2.gain.linearRampToValueAtTime(0, audioContext.currentTime + 0.3);
-      
-      oscillator2.start(audioContext.currentTime);
-      oscillator2.stop(audioContext.currentTime + 0.3);
-    }, 150);
-    
-  } catch (error) {
-    console.warn('[Notification] Error playing sound:', error);
-  }
+  notificationAudio.playNotificationSound();
 }

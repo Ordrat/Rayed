@@ -6,6 +6,7 @@
 import { initializeApp, getApps, getApp, FirebaseApp } from 'firebase/app';
 import { getDatabase, Database } from 'firebase/database';
 import { getMessaging, Messaging, isSupported } from 'firebase/messaging';
+import { getAnalytics, Analytics, isSupported as isAnalyticsSupported } from 'firebase/analytics';
 
 // Firebase configuration - Client-side Web SDK
 const firebaseConfig = {
@@ -15,13 +16,14 @@ const firebaseConfig = {
   projectId: "rayed-586e3",
   storageBucket: "rayed-586e3.firebasestorage.app",
   messagingSenderId: "716889335600",
-  appId: "1:716889335600:web:e180a50322962a3d2ccaf5",
-  measurementId: "G-Z3MS2LQEKK"
+  appId: "1:716889335600:web:0ebd920e7a446d072ccaf5",
+  measurementId: "G-807PP7F0VM"
 };
 
 let app: FirebaseApp | null = null;
 let database: Database | null = null;
 let messaging: Messaging | null = null;
+let analytics: Analytics | null = null;
 
 /**
  * Initialize Firebase App
@@ -62,26 +64,54 @@ export async function getFirebaseMessaging(): Promise<Messaging | null> {
   try {
     const supported = await isSupported();
     if (!supported) {
-      console.warn('Firebase Messaging is not supported in this browser');
+      console.warn('[Firebase] Messaging is not supported in this browser');
       return null;
     }
 
     // Register service worker for background notifications
     if ('serviceWorker' in navigator) {
       try {
-        const registration = await navigator.serviceWorker.register('/firebase-messaging-sw.js', {
+        await navigator.serviceWorker.register('/firebase-messaging-sw.js', {
           scope: '/',
+          updateViaCache: 'none'
         });
-        console.log('[Firebase] Service worker registered:', registration.scope);
+        await navigator.serviceWorker.ready;
       } catch (err) {
-        console.warn('[Firebase] Service worker registration failed:', err);
+        console.error('[Firebase] SW registration failed:', err);
       }
     }
 
     messaging = getMessaging(getFirebaseApp());
     return messaging;
   } catch (error) {
-    console.error('Error initializing Firebase Messaging:', error);
+    console.error('[Firebase] Error initializing Firebase Messaging:', error);
+    return null;
+  }
+}
+
+/**
+ * Get Firebase Analytics - only available in browser
+ */
+export async function getFirebaseAnalytics(): Promise<Analytics | null> {
+  if (typeof window === 'undefined') {
+    return null;
+  }
+
+  if (analytics) {
+    return analytics;
+  }
+
+  try {
+    const supported = await isAnalyticsSupported();
+    if (!supported) {
+      console.warn('Firebase Analytics is not supported in this browser');
+      return null;
+    }
+
+    analytics = getAnalytics(getFirebaseApp());
+    return analytics;
+  } catch (error) {
+    console.error('Error initializing Firebase Analytics:', error);
     return null;
   }
 }

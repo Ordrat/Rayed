@@ -24,7 +24,8 @@
       "Bash(move modal \"..\\\\archived\\\\profile-settings\"\")",
       "Bash(git mv:*)",
       "Bash(powershell:*)",
-      "Bash(cd:*)"
+      "Bash(cd:*)",
+      "Bash(echo:*)"
     ]
   }
 }

@@ -77,16 +77,16 @@ export async function markMessagesAsRead(
   chatId: string,
   token: string
 ): Promise<void> {
-  // URL encode the chatId to handle special characters
+  console.log('[FirebaseChat] Marking messages as read for chatId:', chatId);
   const encodedChatId = encodeURIComponent(chatId);
   try {
     await apiRequest<void>(`${BASE_URL}/messages/read?chatId=${encodedChatId}`, {
       method: 'PUT',
       token,
     });
+    console.log('[FirebaseChat] Messages marked as read successfully');
   } catch (error: any) {
-    // Log but don't throw for non-critical operation
-    console.warn('[Firebase Chat] Mark as read failed:', error?.message || error);
+    console.error('[FirebaseChat] Failed to mark messages as read:', error?.message || error);
     throw error;
   }
 }
